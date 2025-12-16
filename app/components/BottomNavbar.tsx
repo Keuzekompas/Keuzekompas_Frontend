@@ -1,30 +1,30 @@
-import Image from 'next/image';
+"use client";
 import Link from 'next/link';
-import ProfileIcon from './icons/profile.svg';
-import ModulesIcon from './icons/modules.svg';
-import AiIcon from './icons/ai.svg';
-import FavoritesIcon from './icons/favorites.svg';
+import { usePathname } from 'next/navigation';
+import { UserIcon, BookOpenIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline';
 
 const BottomNavbar = () => {
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: '/profile', icon: UserIcon, label: 'Profile' },
+    { href: '/modules', icon: BookOpenIcon, label: 'Modules' },
+    { href: '/ai', icon: SparklesIcon, label: 'AI' },
+    { href: '/favorites', icon: HeartIcon, label: 'Favorites' },
+  ];
+
   return (
-    <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+    <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white shadow-lg" style={{boxShadow: '0 -1px 3px 0 rgba(0, 0, 0, 0.1), 0 -1px 2px 0 rgba(0, 0, 0, 0.06)'}}>
       <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
-        <Link href="/profile" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <Image src={ProfileIcon} alt="Profile" width={24} height={24} className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">Profile</span>
-        </Link>
-        <Link href="/modules" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <Image src={ModulesIcon} alt="Modules" width={24} height={24} className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">Modules</span>
-        </Link>
-        <Link href="/ai" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <Image src={AiIcon} alt="AI" width={24} height={24} className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">AI</span>
-        </Link>
-        <Link href="/favorites" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <Image src={FavoritesIcon} alt="Favorites" width={24} height={24} className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">Favorites</span>
-        </Link>
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const isActive = pathname === href;
+          return (
+            <Link key={href} href={href} className="inline-flex flex-col items-center justify-center px-5 group">
+              <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-red-500' : 'text-gray-500'}`} />
+              <span className={`text-sm ${isActive ? 'text-red-500' : 'text-gray-500'}`}>{label}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

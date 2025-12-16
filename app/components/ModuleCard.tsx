@@ -1,6 +1,4 @@
-import Image from 'next/image';
-import LocationIcon from './icons/location.svg';
-import StarIcon from './icons/star.svg';
+import { MapPinIcon, StarIcon } from '@heroicons/react/24/outline';
 
 interface ModuleCardProps {
   title: string;
@@ -17,7 +15,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, location, e
         <p className="text-gray-600">{description}</p>
         <div className="flex items-center mt-4">
           <div className="flex items-center mr-4">
-            <Image src={LocationIcon} alt="Location" width={16} height={16} className="mr-1" />
+            <MapPinIcon className="w-4 h-4 mr-1" />
             <span>{location}</span>
           </div>
           <div>
@@ -25,7 +23,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, location, e
           </div>
         </div>
       </div>
-      <Image src={StarIcon} alt="Favorite" width={24} height={24} />
+      <StarIcon className="w-6 h-6" />
     </div>
   );
 };

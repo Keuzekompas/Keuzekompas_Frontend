@@ -1,7 +1,6 @@
 "use client";
-import Image from 'next/image';
 import { useState } from 'react';
-import SearchIcon from '../components/icons/search.svg';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import ModuleCard from '../components/ModuleCard';
 
 const modules = [
@@ -91,7 +90,7 @@ const ModulesPage = () => {
           onChange={e => setSearchQuery(e.target.value)}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <Image src={SearchIcon} alt="Search" width={20} height={20} />
+          <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
         </div>
       </div>
 
