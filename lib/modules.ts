@@ -7,25 +7,37 @@ type FetchOptions = {
   noStore?: boolean;
 };
 
-async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+async function apiFetch<T>(
+  path: string,
+  options: FetchOptions = {}
+): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...(options.noStore ? { cache: "no-store" } : {}),
-    ...(options.revalidate != null ? { next: { revalidate: options.revalidate } } : {}),
+    ...(options.revalidate !== undefined
+      ? { next: { revalidate: options.revalidate } }
+      : {}),
   });
 
   if (!res.ok) {
-    throw new Error(`API request failed: ${res.status} ${res.statusText} (${path})`);
+    throw new Error(
+      `API request failed: ${res.status} ${res.statusText} (${path})`
+    );
   }
 
   return res.json() as Promise<T>;
 }
 
-export async function getModules(options: FetchOptions = {}): Promise<Module[]> {
+export async function getModules(
+  options: FetchOptions = {}
+): Promise<Module[]> {
   const data = await apiFetch<unknown>("/modules", options);
   return Array.isArray(data) ? (data as Module[]) : [];
 }
 
-export async function getModuleById(id: string, options: FetchOptions = {}): Promise<Module | null> {
+export async function getModuleById(
+  id: string,
+  options: FetchOptions = {}
+): Promise<Module | null> {
   try {
     return await apiFetch<Module>(`/modules/${id}`, options);
   } catch {

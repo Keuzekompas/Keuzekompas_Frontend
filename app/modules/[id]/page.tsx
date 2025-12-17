@@ -32,7 +32,7 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Readonly<PageProps>) {
   const { id } = await params;
 
   const module = await getModuleById(id, { noStore: true });
