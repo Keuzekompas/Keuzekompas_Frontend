@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Header title="Avans*" showSettings />
-        <main>{children}</main>
+        <main className="pb-16">{children}</main>
         <BottomNavbar />
       </body>
     </html>
