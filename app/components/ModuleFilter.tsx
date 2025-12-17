@@ -64,7 +64,7 @@ const ModuleFilter = ({ modules }: { modules: Module[] }) => {
           <select
             id="ects"
             className="w-full p-2 border rounded-lg"
-            onChange={(e) => setEcts(parseInt(e.target.value))}
+            onChange={(e) => setEcts(Number.parseInt(e.target.value))}
           >
             <option value="0">Alle</option>
             <option value="15">15</option>
