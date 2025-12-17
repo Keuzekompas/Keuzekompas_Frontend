@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import type { Module } from "../../types/module";
 import Link from "next/link";
+import { getModuleById } from "@/lib/modules";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -13,8 +13,6 @@ function formatDate(iso: string) {
 }
 
 function parseTags(tagsString: string): string[] {
-  // Jouw tags komen als string zoals: "['Medicatie', 'chemie', ...]"
-  // Dit is geen echte JSON, dus we normaliseren het.
   try {
     const jsonish = tagsString.replaceAll("'", '"');
     const parsed = JSON.parse(jsonish);
@@ -30,15 +28,6 @@ function parseTags(tagsString: string): string[] {
   }
 }
 
-async function getModule(id: string): Promise<Module | null> {
-  const res = await fetch(`http://localhost:1000/modules/${id}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-  return res.json();
-}
-
 type PageProps = {
   params: Promise<{ id: string }>;
 };
@@ -46,7 +35,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
 
-  const module = await getModule(id);
+  const module = await getModuleById(id, { noStore: true });
   if (!module) notFound();
 
   const tagsNl = parseTags(module.module_tags_nl);

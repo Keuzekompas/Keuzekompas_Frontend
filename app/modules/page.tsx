@@ -1,14 +1,5 @@
 import ModuleFilter from "../components/ModuleFilter";
-import { Module } from "../types/module";
-
-async function getModules(): Promise<Module[]> {
-  const res = await fetch("http://localhost:1000/modules", {
-    next: { revalidate: 60 },
-  });
-
-  const data = await res.json();
-  return Array.isArray(data) ? data : [];
-}
+import { getModules } from "@/lib/modules";
 
 const ModulesPage = async () => {
   const modules = await getModules();
