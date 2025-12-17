@@ -13,7 +13,7 @@ async function apiFetch<T>(
 ): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...(options.noStore ? { cache: "no-store" } : {}),
-    ...(options.revalidate !== undefined
+    ...("revalidate" in options
       ? { next: { revalidate: options.revalidate } }
       : {}),
   });
@@ -26,6 +26,7 @@ async function apiFetch<T>(
 
   return res.json() as Promise<T>;
 }
+
 
 export async function getModules(
   options: FetchOptions = {}
