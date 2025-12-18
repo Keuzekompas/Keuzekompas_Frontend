@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { login } from "../lib/login";
+import { loginAPI } from "../lib/login";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
@@ -13,10 +13,10 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
     try {
-      await login(email, password);
+      await loginAPI(email, password);
       router.push("/modules");
     } catch (err: any) {
-      setError("Login mislukt. Controleer je gegevens.");
+      setError("Login failed. Please check your credentials and try again.");
     }
   };
 

@@ -1,7 +1,7 @@
 import { apiFetch } from "@/utils/apiFetch";
 import { loginResponse } from "../app/types/login";
 
-export async function login(
+export async function loginAPI(
   email: string,
   password: string
 ): Promise<loginResponse> {
