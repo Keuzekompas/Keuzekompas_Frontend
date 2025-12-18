@@ -1,4 +1,5 @@
 import ModuleFilter from "../components/ModuleFilter";
+import ModulesHeader from "../components/ModulesHeader";
 import { getModules } from "@/lib/modules";
 
 const ModulesPage = async () => {
@@ -6,7 +7,7 @@ const ModulesPage = async () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Keuzemodules bij Avans</h2>
+      <ModulesHeader />
       <ModuleFilter modules={modules} />
     </div>
   );

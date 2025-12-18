@@ -1,6 +1,6 @@
 import type { Module } from "@/app/types/module";
 
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:1000/api";
+const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:1000";
 
 type FetchOptions = {
   revalidate?: number; // seconds
