@@ -1,19 +1,20 @@
 "use client";
 import { useState } from "react";
 import { login } from "../lib/login";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-      console.log("Submitting login for", email, password);
       await login(email, password);
-      // Redirect or show success message here
+      router.push("/modules");
     } catch (err: any) {
       setError("Login mislukt. Controleer je gegevens.");
     }
