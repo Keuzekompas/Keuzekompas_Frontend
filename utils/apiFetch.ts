@@ -33,12 +33,13 @@ export async function apiFetch<T>(
     body: options.body,
   });
 
-  if (!res.ok) {
-    throw new Error(
-      `API request failed: ${res.status} ${res.statusText} (${path})`
-    );
+  const response = await res.json();
+
+  if (!res.ok || response.status !== "success") {
+    const error = new Error(response.message || res.statusText);
+    (error as any).status = response.status || res.status;
+    throw error;
   }
 
-  const json = await res.json();
-  return "data" in json ? json.data : json;
+  return response;
 }
