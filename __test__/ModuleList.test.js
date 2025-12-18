@@ -1,10 +1,10 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ModuleFilter from '../app/components/ModuleFilter';
 import '@testing-library/jest-dom';
 
 // Mock next/link
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/prop-types
   return ({ children, href }) => {
     return <a href={href}>{children}</a>;
   };

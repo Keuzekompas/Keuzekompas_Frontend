@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Page from '../app/modules/[id]/page';
 import { getModuleById } from '../lib/modules';
 import { notFound } from 'next/navigation';
@@ -15,6 +14,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/prop-types
   return ({ children, href }) => {
     return <a href={href}>{children}</a>;
   };
