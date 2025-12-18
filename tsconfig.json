@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "__test__/ModuleList.test.js"  ],
   "exclude": ["node_modules"]
 }
