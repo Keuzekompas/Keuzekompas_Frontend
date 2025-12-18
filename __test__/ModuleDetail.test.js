@@ -45,11 +45,7 @@ describe('Module Detail Page', () => {
 
     const params = Promise.resolve({ id: '999' });
     
-    try {
-        await Page({ params });
-    } catch (e) {
-        // Page might throw if notFound throws, or just return null/undefined depending on mock implementation
-    }
+    await expect(Page({ params })).rejects.toThrow();
 
     expect(notFound).toHaveBeenCalled();
   });
