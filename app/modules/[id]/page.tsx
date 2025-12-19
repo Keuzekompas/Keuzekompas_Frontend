@@ -45,11 +45,7 @@ export default function Page() {
     const fetchModule = async () => {
       try {
         const response = await getModuleById(id);
-        if (response && response.data) {
-          setModule(response.data);
-        } else {
-          setModule(null);
-        }
+        setModule(response?.data ?? null);
       } catch (error) {
         console.error("Failed to fetch module:", error);
         setModule(null);
