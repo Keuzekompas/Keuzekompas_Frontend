@@ -1,46 +1,18 @@
-import type { Module } from "@/app/types/module";
-
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:1000";
-
-type FetchOptions = {
-  revalidate?: number; // seconds
-  noStore?: boolean;
-};
-
-async function apiFetch<T>(
-  path: string,
-  options: FetchOptions = {}
-): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    ...(options.noStore ? { cache: "no-store" } : {}),
-    ...("revalidate" in options
-      ? { next: { revalidate: options.revalidate } }
-      : {}),
-  });
-
-  if (!res.ok) {
-    throw new Error(
-      `API request failed: ${res.status} ${res.statusText} (${path})`
-    );
-  }
-
-  return res.json() as Promise<T>;
-}
-
+import { JsonResponse } from "@/app/types/jsonResponse";
+import type { ModuleResponse } from "@/app/types/module";
+import { apiFetch } from "@/utils/apiFetch";
 
 export async function getModules(
-  options: FetchOptions = {}
-): Promise<Module[]> {
-  const data = await apiFetch<unknown>("/modules", options);
-  return Array.isArray(data) ? (data as Module[]) : [];
+): Promise<ModuleResponse[]> {
+  const data = await apiFetch<JsonResponse<ModuleResponse>>("/modules");
+  return Array.isArray(data.data) ? (data.data as ModuleResponse[]) : [];
 }
 
 export async function getModuleById(
   id: string,
-  options: FetchOptions = {}
-): Promise<Module | null> {
+): Promise<JsonResponse<ModuleResponse> | null> {
   try {
-    return await apiFetch<Module>(`/modules/${id}`, options);
+    return await apiFetch<JsonResponse<ModuleResponse>>(`/modules/${id}`);
   } catch {
     return null;
   }

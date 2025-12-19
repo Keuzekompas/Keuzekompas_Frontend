@@ -1,6 +1,10 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useState, useEffect } from "react";
+import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
+import type { ModuleResponse } from "@/app/types/module";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -28,15 +32,43 @@ function parseTags(tagsString: string): string[] {
   }
 }
 
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
+export default function Page() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
 
-export default async function Page({ params }: Readonly<PageProps>) {
-  const { id } = await params;
+  const [module, setModule] = useState<ModuleResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const module = await getModuleById(id, { noStore: true });
-  if (!module) notFound();
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchModule = async () => {
+      try {
+        const response = await getModuleById(id);
+        setModule(response?.data ?? null);
+      } catch (error) {
+        console.error("Failed to fetch module:", error);
+        setModule(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModule();
+  }, [id]);
+
+  // id nog niet beschikbaar (heel kort moment) -> laadstatus
+  if (!id || loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Laden...</p>
+      </div>
+    );
+  }
+
+  if (!module) {
+    return notFound();
+  }
 
   const tagsNl = parseTags(module.module_tags_nl);
 
