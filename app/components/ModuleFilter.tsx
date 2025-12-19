@@ -35,8 +35,8 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
         </div>
       </div>
 
-      <div className="flex justify-between mb-4">
-        <div className="w-1/2 pr-2">
+      <div className="flex flex-row gap-4 mb-4">
+        <div className="w-1/2">
           <label
             htmlFor="locatie"
             className="block text-sm font-medium text-(--text-secondary)"
@@ -54,7 +54,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
             <option>Tilburg</option>
           </select>
         </div>
-        <div className="w-1/2 pl-2">
+        <div className="w-1/2">
           <label
             htmlFor="ects"
             className="block text-sm font-medium text-(--text-secondary)"

@@ -63,7 +63,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center grow w-full">
+    <div className="flex flex-col items-center justify-center grow w-full px-4 sm:px-0">
       <h1 className="text-2xl font-bold mb-4 text-(--text-primary)">Login</h1>
       {/* noValidate added: this stops the browser popup (like 'missing @') */}
       <form className="flex flex-col w-full max-w-sm" onSubmit={handleSubmit} noValidate>

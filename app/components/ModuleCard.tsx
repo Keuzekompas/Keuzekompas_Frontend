@@ -8,7 +8,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name_nl, description_nl, l
   return (
     <Link href={`/modules/${_id}`} className="block mb-4">
       <div className="bg-(--bg-input) text-(--text-primary) p-4 rounded-lg shadow-md flex justify-between items-start">
-        <div>
+        <div className="flex-1 min-w-0 pr-4">
           <h3 className="font-bold text-lg">{name_nl}</h3>
           <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis">{description_nl}</p>
           <div className="flex items-center mt-4 text-(--text-secondary)">

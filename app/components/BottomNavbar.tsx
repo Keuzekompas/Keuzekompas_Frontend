@@ -6,6 +6,10 @@ import { UserIcon, BookOpenIcon, SparklesIcon, HeartIcon } from '@heroicons/reac
 const BottomNavbar = () => {
   const pathname = usePathname();
 
+  if (pathname === '/') {
+    return null;
+  }
+
   const navItems = [
     { href: '/profile', icon: UserIcon, label: 'Profile' },
     { href: '/modules', icon: BookOpenIcon, label: 'Modules' },
