@@ -65,7 +65,6 @@ main {
   background: var(--bg-page);
   background-attachment: fixed;
   color: var(--text-primary);
-  min-height: 100vh;
 }
 
 .pb-safe {

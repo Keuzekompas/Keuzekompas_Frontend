@@ -20,10 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider>
           <Header title="Avans*" showSettings />
-          <main className="pb-16">{children}</main>
+          <main className="pb-16 grow flex flex-col">{children}</main>
           <BottomNavbar />
         </ThemeProvider>
       </body>
