@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:3080/api";
+const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:1000/api";
 
 export type FetchOptions = {
   revalidate?: number;

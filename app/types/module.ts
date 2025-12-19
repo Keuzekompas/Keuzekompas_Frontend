@@ -1,4 +1,4 @@
-export interface Module {
+export interface ModuleResponse {
   _id: string;
   name_en: string;
   description_en: string;
@@ -13,4 +13,4 @@ export interface Module {
   module_tags_nl: string;
 }
 
-export type Modules = Module[];
+export type Modules = ModuleResponse[];

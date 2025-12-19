@@ -1,6 +1,11 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
+import type { JsonResponse } from "@/app/types/jsonResponse";
+import type { ModuleResponse } from "@/app/types/module";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -29,14 +34,45 @@ function parseTags(tagsString: string): string[] {
 }
 
 type PageProps = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
-export default async function Page({ params }: Readonly<PageProps>) {
-  const { id } = await params;
+export default function Page({ params }: Readonly<PageProps>) {
+  const { id } = params;
+  const [module, setModule] = useState<ModuleResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const module = await getModuleById(id, { noStore: true });
-  if (!module) notFound();
+  useEffect(() => {
+    const fetchModule = async () => {
+      try {
+        const response = await getModuleById(id, { noStore: true });
+        if (response && response.data) {
+          setModule(response.data as ModuleResponse);
+        } else {
+          setModule(null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch module:", error);
+        setModule(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModule();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Laden...</p>
+      </div>
+    );
+  }
+
+  if (!module) {
+    return notFound();
+  }
 
   const tagsNl = parseTags(module.module_tags_nl);
 
