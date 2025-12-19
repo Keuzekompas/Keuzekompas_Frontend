@@ -15,10 +15,10 @@ export async function loginAPI(
     skipAuth: true,
   });
 
-  // Controleer of er een token is, anders is login mislukt
+  // Check if token is present
   if (!response.data.token) {
     throw new Error(
-      "Login failed" + (response.message ? `: ${response.message}` : "")
+      "Something went wrong. Please try again later. (No token received.)"
     );
   }
 
