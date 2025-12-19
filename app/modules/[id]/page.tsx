@@ -159,6 +159,14 @@ export default async function Page({ params }: Readonly<PageProps>) {
             <h2 className="text-lg font-semibold text-gray-900">Acties</h2>
 
             <div className="mt-3 flex flex-col gap-2">
+              <a
+                href="https://osirisstudent.avans.nl/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                Inschrijven
+              </a>
               <Link
                 href="/modules"
                 className="inline-flex items-center justify-center rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800"
