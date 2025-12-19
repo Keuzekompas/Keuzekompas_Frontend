@@ -33,7 +33,7 @@ const LoginPage = () => {
       hasError = true;
     }
 
-    // Check specifiek Avans student email (alleen als er al iets is ingevuld)
+    // Check if email is valid Avans email
     if (email && !email.endsWith("@student.avans.nl")) {
       setEmailError("Please use a valid avans email address.");
       hasError = true;
@@ -41,14 +41,14 @@ const LoginPage = () => {
 
     if (hasError) return;
 
-    // 3. API Aanroep
+    // 3. API call
     try {
       await loginAPI(email, password);
       router.push("/modules");
     } catch (error: any) {
       console.error("Login error:", error);
 
-      // Check voor specifieke Netwerk fout (als de API uit staat)
+      // Check for network errors
       if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
          setServerError("Something went wrong. Please try again later.");
          return;
