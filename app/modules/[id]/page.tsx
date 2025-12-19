@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
-import type { JsonResponse } from "@/app/types/jsonResponse";
 import type { ModuleResponse } from "@/app/types/module";
 
 function formatDate(iso: string) {
@@ -33,16 +32,16 @@ function parseTags(tagsString: string): string[] {
   }
 }
 
-type PageProps = {
-  params: { id: string };
-};
+export default function Page() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
 
-export default function Page({ params }: Readonly<PageProps>) {
-  const { id } = params;
   const [module, setModule] = useState<ModuleResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchModule = async () => {
       try {
         const response = await getModuleById(id, { noStore: true });
@@ -62,7 +61,8 @@ export default function Page({ params }: Readonly<PageProps>) {
     fetchModule();
   }, [id]);
 
-  if (loading) {
+  // id nog niet beschikbaar (heel kort moment) -> laadstatus
+  if (!id || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-lg">Laden...</p>
