@@ -14,7 +14,7 @@ export async function apiFetch<T>(
   options: FetchOptions = {}
 ): Promise<T> {
   const token =
-    typeof globalThis.window !== "undefined" && !options.skipAuth
+    globalThis.window !== undefined && !options.skipAuth
       ? localStorage.getItem("token")
       : null;
 

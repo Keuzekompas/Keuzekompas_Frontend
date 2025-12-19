@@ -22,7 +22,7 @@ export async function loginAPI(
     );
   }
 
-  if (typeof globalThis.window !== "undefined" && response.data.token) {
+  if (globalThis.window !== undefined && response.data.token) {
     localStorage.setItem("token", response.data.token);
   }
 
