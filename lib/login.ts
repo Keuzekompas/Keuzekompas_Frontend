@@ -17,7 +17,9 @@ export async function loginAPI(
 
   // Controleer of er een token is, anders is login mislukt
   if (!response.data.token) {
-    throw new Error("Login failed");
+    throw new Error(
+      "Login failed" + (response.message ? `: ${response.message}` : "")
+    );
   }
 
   if (typeof window !== "undefined" && response.data.token) {

@@ -23,19 +23,25 @@ export async function apiFetch<T>(
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    ...(options.noStore ? { cache: "no-store" } : {}),
-    ...("revalidate" in options
-      ? { next: { revalidate: options.revalidate } }
-      : {}),
-    method: options.method,
-    headers,
-    body: options.body,
-  });
+  let res;
+
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, {
+      ...(options.noStore ? { cache: "no-store" } : {}),
+      ...("revalidate" in options
+        ? { next: { revalidate: options.revalidate } }
+        : {}),
+      method: options.method,
+      headers,
+      body: options.body,
+    });
+  } catch (error) {
+    throw new Error("NETWORK_ERROR");
+  }
 
   const response = await res.json();
 
-  if (!res.ok || response.status !== "success") {
+  if (!res.ok || (response.status !== 200 && response.status !== "success")) {
     const error = new Error(response.message || res.statusText);
     (error as any).status = response.status || res.status;
     throw error;
