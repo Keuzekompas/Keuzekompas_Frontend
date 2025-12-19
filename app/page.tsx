@@ -63,20 +63,20 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow w-full">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
+    <div className="flex flex-col items-center justify-center grow w-full">
+      <h1 className="text-2xl font-bold mb-4 text-(--text-primary)">Login</h1>
       {/* noValidate added: this stops the browser popup (like 'missing @') */}
       <form className="flex flex-col w-full max-w-sm" onSubmit={handleSubmit} noValidate>
         
         {/* EMAIL INPUT */}
-        <label htmlFor="email" className="mb-2">Email</label>
+        <label htmlFor="email" className="mb-2 text-(--text-primary)">Email</label>
         <input
           type="email"
           id="email"
-          className={`p-2 border rounded-lg outline-none ${
+          className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
             emailError 
-              ? "border-red-500 bg-red-50 focus:border-red-700 mb-1" 
-              : "border-gray-200 focus:border-blue-500 mb-4"
+              ? "border-(--color-error) focus:border-red-700 mb-1" 
+              : "border-(--border-input) focus:border-(--color-brand) mb-4"
           }`}
           value={email}
           onChange={(e) => {
@@ -85,17 +85,17 @@ const LoginPage = () => {
           }}
         />
         {/* Here we show the specific error text for email */}
-        {emailError && <p className="text-red-500 text-sm mb-3">{emailError}</p>}
+        {emailError && <p className="text-(--color-error) text-sm mb-3">{emailError}</p>}
 
         {/* PASSWORD INPUT */}
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className="text-(--text-primary)">Password</label>
         <input
           type="password"
           id="password"
-          className={`p-2 border rounded-lg outline-none ${
+          className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
             passwordError 
-              ? "border-red-500 bg-red-50 focus:border-red-700 mb-1" 
-              : "border-gray-200 focus:border-blue-500 mb-4"
+              ? "border-(--color-error) focus:border-red-700 mb-1" 
+              : "border-(--border-input) focus:border-(--color-brand) mb-4"
           }`}
           value={password}
           onChange={(e) => {
@@ -104,15 +104,15 @@ const LoginPage = () => {
           }}
         />
         {/* Here we show the specific error text for password */}
-        {passwordError && <p className="text-red-500 text-sm mb-3">{passwordError}</p>}
+        {passwordError && <p className="text-(--color-error) text-sm mb-3">{passwordError}</p>}
 
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mt-2">
+        <button type="submit" className="p-2 bg-(--color-brand) text-white rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2">
             Login
         </button>
 
         {/* General Server Error display */}
         {serverError && (
-            <p className="text-red-500 mt-2 text-sm font-medium text-center">
+            <p className="text-(--color-error) mt-2 text-sm font-medium text-center">
                 {serverError}
             </p>
         )}

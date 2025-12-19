@@ -31,7 +31,7 @@ const ModulesPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg">Laden…</p>
+        <p className="text-lg text-(--text-primary)">Laden…</p>
       </div>
     );
   }
@@ -39,7 +39,7 @@ const ModulesPage = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-red-600">{error}</p>
+        <p className="text-(--color-error)">{error}</p>
       </div>
     );
   }
