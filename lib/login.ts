@@ -1,12 +1,12 @@
 import { apiFetch } from "@/utils/apiFetch";
-import { loginResponse } from "../app/types/login";
+import { LoginResponse } from "../app/types/login";
 import { JsonResponse } from "../app/types/jsonResponse";
 
 export async function loginAPI(
   email: string,
   password: string
-): Promise<loginResponse> {
-  const response = await apiFetch<JsonResponse<loginResponse>>("/auth/login", {
+): Promise<LoginResponse> {
+  const response = await apiFetch<JsonResponse<LoginResponse>>("/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export async function loginAPI(
     );
   }
 
-  if (typeof window !== "undefined" && response.data.token) {
+  if (typeof globalThis.window !== "undefined" && response.data.token) {
     localStorage.setItem("token", response.data.token);
   }
 

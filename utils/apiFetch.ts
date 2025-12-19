@@ -14,12 +14,12 @@ export async function apiFetch<T>(
   options: FetchOptions = {}
 ): Promise<T> {
   const token =
-    typeof window !== "undefined" && !options.skipAuth
+    typeof globalThis.window !== "undefined" && !options.skipAuth
       ? localStorage.getItem("token")
       : null;
 
   const headers = {
-    ...(options.headers || {}),
+    ...options.headers,
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
@@ -36,7 +36,7 @@ export async function apiFetch<T>(
       body: options.body,
     });
   } catch (error) {
-    throw new Error("NETWORK_ERROR");
+    throw new Error("NETWORK_ERROR", { cause: error });
   }
 
   const response = await res.json();

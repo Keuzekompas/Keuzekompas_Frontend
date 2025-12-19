@@ -1,4 +1,4 @@
-export interface loginResponse {
+export interface LoginResponse {
   token: string;
   user: {
     id: string;
