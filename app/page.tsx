@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { loginAPI } from "../lib/login";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -64,59 +65,65 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center grow w-full px-4 sm:px-0">
-      <h1 className="text-2xl font-bold mb-4 text-(--text-primary)">Login</h1>
-      {/* noValidate added: this stops the browser popup (like 'missing @') */}
-      <form className="flex flex-col w-full max-w-sm" onSubmit={handleSubmit} noValidate>
-        
-        {/* EMAIL INPUT */}
-        <label htmlFor="email" className="mb-2 text-(--text-primary)">Email</label>
-        <input
-          type="email"
-          id="email"
-          className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
-            emailError 
-              ? "border-(--color-error) focus:border-red-700 mb-1" 
-              : "border-(--border-input) focus:border-(--color-brand) mb-4"
-          }`}
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (emailError) setEmailError("");
-          }}
-        />
-        {/* Here we show the specific error text for email */}
-        {emailError && <p className="text-(--color-error) text-sm mb-3">{emailError}</p>}
+      <Card className="w-full max-w-sm bg-(--bg-card) mt-8">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">Login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* noValidate added: this stops the browser popup (like 'missing @') */}
+          <form className="flex flex-col w-full" onSubmit={handleSubmit} noValidate>
+            
+            {/* EMAIL INPUT */}
+            <label htmlFor="email" className="mb-2 text-(--text-primary)">Email</label>
+            <input
+              type="email"
+              id="email"
+              className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
+                emailError 
+                  ? "border-(--color-error) focus:border-red-700 mb-1" 
+                  : "border-(--border-input) focus:border-(--color-brand) mb-4"
+              }`}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
+              }}
+            />
+            {/* Here we show the specific error text for email */}
+            {emailError && <p className="text-(--color-error) text-sm mb-3">{emailError}</p>}
 
-        {/* PASSWORD INPUT */}
-        <label htmlFor="password" className="text-(--text-primary)">Password</label>
-        <input
-          type="password"
-          id="password"
-          className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
-            passwordError 
-              ? "border-(--color-error) focus:border-red-700 mb-1" 
-              : "border-(--border-input) focus:border-(--color-brand) mb-4"
-          }`}
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (passwordError) setPasswordError("");
-          }}
-        />
-        {/* Here we show the specific error text for password */}
-        {passwordError && <p className="text-(--color-error) text-sm mb-3">{passwordError}</p>}
+            {/* PASSWORD INPUT */}
+            <label htmlFor="password" className="text-(--text-primary)">Password</label>
+            <input
+              type="password"
+              id="password"
+              className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
+                passwordError 
+                  ? "border-(--color-error) focus:border-red-700 mb-1" 
+                  : "border-(--border-input) focus:border-(--color-brand) mb-4"
+              }`}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+            />
+            {/* Here we show the specific error text for password */}
+            {passwordError && <p className="text-(--color-error) text-sm mb-3">{passwordError}</p>}
 
-        <button type="submit" className="p-2 bg-(--color-brand) text-white rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2">
-            Login
-        </button>
+            <button type="submit" className="p-2 bg-(--color-brand) text-white rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2">
+                Login
+            </button>
 
-        {/* General Server Error display */}
-        {serverError && (
-            <p className="text-(--color-error) mt-2 text-sm font-medium text-center">
-                {serverError}
-            </p>
-        )}
-      </form>
+            {/* General Server Error display */}
+            {serverError && (
+                <p className="text-(--color-error) mt-2 text-sm font-medium text-center">
+                    {serverError}
+                </p>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

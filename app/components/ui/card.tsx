@@ -6,7 +6,7 @@ type TitleProps = React.HTMLAttributes<HTMLHeadingElement>;
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement>;
 
 const Card = React.forwardRef<HTMLDivElement, DivProps>(({ className = "", ...props }, ref) => (
-  <div ref={ref} className={`border rounded-lg shadow-sm ${className}`} {...props} />
+  <div ref={ref} className={`border border-(--border-input) rounded-lg shadow-sm ${className}`} {...props} />
 ));
 Card.displayName = "Card";
 
