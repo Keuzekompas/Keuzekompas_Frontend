@@ -44,9 +44,9 @@ export default function Page() {
 
     const fetchModule = async () => {
       try {
-        const response = await getModuleById(id, { noStore: true });
+        const response = await getModuleById(id);
         if (response && response.data) {
-          setModule(response.data as ModuleResponse);
+          setModule(response.data);
         } else {
           setModule(null);
         }
