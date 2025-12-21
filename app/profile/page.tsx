@@ -3,9 +3,10 @@
 import { UserIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { getProfile } from '@/lib/profile';
+import { Profile } from '../types/profile';
 
 const ProfilePage = () => {
-  const [user, setUser] = useState<{ name: string; studentNumber: string; email: string } | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
