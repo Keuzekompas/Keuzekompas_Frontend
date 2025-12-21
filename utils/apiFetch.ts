@@ -1,5 +1,7 @@
 const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:1000/api";
 
+import { ApiError } from "../app/types/errors";
+
 export type FetchOptions = {
   revalidate?: number;
   noStore?: boolean;
@@ -42,9 +44,10 @@ export async function apiFetch<T>(
   const response = await res.json();
 
   if (!res.ok || (response.status !== 200 && response.status !== "success")) {
-    const error = new Error(response.message || res.statusText);
-    (error as any).status = response.status || res.status;
-    throw error;
+    throw new ApiError(
+      response.message || res.statusText,
+      response.status || res.status
+    );
   }
 
   return response;
