@@ -48,7 +48,7 @@ const LoginPage = () => {
 
     // Check if email is valid Avans email
     if (email && !email.endsWith("@student.avans.nl")) {
-      setEmailError("Please use a valid avans email address.");
+      setEmailError("Please use a valid Avans email address.");
       hasError = true;
     }
 

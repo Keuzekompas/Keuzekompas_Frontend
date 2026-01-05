@@ -18,7 +18,7 @@ const ProfilePage = () => {
         setUser(fetchedProfile);
       } catch (err) {
         console.error("Failed to fetch profile:", err);
-        setError("Profiel kon niet worden geladen.");
+        setError("Profile could not be loaded.");
       } finally {
         setLoading(false);
       }
@@ -29,7 +29,7 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg">Laden…</p>
+        <p className="text-lg">Loading…</p>
       </div>
     );
   }
@@ -46,14 +46,14 @@ const ProfilePage = () => {
 
   return (
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-4 text-center text-(--text-primary)">Profiel</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-(--text-primary)">Profile</h2>
         <div className="flex items-center mb-4 text-(--text-primary)">
           <UserIcon className="w-12 h-12 mr-4" />
           <h3 className="text-2xl font-bold">{user.name}</h3>
         </div>
         <div className="space-y-4">
           <div className="flex justify-between items-center text-(--text-primary)">
-            <span className="font-medium">Studentnummer</span>
+            <span className="font-medium">Studentnumber</span>
             <span className="px-4 py-1 bg-(--bg-input) rounded-full">{user.studentNumber}</span>
           </div>
           <div className="flex justify-between items-center text-(--text-primary)">

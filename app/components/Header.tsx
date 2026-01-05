@@ -4,6 +4,7 @@ import { Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/ou
 import { useTheme } from '../context/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '../../utils/apiFetch';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeaderProps {
   title: string;
@@ -23,6 +24,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
       router.push('/');
     }
   }
+  const { language, setLanguage } = useLanguage();
 
   return (
     <header className="flex justify-between items-center p-4 bg-(--bg-card) shadow-lg border-b border-(--border-divider)" style={{boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'}}>
@@ -37,9 +39,25 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             {/* Language Toggle */}
             <div className="flex justify-between items-center mb-4">
               <span className="text-sm font-medium text-(--text-secondary)">Language</span>
-              <div className="flex bg-(--bg-input) rounded-full p-1">
-                <button className="px-3 py-1 text-xs font-bold bg-(--bg-card) rounded-full shadow-sm text-(--text-primary)">NL</button>
-                <button className="px-3 py-1 text-xs font-medium text-(--text-secondary) hover:text-(--text-primary)">EN</button>
+              <div className="relative grid grid-cols-2 bg-(--bg-input) rounded-full p-1 w-24">
+                <div
+                  className={`absolute top-1 bottom-1 left-1 bg-(--bg-card) rounded-full shadow-sm transition-transform duration-300 ease-in-out ${
+                    language === 'EN' ? 'translate-x-full' : 'translate-x-0'
+                  }`}
+                  style={{ width: 'calc(50% - 4px)' }}
+                />
+                <button 
+                  onClick={() => setLanguage('NL')}
+                  className={`relative z-10 text-xs font-bold py-1 transition-colors duration-300 ${language === 'NL' ? 'text-(--text-primary)' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
+                >
+                  NL
+                </button>
+                <button 
+                  onClick={() => setLanguage('EN')}
+                  className={`relative z-10 text-xs font-bold py-1 transition-colors duration-300 ${language === 'EN' ? 'text-(--text-primary)' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
+                >
+                  EN
+                </button>
               </div>
             </div>
 

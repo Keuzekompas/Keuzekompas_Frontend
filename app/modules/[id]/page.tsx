@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
-import type { ModuleResponse } from "@/app/types/module";
+import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -16,13 +17,28 @@ function formatDate(iso: string) {
   });
 }
 
-function parseTags(tagsString: string): string[] {
+function parseTags(tags: string | string[] | undefined | null): string[] {
+  if (!tags) return [];
+
+  let stringToParse: string;
+
+  if (Array.isArray(tags)) {
+    // Check if it's a single string that looks like a stringified array (e.g. ["['a', 'b']"])
+    if (tags.length === 1 && typeof tags[0] === 'string' && tags[0].trim().startsWith('[')) {
+      stringToParse = tags[0];
+    } else {
+      return tags.map(String);
+    }
+  } else {
+    stringToParse = tags;
+  }
+
   try {
-    const jsonish = tagsString.replaceAll("'", '"');
+    const jsonish = stringToParse.replaceAll("'", '"');
     const parsed = JSON.parse(jsonish);
     return Array.isArray(parsed) ? parsed.map(String) : [];
   } catch {
-    return tagsString
+    return stringToParse
       .replaceAll("[", "")
       .replaceAll("]", "")
       .replaceAll("'", "")
@@ -35,8 +51,9 @@ function parseTags(tagsString: string): string[] {
 export default function Page() {
   const params = useParams<{ id: string }>();
   const id = params?.id;
+  const { language } = useLanguage();
 
-  const [module, setModule] = useState<ModuleResponse | null>(null);
+  const [module, setModule] = useState<ModuleDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +61,8 @@ export default function Page() {
 
     const fetchModule = async () => {
       try {
-        const response = await getModuleById(id);
+        setLoading(true);
+        const response = await getModuleById(id, language);
         setModule(response?.data ?? null);
       } catch (error) {
         console.error("Failed to fetch module:", error);
@@ -55,13 +73,13 @@ export default function Page() {
     };
 
     fetchModule();
-  }, [id]);
+  }, [id, language]);
 
   // id nog niet beschikbaar (heel kort moment) -> laadstatus
   if (!id || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg">Laden...</p>
+        <p className="text-lg">Loading...</p>
       </div>
     );
   }
@@ -70,7 +88,7 @@ export default function Page() {
     return notFound();
   }
 
-  const tagsNl = parseTags(module.module_tags_nl);
+  const tags = parseTags(module.module_tags);
 
   return (
     <div className="min-h-screen bg-(--bg-page)">
@@ -81,10 +99,10 @@ export default function Page() {
             <div className="min-w-0">
               <p className="text-sm text-(--text-secondary)">Module detail</p>
               <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
-                {module.name_nl}
+                {module.name}
               </h1>
               <p className="mt-1 text-sm text-(--text-secondary)">
-                {module.name_en}
+                {module.name}
               </p>
             </div>
 
@@ -96,13 +114,13 @@ export default function Page() {
                 {module.level}
               </span>
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-                {module.available_spots} plekken
+                {module.available_spots} spots
               </span>
             </div>
           </div>
 
           <div className="mt-4 text-sm text-(--text-secondary)">
-            <span className="font-medium text-(--text-primary)">Locatie:</span>{" "}
+            <span className="font-medium text-(--text-primary)">Location:</span>{" "}
             {module.location} •{" "}
             <span className="font-medium text-(--text-primary)">Start:</span>{" "}
             {formatDate(module.start_date)}
@@ -116,10 +134,10 @@ export default function Page() {
         <div className="lg:col-span-2 space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Beschrijving (NL)
+              Beschrijving
             </h2>
             <p className="mt-2 leading-relaxed text-(--text-secondary)">
-              {module.description_nl}
+              {module.description}
             </p>
           </section>
 
@@ -129,10 +147,9 @@ export default function Page() {
             </h2>
 
             <div className="mt-3">
-              <p className="text-sm font-medium text-(--text-secondary)">NL</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {tagsNl.length ? (
-                  tagsNl.map((t, i) => (
+                {tags.length ? (
+                  tags.map((t, i) => (
                     <span
                       key={`nl-${i}-${t}`}
                       className="inline-flex items-center rounded-full bg-(--bg-input) px-3 py-1 text-sm text-(--text-secondary)"
@@ -142,7 +159,7 @@ export default function Page() {
                   ))
                 ) : (
                   <span className="text-sm text-(--text-secondary)">
-                    Geen tags
+                    No tags
                   </span>
                 )}
               </div>
@@ -154,18 +171,18 @@ export default function Page() {
         <aside className="space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Overzicht
+              Module Info
             </h2>
 
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Locatie</dt>
+                <dt className="text-(--text-secondary)">Location</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.location}
                 </dd>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Startdatum</dt>
+                <dt className="text-(--text-secondary)">Start date</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {formatDate(module.start_date)}
                 </dd>
@@ -179,14 +196,14 @@ export default function Page() {
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Beschikbare plekken</dt>
+                <dt className="text-(--text-secondary)">Available spots</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.available_spots}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Niveau</dt>
+                <dt className="text-(--text-secondary)">Level</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.level}
                 </dd>
@@ -196,7 +213,7 @@ export default function Page() {
 
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Acties
+              Actions
             </h2>
 
             <div className="mt-3 flex flex-col gap-2">
@@ -206,13 +223,13 @@ export default function Page() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
-                Inschrijven
+                Enroll
               </a>
               <Link
                 href="/modules"
                 className="inline-flex items-center justify-center rounded-xl bg-(--text-primary) px-4 py-2 text-sm font-semibold text-(--bg-card) hover:opacity-90"
               >
-                Terug naar overzicht
+                Back to modules
               </Link>
             </div>
           </section>
