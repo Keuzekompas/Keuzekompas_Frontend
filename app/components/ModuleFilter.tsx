@@ -2,15 +2,15 @@
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
-import { ModuleResponse } from "../types/module";
+import { ModuleListResponse } from "../types/moduleList";
 
-const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
+const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("Geen");
   const [ects, setEcts] = useState(0);
 
   const filteredModules = modules.filter((module) => {
-    const searchMatch = module.name_nl
+    const searchMatch = module.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const locationMatch =

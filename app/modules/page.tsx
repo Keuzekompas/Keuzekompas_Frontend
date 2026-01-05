@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import ModuleFilter from "../components/ModuleFilter";
 import ModulesHeader from "../components/ModulesHeader";
 import { getModules } from "@/lib/modules";
-import type { ModuleResponse } from "@/app/types/module";
+import type { ModuleListResponse } from "@/app/types/moduleList";
 
 const ModulesPage = () => {
-  const [modules, setModules] = useState<ModuleResponse[]>([]);
+  const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

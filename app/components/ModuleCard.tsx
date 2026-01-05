@@ -1,16 +1,16 @@
 import { MapPinIcon, HeartIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { ModuleResponse } from '../types/module';
+import { ModuleListResponse } from '../types/moduleList';
 
-type ModuleCardProps = ModuleResponse;
+type ModuleCardProps = ModuleListResponse;
 
-const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name_nl, description_nl, location, studycredit }) => {
+const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit }) => {
   return (
     <Link href={`/modules/${_id}`} className="block mb-4">
       <div className="bg-(--bg-input) text-(--text-primary) p-4 rounded-lg shadow-md flex justify-between items-start">
         <div className="flex-1 min-w-0 pr-4">
-          <h3 className="font-bold text-lg">{name_nl}</h3>
-          <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis">{description_nl}</p>
+          <h3 className="font-bold text-lg">{name}</h3>
+          <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis">{description}</p>
           <div className="flex items-center mt-4 text-(--text-secondary)">
             <div className="flex items-center mr-4">
               <MapPinIcon className="w-4 h-4 mr-1" />
