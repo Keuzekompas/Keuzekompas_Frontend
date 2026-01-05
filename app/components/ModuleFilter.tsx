@@ -6,7 +6,7 @@ import { ModuleResponse } from "../types/module";
 
 const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useState("Geen");
+  const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
 
   const filteredModules = modules.filter((module) => {
@@ -14,7 +14,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const locationMatch =
-      location === "Geen" ||
+      location === "None" ||
       module.location?.toLowerCase().includes(location.toLowerCase());
 
     const ectsMatch = ects === 0 || module.studycredit === ects;
@@ -38,17 +38,17 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
       <div className="flex flex-row gap-4 mb-4">
         <div className="w-1/2">
           <label
-            htmlFor="locatie"
+            htmlFor="location"
             className="block text-sm font-medium text-(--text-secondary)"
           >
-            Locatie
+            Location
           </label>
           <select
-            id="locatie"
+            id="location"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setLocation(e.target.value)}
           >
-            <option>Geen</option>
+            <option>None</option>
             <option>Breda</option>
             <option>Den Bosch</option>
             <option>Tilburg</option>
@@ -66,7 +66,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setEcts(Number.parseInt(e.target.value))}
           >
-            <option value="0">Alle</option>
+            <option value="0">All</option>
             <option value="15">15</option>
             <option value="30">30</option>
           </select>
@@ -80,7 +80,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
           ))
         ) : (
           <div className="text-center text-(--text-secondary) mt-8">
-            Geen module gevonden.
+            No modules found
           </div>
         )}
       </div>
