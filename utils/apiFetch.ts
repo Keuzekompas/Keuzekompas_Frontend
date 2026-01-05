@@ -9,8 +9,8 @@ export type FetchOptions = {
   method?: string;
   headers?: Record<string, string>;
   body?: string;
-  skipAuth?: boolean; // bij 
-  credentials?: RequestCredentials; // optioneel override
+  skipAuth?: boolean;
+  credentials?: RequestCredentials;
 };
 
 function buildHeaders(options: FetchOptions) {
