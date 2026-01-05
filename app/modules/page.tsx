@@ -6,12 +6,14 @@ import ModulesHeader from "../components/ModulesHeader";
 import { getModules } from "@/lib/modules";
 import type { ModuleListResponse } from "@/app/types/moduleList";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const ModulesPage = () => {
   const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -21,19 +23,19 @@ const ModulesPage = () => {
         setModules(fetchedModules);
       } catch (err) {
         console.error("Failed to fetch modules:", err);
-        setError("Modules could not be loaded. Please try again later.");
+        setError(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchModules();
-  }, [language]);
+  }, [language, t]);
 
   if (loading && modules.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg text-(--text-primary)">Loading…</p>
+        <p className="text-lg text-(--text-primary)">{t('common.loading')}</p>
       </div>
     );
   }

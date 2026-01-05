@@ -1,10 +1,13 @@
+"use client";
 import { MapPinIcon, HeartIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { ModuleListResponse } from '../types/moduleList';
+import { useTranslation } from 'react-i18next';
 
 type ModuleCardProps = ModuleListResponse;
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit }) => {
+  const { t } = useTranslation();
   return (
     <Link href={`/modules/${_id}`} className="block mb-4 group">
       <div className="bg-(--bg-input) text-(--text-primary) p-4 rounded-lg shadow-md flex justify-between items-start transition-all duration-300 ease-in-out group-hover:shadow-lg group-hover:scale-[1.01] group-hover:bg-(--bg-card)">
@@ -17,7 +20,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
               <span>{location}</span>
             </div>
             <div>
-              <span>EC&apos;s: {studycredit}</span>
+              <span>{t('moduleDetail.ec')}: {studycredit}</span>
             </div>
           </div>
         </div>

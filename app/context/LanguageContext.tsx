@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
+import i18n from '../i18n/i18n';
 
 type Language = 'NL' | 'EN';
 
@@ -14,9 +15,17 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('NL');
 
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem('language') as Language;
+    if (storedLanguage && (storedLanguage === 'NL' || storedLanguage === 'EN')) {
+      setLanguage(storedLanguage);
+      i18n.changeLanguage(storedLanguage);
+    }
+  }, []);
+
   const updateLanguage = useCallback((lang: Language) => {
     setLanguage(lang);
-    // Optionally save to local storage here
+    i18n.changeLanguage(lang);
     localStorage.setItem('language', lang);
   }, []);
 

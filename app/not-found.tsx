@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function NotFound() {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
+    const { t } = useTranslation();
     
-    const fullText = "404";
+    const fullText = t('notFound.title');
     const typingSpeed = 300;    // Speed when typing characters
     const deletingSpeed = 200;  // Speed when deleting characters
     const pauseDuration = 1000; // How long to wait before deleting
@@ -45,7 +47,7 @@ export default function NotFound() {
         }
 
         return () => clearTimeout(timeout);
-    }, [text, isDeleting]);
+    }, [text, isDeleting, fullText]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
@@ -67,14 +69,14 @@ export default function NotFound() {
             </div>
             
             <p className="text-xl text-(--text-secondary) mb-8 text-center max-w-md">
-                Oops! The page you're looking for doesn't exist.
+                {t('notFound.message')}
             </p>
             
             <Link
                 href="/modules"
                 className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
             >
-                Go to Modules
+                {t('notFound.button')}
             </Link>
         </div>
     );
