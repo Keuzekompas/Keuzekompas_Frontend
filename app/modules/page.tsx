@@ -21,7 +21,7 @@ const ModulesPage = () => {
         setModules(fetchedModules);
       } catch (err) {
         console.error("Failed to fetch modules:", err);
-        setError("Modules konden niet worden geladen.");
+        setError("Modules could not be loaded. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -33,7 +33,7 @@ const ModulesPage = () => {
   if (loading && modules.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg text-(--text-primary)">Laden…</p>
+        <p className="text-lg text-(--text-primary)">Loading…</p>
       </div>
     );
   }
