@@ -57,10 +57,10 @@ function handleNonOk(res: Response, response: any): never {
 
   // redirect to homepage on unauthorized (avoid loop when already on homepage)
   if (status === 401) {
-    if (typeof window !== "undefined") {
-      const { pathname } = window.location;
+    if (typeof globalThis !== "undefined") {
+      const { pathname } = globalThis.location;
       if (pathname !== "/") {
-        window.location.assign("/");
+        globalThis.location.assign("/");
       }
     }
   }
@@ -95,10 +95,10 @@ export async function apiFetch<T>(
     response.status !== "success"
   ) {
     // redirect to homepage on unauthorized reported in-response (avoid loop)
-    if (response.status === 401 && typeof window !== "undefined") {
-      const { pathname } = window.location;
+    if (response.status === 401 && typeof globalThis !== "undefined") {
+      const { pathname } = globalThis.location;
       if (pathname !== "/") {
-        window.location.assign("/");
+        globalThis.location.assign("/");
       }
     }
     throw new ApiError(response.message || res.statusText, response.status);
