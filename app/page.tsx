@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading] = useState(true);
 
   const router = useRouter();
 
