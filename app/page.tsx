@@ -20,8 +20,8 @@ const LoginPage = () => {
       try {
         await getProfile();
         router.push("/modules");
-      } catch (error) {
-        setIsLoading(false);
+      } catch {
+        // Not logged in
       }
     };
     checkAuth();
