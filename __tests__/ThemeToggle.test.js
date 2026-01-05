@@ -5,7 +5,7 @@ import Header from '../app/components/Header';
 import { ThemeProvider } from '../app/context/ThemeContext';
 
 // Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(globalThis, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation(query => ({
     matches: false,
@@ -36,13 +36,13 @@ const localStorageMock = (function() {
   };
 })();
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(globalThis, 'localStorage', {
   value: localStorageMock,
 });
 
 describe('Theme Toggle Functionality', () => {
   beforeEach(() => {
-    window.localStorage.clear();
+    globalThis.localStorage.clear();
     document.documentElement.className = '';
   });
 
@@ -53,18 +53,13 @@ describe('Theme Toggle Functionality', () => {
       </ThemeProvider>
     );
 
-    // Find the "Dark Mode" text
-    const darkModeText = screen.getByText('Dark Mode');
-    expect(darkModeText).toBeInTheDocument();
-
-    // The toggle is the div next to the text. 
-    // Since the div doesn't have a role, we can find it by class or structure.
-    // Or we can add a data-testid to the component. 
-    // Let's try to find it by the container.
-    const toggleButton = darkModeText.nextElementSibling;
+    // Find the toggle button by role
+    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    expect(toggleButton).toBeInTheDocument();
     
     // Initial state should be light (bg-gray-200)
     expect(toggleButton).toHaveClass('bg-gray-200');
+    expect(toggleButton).toHaveAttribute('aria-checked', 'false');
     expect(document.documentElement).toHaveClass('light');
 
     // Click to toggle
@@ -72,21 +67,23 @@ describe('Theme Toggle Functionality', () => {
 
     // Should be dark now
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
+    expect(toggleButton).toHaveAttribute('aria-checked', 'true');
     expect(document.documentElement).toHaveClass('dark');
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
 
     // Click again to toggle back
     fireEvent.click(toggleButton);
 
     // Should be light again
     expect(toggleButton).toHaveClass('bg-gray-200');
+    expect(toggleButton).toHaveAttribute('aria-checked', 'false');
     expect(document.documentElement).toHaveClass('light');
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
   });
 
   test('respects system preference if no local storage', () => {
     // Mock system preference to dark
-    window.matchMedia.mockImplementation(query => ({
+    globalThis.matchMedia.mockImplementation(query => ({
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
       onchange: null,
@@ -103,16 +100,16 @@ describe('Theme Toggle Functionality', () => {
       </ThemeProvider>
     );
 
-    const darkModeText = screen.getByText('Dark Mode');
-    const toggleButton = darkModeText.nextElementSibling;
+    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
 
     // Should be dark initially due to system preference
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
+    expect(toggleButton).toHaveAttribute('aria-checked', 'true');
     expect(document.documentElement).toHaveClass('dark');
   });
 
   test('loads theme from local storage', () => {
-    window.localStorage.getItem.mockReturnValue('dark');
+    globalThis.localStorage.getItem.mockReturnValue('dark');
 
     render(
       <ThemeProvider>
@@ -120,11 +117,11 @@ describe('Theme Toggle Functionality', () => {
       </ThemeProvider>
     );
 
-    const darkModeText = screen.getByText('Dark Mode');
-    const toggleButton = darkModeText.nextElementSibling;
+    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
 
     // Should be dark initially due to local storage
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
+    expect(toggleButton).toHaveAttribute('aria-checked', 'true');
     expect(document.documentElement).toHaveClass('dark');
   });
 });

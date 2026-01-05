@@ -32,15 +32,19 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
 
             {/* Theme Toggle */}
             <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-medium text-(--text-secondary)">Dark Mode</span>
-              <div 
-                className={`relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors duration-200 ease-in-out ${theme === 'dark' ? 'bg-(--color-brand)' : 'bg-gray-200'}`}
+              <span className="text-sm font-medium text-(--text-secondary)" id="theme-toggle-label">Dark Mode</span>
+              <button 
+                type="button"
+                role="switch"
+                aria-checked={theme === 'dark'}
+                aria-labelledby="theme-toggle-label"
+                className={`relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--color-brand) ${theme === 'dark' ? 'bg-(--color-brand)' : 'bg-gray-200'}`}
                 onClick={toggleTheme}
               >
                 <span 
                   className={`${theme === 'dark' ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`} 
                 />
-              </div>
+              </button>
             </div>
 
             <div className="h-px bg-(--border-divider) my-2" />
