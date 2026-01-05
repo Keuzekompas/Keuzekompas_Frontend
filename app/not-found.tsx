@@ -49,12 +49,12 @@ export default function NotFound() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-6xl font-bold text-gray-800 mb-4 font-mono flex items-center h-16">
+            <h1 className="text-6xl font-bold text-(--text-primary) mb-4 font-mono flex items-center h-16">
                 {/* The text */}
                 <span>{text}</span>
                 
                 {/* The Cursor: We keep it blinking always to simulate a real terminal */}
-                <span className="ml-2 h-12 w-1 bg-gray-800 animate-cursor-blink"></span>
+                <span className="ml-2 h-12 w-1 bg-(--text-primary) animate-cursor-blink"></span>
             </h1>
             
             <div className="mb-8">
@@ -66,7 +66,7 @@ export default function NotFound() {
                 />
             </div>
             
-            <p className="text-xl text-gray-600 mb-8 text-center max-w-md">
+            <p className="text-xl text-(--text-secondary) mb-8 text-center max-w-md">
                 Oops! The page you're looking for doesn't exist.
             </p>
             
