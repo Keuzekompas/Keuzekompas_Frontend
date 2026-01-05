@@ -2,6 +2,8 @@
 
 import { Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../context/ThemeContext';
+import { useRouter } from 'next/navigation';
+import { apiFetch } from '../../utils/apiFetch';
 
 interface HeaderProps {
   title: string;
@@ -10,6 +12,17 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await apiFetch('/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch {
+      // ignore errors on logout
+    } finally {
+      router.push('/');
+    }
+  }
 
   return (
     <header className="flex justify-between items-center p-4 bg-(--bg-card) shadow-lg border-b border-(--border-divider)" style={{boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'}}>
@@ -50,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             <div className="h-px bg-(--border-divider) my-2" />
 
             {/* Logout */}
-            <button className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
+            <button onClick={handleLogout} className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
               <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
               Logout
             </button>
