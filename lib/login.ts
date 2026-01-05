@@ -29,9 +29,5 @@ export async function loginAPI(
   body: JSON.stringify({ email, password }),
 });
 
-  // if (globalThis.window !== undefined && response.data.token) {
-  //   localStorage.setItem("token", response.data.token);
-  // }
-
   return response.data;
 }
