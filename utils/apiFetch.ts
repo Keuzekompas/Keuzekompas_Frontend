@@ -9,24 +9,21 @@ export type FetchOptions = {
   method?: string;
   headers?: Record<string, string>;
   body?: string;
-  skipAuth?: boolean; // Skip adding Authorization header
+  skipAuth?: boolean; // bij 
+  credentials?: RequestCredentials; // optioneel override
 };
-
 export async function apiFetch<T>(
   path: string,
   options: FetchOptions = {}
 ): Promise<T> {
-  const token =
-    globalThis.window !== undefined && !options.skipAuth
-      ? localStorage.getItem("token")
-      : null;
-
-  const headers = {
+  const headers: Record<string, string> = {
     ...options.headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
-  let res;
+  let res: Response;
 
   try {
     res = await fetch(`${API_BASE_URL}${path}`, {
@@ -34,22 +31,45 @@ export async function apiFetch<T>(
       ...("revalidate" in options
         ? { next: { revalidate: options.revalidate } }
         : {}),
-      method: options.method,
+      method: options.method ?? (options.body ? "POST" : "GET"),
       headers,
+      credentials: options.credentials ?? "include",
+
       body: options.body,
     });
   } catch (error) {
     throw new Error("NETWORK_ERROR", { cause: error });
   }
+  let response: any = null;
+  const contentType = res.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    response = await res.json();
+  } else {
+    response = await res.text();
+  }
+  if (!res.ok) {
+    const message =
+      typeof response === "object" && response?.message
+        ? response.message
+        : res.statusText;
 
-  const response = await res.json();
+    const status =
+      typeof response === "object" && response?.status
+        ? response.status
+        : res.status;
 
-  if (!res.ok || (response.status !== 200 && response.status !== "success")) {
-    throw new ApiError(
-      response.message || res.statusText,
-      response.status || res.status
-    );
+    throw new ApiError(message, status);
   }
 
-  return response;
+  if (
+    typeof response === "object" &&
+    response !== null &&
+    "status" in response &&
+    response.status !== 200 &&
+    response.status !== "success"
+  ) {
+    throw new ApiError(response.message || res.statusText, response.status);
+  }
+
+  return response as T;
 }

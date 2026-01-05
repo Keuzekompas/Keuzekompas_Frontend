@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loginAPI } from "../lib/login";
+import { getProfile } from "../lib/profile";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
@@ -10,8 +11,21 @@ const LoginPage = () => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await getProfile();
+        router.push("/modules");
+      } catch (error) {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +77,16 @@ const LoginPage = () => {
       }
     }
   };
+
+
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-grow w-full">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center flex-grow w-full">
