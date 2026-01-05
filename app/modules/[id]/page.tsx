@@ -1,6 +1,10 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useState, useEffect } from "react";
+import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
+import type { ModuleResponse } from "@/app/types/module";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -28,34 +32,64 @@ function parseTags(tagsString: string): string[] {
   }
 }
 
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
+export default function Page() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
 
-export default async function Page({ params }: Readonly<PageProps>) {
-  const { id } = await params;
+  const [module, setModule] = useState<ModuleResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const module = await getModuleById(id, { noStore: true });
-  if (!module) notFound();
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchModule = async () => {
+      try {
+        const response = await getModuleById(id);
+        setModule(response?.data ?? null);
+      } catch (error) {
+        console.error("Failed to fetch module:", error);
+        setModule(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModule();
+  }, [id]);
+
+  // id nog niet beschikbaar (heel kort moment) -> laadstatus
+  if (!id || loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Laden...</p>
+      </div>
+    );
+  }
+
+  if (!module) {
+    return notFound();
+  }
 
   const tagsNl = parseTags(module.module_tags_nl);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-(--bg-page)">
       {/* Header */}
-      <div className="border-b bg-white">
+      <div className="border-b border-(--border-divider) bg-(--bg-card)">
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm text-gray-500">Module detail</p>
-              <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+              <p className="text-sm text-(--text-secondary)">Module detail</p>
+              <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
                 {module.name_nl}
               </h1>
-              <p className="mt-1 text-sm text-gray-600">{module.name_en}</p>
+              <p className="mt-1 text-sm text-(--text-secondary)">
+                {module.name_en}
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:justify-end">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+              <span className="inline-flex items-center rounded-full bg-(--bg-input) px-3 py-1 text-sm font-medium text-(--text-primary)">
                 {module.studycredit} EC
               </span>
               <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
@@ -67,10 +101,10 @@ export default async function Page({ params }: Readonly<PageProps>) {
             </div>
           </div>
 
-          <div className="mt-4 text-sm text-gray-600">
-            <span className="font-medium text-gray-900">Locatie:</span>{" "}
+          <div className="mt-4 text-sm text-(--text-secondary)">
+            <span className="font-medium text-(--text-primary)">Locatie:</span>{" "}
             {module.location} •{" "}
-            <span className="font-medium text-gray-900">Start:</span>{" "}
+            <span className="font-medium text-(--text-primary)">Start:</span>{" "}
             {formatDate(module.start_date)}
           </div>
         </div>
@@ -80,32 +114,36 @@ export default async function Page({ params }: Readonly<PageProps>) {
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-3">
         {/* Main column */}
         <div className="lg:col-span-2 space-y-6">
-          <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
+          <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
+            <h2 className="text-lg font-semibold text-(--text-primary)">
               Beschrijving (NL)
             </h2>
-            <p className="mt-2 leading-relaxed text-gray-700">
+            <p className="mt-2 leading-relaxed text-(--text-secondary)">
               {module.description_nl}
             </p>
           </section>
 
-          <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Tags</h2>
+          <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
+            <h2 className="text-lg font-semibold text-(--text-primary)">
+              Tags
+            </h2>
 
             <div className="mt-3">
-              <p className="text-sm font-medium text-gray-700">NL</p>
+              <p className="text-sm font-medium text-(--text-secondary)">NL</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {tagsNl.length ? (
                   tagsNl.map((t, i) => (
                     <span
                       key={`nl-${i}-${t}`}
-                      className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                      className="inline-flex items-center rounded-full bg-(--bg-input) px-3 py-1 text-sm text-(--text-secondary)"
                     >
                       {t}
                     </span>
                   ))
                 ) : (
-                  <span className="text-sm text-gray-500">Geen tags</span>
+                  <span className="text-sm text-(--text-secondary)">
+                    Geen tags
+                  </span>
                 )}
               </div>
             </div>
@@ -114,49 +152,52 @@ export default async function Page({ params }: Readonly<PageProps>) {
 
         {/* Sidebar */}
         <aside className="space-y-6">
-          <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Overzicht</h2>
+          <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
+            <h2 className="text-lg font-semibold text-(--text-primary)">
+              Overzicht
+            </h2>
 
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-gray-500">Locatie</dt>
-                <dd className="text-right font-medium text-gray-900">
+                <dt className="text-(--text-secondary)">Locatie</dt>
+                <dd className="text-right font-medium text-(--text-primary)">
                   {module.location}
                 </dd>
               </div>
-
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-gray-500">Startdatum</dt>
-                <dd className="text-right font-medium text-gray-900">
+                <dt className="text-(--text-secondary)">Startdatum</dt>
+                <dd className="text-right font-medium text-(--text-primary)">
                   {formatDate(module.start_date)}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-gray-500">EC</dt>
-                <dd className="text-right font-medium text-gray-900">
+                <dt className="text-(--text-secondary)">EC</dt>
+                <dd className="text-right font-medium text-(--text-primary)">
                   {module.studycredit}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-gray-500">Beschikbare plekken</dt>
-                <dd className="text-right font-medium text-gray-900">
+                <dt className="text-(--text-secondary)">Beschikbare plekken</dt>
+                <dd className="text-right font-medium text-(--text-primary)">
                   {module.available_spots}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-gray-500">Niveau</dt>
-                <dd className="text-right font-medium text-gray-900">
+                <dt className="text-(--text-secondary)">Niveau</dt>
+                <dd className="text-right font-medium text-(--text-primary)">
                   {module.level}
                 </dd>
               </div>
             </dl>
           </section>
 
-          <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Acties</h2>
+          <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
+            <h2 className="text-lg font-semibold text-(--text-primary)">
+              Acties
+            </h2>
 
             <div className="mt-3 flex flex-col gap-2">
               <a
@@ -169,7 +210,7 @@ export default async function Page({ params }: Readonly<PageProps>) {
               </a>
               <Link
                 href="/modules"
-                className="inline-flex items-center justify-center rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800"
+                className="inline-flex items-center justify-center rounded-xl bg-(--text-primary) px-4 py-2 text-sm font-semibold text-(--bg-card) hover:opacity-90"
               >
                 Terug naar overzicht
               </Link>
