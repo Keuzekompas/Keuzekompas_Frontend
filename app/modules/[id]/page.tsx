@@ -61,7 +61,7 @@ export default function Page() {
   if (!id || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg">Laden...</p>
+        <p className="text-lg">Loading...</p>
       </div>
     );
   }
@@ -96,13 +96,13 @@ export default function Page() {
                 {module.level}
               </span>
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-                {module.available_spots} plekken
+                {module.available_spots} spots
               </span>
             </div>
           </div>
 
           <div className="mt-4 text-sm text-(--text-secondary)">
-            <span className="font-medium text-(--text-primary)">Locatie:</span>{" "}
+            <span className="font-medium text-(--text-primary)">Location:</span>{" "}
             {module.location} •{" "}
             <span className="font-medium text-(--text-primary)">Start:</span>{" "}
             {formatDate(module.start_date)}
@@ -116,7 +116,7 @@ export default function Page() {
         <div className="lg:col-span-2 space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Beschrijving (NL)
+              Description (NL)
             </h2>
             <p className="mt-2 leading-relaxed text-(--text-secondary)">
               {module.description_nl}
@@ -142,7 +142,7 @@ export default function Page() {
                   ))
                 ) : (
                   <span className="text-sm text-(--text-secondary)">
-                    Geen tags
+                    No tags
                   </span>
                 )}
               </div>
@@ -154,18 +154,18 @@ export default function Page() {
         <aside className="space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Overzicht
+              Module Info
             </h2>
 
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Locatie</dt>
+                <dt className="text-(--text-secondary)">Location</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.location}
                 </dd>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Startdatum</dt>
+                <dt className="text-(--text-secondary)">Start date</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {formatDate(module.start_date)}
                 </dd>
@@ -179,14 +179,14 @@ export default function Page() {
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Beschikbare plekken</dt>
+                <dt className="text-(--text-secondary)">Available spots</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.available_spots}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Niveau</dt>
+                <dt className="text-(--text-secondary)">Level</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.level}
                 </dd>
@@ -196,7 +196,7 @@ export default function Page() {
 
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Acties
+              Actions
             </h2>
 
             <div className="mt-3 flex flex-col gap-2">
@@ -206,13 +206,13 @@ export default function Page() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
-                Inschrijven
+                Enroll
               </a>
               <Link
                 href="/modules"
                 className="inline-flex items-center justify-center rounded-xl bg-(--text-primary) px-4 py-2 text-sm font-semibold text-(--bg-card) hover:opacity-90"
               >
-                Terug naar overzicht
+                Back to modules
               </Link>
             </div>
           </section>
