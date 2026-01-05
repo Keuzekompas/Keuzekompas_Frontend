@@ -46,19 +46,21 @@ const LoginPage = () => {
     try {
       await loginAPI(email, password);
       router.push("/modules");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login error:", error);
+      if (error instanceof Error) {
+        // Check for network errors
+        if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
+          setServerError("Something went wrong. Please try again later.");
+          return;
+        }
 
-      // Check for network errors
-      if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
-         setServerError("Something went wrong. Please try again later.");
-         return;
-      }
-
-      if (error.status === 500) {
-        setServerError("The server is temporarily unavailable. Please try again later.");
-      } else {
-        setServerError(error.message || "An unknown error occurred. Please try again.");
+        const status = (error as {status?: number}).status;
+        if (status === 500) {
+          setServerError("The server is temporarily unavailable. Please try again later.");
+        } else {
+          setServerError(error.message || "An unknown error occurred. Please try again.");
+        }
       }
     }
   };

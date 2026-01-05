@@ -1,12 +1,49 @@
-import { UserIcon } from '@heroicons/react/24/outline';
+"use client";
 
-const user = {
-  name: 'Sietse',
-  studentNumber: '1234567',
-  email: 'sietse.demo@avans.nl',
-};
+import { UserIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
+import { getProfile } from '@/lib/profile';
+import { Profile } from '@/app/types/profile';
 
 const ProfilePage = () => {
+  const [user, setUser] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setLoading(true);
+        const fetchedProfile = await getProfile();
+        setUser(fetchedProfile);
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+        setError("Profiel kon niet worden geladen.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Laden…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
   return (
       <div className="p-4">
         <h2 className="text-xl font-bold mb-4 text-center text-(--text-primary)">Profiel</h2>
@@ -25,6 +62,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
