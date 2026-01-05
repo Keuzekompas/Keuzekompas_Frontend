@@ -6,8 +6,8 @@ type ModuleCardProps = ModuleListResponse;
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit }) => {
   return (
-    <Link href={`/modules/${_id}`} className="block mb-4">
-      <div className="bg-(--bg-input) text-(--text-primary) p-4 rounded-lg shadow-md flex justify-between items-start">
+    <Link href={`/modules/${_id}`} className="block mb-4 group">
+      <div className="bg-(--bg-input) text-(--text-primary) p-4 rounded-lg shadow-md flex justify-between items-start transition-all duration-300 ease-in-out group-hover:shadow-lg group-hover:scale-[1.01] group-hover:bg-(--bg-card)">
         <div className="flex-1 min-w-0 pr-4">
           <h3 className="font-bold text-lg">{name}</h3>
           <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis">{description}</p>

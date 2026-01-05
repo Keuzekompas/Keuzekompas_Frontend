@@ -30,7 +30,7 @@ const ModulesPage = () => {
     fetchModules();
   }, [language]);
 
-  if (loading) {
+  if (loading && modules.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-lg text-(--text-primary)">Laden…</p>
@@ -49,7 +49,9 @@ const ModulesPage = () => {
   return (
     <div className="p-4">
       <ModulesHeader />
-      <ModuleFilter modules={modules} />
+      <div className={`transition-opacity duration-300 ease-in-out ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+        <ModuleFilter modules={modules} />
+      </div>
     </div>
   );
 };
