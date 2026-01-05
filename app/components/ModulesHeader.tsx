@@ -8,11 +8,11 @@ export default function ModulesHeader() {
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Keuzemodules bij Avans</h2>
+        <h2 className="text-xl font-bold text-(--text-primary)]">Keuzemodules bij Avans</h2>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`inline-flex items-center justify-center rounded-full p-1 hover:bg-gray-100 focus:outline-none transition-colors ${
-            isOpen ? "text-blue-600" : "text-gray-900"
+          className={`inline-flex items-center justify-center rounded-full p-1 hover:bg-(--bg-input)] focus:outline-none transition-colors ${
+            isOpen ? "text-(--color-brand)]" : "text-(--text-primary)]"
           }`}
           aria-label={isOpen ? "Verberg info" : "Toon info"}
         >
@@ -33,7 +33,7 @@ export default function ModulesHeader() {
         </button>
       </div>
       {isOpen && (
-        <div className="mt-2 rounded-md border border-gray-200 p-4 text-sm text-gray-600">
+        <div className="mt-2 rounded-md border border-(--border-divider) p-4 text-sm text-(--text-secondary)">
           <p>
             Op deze pagina vind je een overzicht van alle beschikbare keuzemodules. 
             Gebruik de filters om modules te zoeken die bij jouw interesses en studie passen.

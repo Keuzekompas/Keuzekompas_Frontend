@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
-import { Module } from "../types/module";
+import { ModuleResponse } from "../types/module";
 
-const ModuleFilter = ({ modules }: { modules: Module[] }) => {
+const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("Geen");
   const [ects, setEcts] = useState(0);
@@ -27,25 +27,25 @@ const ModuleFilter = ({ modules }: { modules: Module[] }) => {
         <input
           type="text"
           placeholder="Search for modules"
-          className="w-full p-2 pl-10 border rounded-lg"
+          className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
+          <MagnifyingGlassIcon className="w-5 h-5 text-(--icon-color)" />
         </div>
       </div>
 
-      <div className="flex justify-between mb-4">
-        <div className="w-1/2 pr-2">
+      <div className="flex flex-row gap-4 mb-4">
+        <div className="w-1/2">
           <label
             htmlFor="locatie"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-(--text-secondary)"
           >
             Locatie
           </label>
           <select
             id="locatie"
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setLocation(e.target.value)}
           >
             <option>Geen</option>
@@ -54,16 +54,16 @@ const ModuleFilter = ({ modules }: { modules: Module[] }) => {
             <option>Tilburg</option>
           </select>
         </div>
-        <div className="w-1/2 pl-2">
+        <div className="w-1/2">
           <label
             htmlFor="ects"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-(--text-secondary)"
           >
             EC&apos;s
           </label>
           <select
             id="ects"
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setEcts(Number.parseInt(e.target.value))}
           >
             <option value="0">Alle</option>
@@ -79,7 +79,7 @@ const ModuleFilter = ({ modules }: { modules: Module[] }) => {
             <ModuleCard key={module._id} {...module} />
           ))
         ) : (
-          <div className="text-center text-gray-500 mt-8">
+          <div className="text-center text-(--text-secondary) mt-8">
             Geen module gevonden.
           </div>
         )}
