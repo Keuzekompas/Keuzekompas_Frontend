@@ -4,16 +4,20 @@ import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
 import { apiFetch } from "@/utils/apiFetch";
 
 export async function getModules(
+  language?: string
 ): Promise<ModuleListResponse[]> {
-  const data = await apiFetch<JsonResponse<ModuleListResponse>>("/modules");
+  const query = language ? `?lang=${language.toLowerCase()}` : "";
+  const data = await apiFetch<JsonResponse<ModuleListResponse>>(`/modules${query}`);
   return Array.isArray(data.data) ? (data.data as ModuleListResponse[]) : [];
 }
 
 export async function getModuleById(
   id: string,
+  language?: string
 ): Promise<JsonResponse<ModuleDetailResponse> | null> {
   try {
-    return await apiFetch<JsonResponse<ModuleDetailResponse>>(`/modules/${id}`);
+    const query = language ? `?lang=${language.toLowerCase()}` : "";
+    return await apiFetch<JsonResponse<ModuleDetailResponse>>(`/modules/${id}${query}`);
   } catch {
     return null;
   }

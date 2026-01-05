@@ -5,17 +5,19 @@ import ModuleFilter from "../components/ModuleFilter";
 import ModulesHeader from "../components/ModulesHeader";
 import { getModules } from "@/lib/modules";
 import type { ModuleListResponse } from "@/app/types/moduleList";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const ModulesPage = () => {
   const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const fetchModules = async () => {
       try {
         setLoading(true);
-        const fetchedModules = await getModules();
+        const fetchedModules = await getModules(language);
         setModules(fetchedModules);
       } catch (err) {
         console.error("Failed to fetch modules:", err);
@@ -26,7 +28,7 @@ const ModulesPage = () => {
     };
 
     fetchModules();
-  }, []);
+  }, [language]);
 
   if (loading) {
     return (

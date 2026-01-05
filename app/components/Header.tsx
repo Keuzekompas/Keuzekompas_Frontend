@@ -2,6 +2,7 @@
 
 import { Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeaderProps {
   title: string;
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
 
   return (
     <header className="flex justify-between items-center p-4 bg-(--bg-card) shadow-lg border-b border-(--border-divider)" style={{boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'}}>
@@ -25,8 +27,18 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             <div className="flex justify-between items-center mb-4">
               <span className="text-sm font-medium text-(--text-secondary)">Language</span>
               <div className="flex bg-(--bg-input) rounded-full p-1">
-                <button className="px-3 py-1 text-xs font-bold bg-(--bg-card) rounded-full shadow-sm text-(--text-primary)">NL</button>
-                <button className="px-3 py-1 text-xs font-medium text-(--text-secondary) hover:text-(--text-primary)">EN</button>
+                <button 
+                  onClick={() => setLanguage('NL')}
+                  className={`px-3 py-1 text-xs font-bold rounded-full shadow-sm transition-colors ${language === 'NL' ? 'bg-(--bg-card) text-(--text-primary)' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
+                >
+                  NL
+                </button>
+                <button 
+                  onClick={() => setLanguage('EN')}
+                  className={`px-3 py-1 text-xs font-bold rounded-full shadow-sm transition-colors ${language === 'EN' ? 'bg-(--bg-card) text-(--text-primary)' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
+                >
+                  EN
+                </button>
               </div>
             </div>
 

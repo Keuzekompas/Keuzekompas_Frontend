@@ -5,6 +5,7 @@ import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
 import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -50,6 +51,7 @@ function parseTags(tags: string | string[] | undefined | null): string[] {
 export default function Page() {
   const params = useParams<{ id: string }>();
   const id = params?.id;
+  const { language } = useLanguage();
 
   const [module, setModule] = useState<ModuleDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,8 @@ export default function Page() {
 
     const fetchModule = async () => {
       try {
-        const response = await getModuleById(id);
+        setLoading(true);
+        const response = await getModuleById(id, language);
         setModule(response?.data ?? null);
       } catch (error) {
         console.error("Failed to fetch module:", error);
@@ -70,7 +73,7 @@ export default function Page() {
     };
 
     fetchModule();
-  }, [id]);
+  }, [id, language]);
 
   // id nog niet beschikbaar (heel kort moment) -> laadstatus
   if (!id || loading) {
