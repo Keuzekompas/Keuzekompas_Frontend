@@ -12,15 +12,15 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('NL');
+  const [language, setLanguage] = useState<Language>('NL');
 
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
+  const updateLanguage = useCallback((lang: Language) => {
+    setLanguage(lang);
     // Optionally save to local storage here
     localStorage.setItem('language', lang);
   }, []);
 
-  const value = useMemo(() => ({ language, setLanguage }), [language, setLanguage]);
+  const value = useMemo(() => ({ language, setLanguage: updateLanguage }), [language, updateLanguage]);
 
   return (
     <LanguageContext.Provider value={value}>
