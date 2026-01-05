@@ -1,16 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
-import { ModuleResponse } from "../types/module";
+import { ModuleListResponse } from "../types/moduleList";
 
-const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
+const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   const filteredModules = modules.filter((module) => {
-    const searchMatch = module.name_nl
+    const searchMatch = module.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const locationMatch =
@@ -20,6 +22,33 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
     const ectsMatch = ects === 0 || module.studycredit === ects;
     return searchMatch && locationMatch && ectsMatch;
   });
+
+  const displayedModules = filteredModules.slice(0, visibleCount);
+
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [searchQuery, location, ects]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + 10);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [displayedModules.length]);
 
   return (
     <div>
@@ -74,10 +103,17 @@ const ModuleFilter = ({ modules }: { modules: ModuleResponse[] }) => {
       </div>
 
       <div className="space-y-4">
-        {filteredModules.length > 0 ? (
-          filteredModules.map((module) => (
-            <ModuleCard key={module._id} {...module} />
-          ))
+        {displayedModules.length > 0 ? (
+          <>
+            {displayedModules.map((module) => (
+              <ModuleCard key={module._id} {...module} />
+            ))}
+            {visibleCount < filteredModules.length && (
+              <div ref={observerTarget} className="h-10 flex justify-center items-center">
+                {/* Sentinel for infinite scroll */}
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center text-(--text-secondary) mt-8">
             No modules found

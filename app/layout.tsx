@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import BottomNavbar from "./components/BottomNavbar";
 import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,9 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider>
-          <Header title="Avans*" showSettings />
-          <main className="pb-16 grow flex flex-col">{children}</main>
-          <BottomNavbar />
+          <LanguageProvider>
+            <Header title="Avans*" showSettings />
+            <main className="pb-16 grow flex flex-col">{children}</main>
+            <BottomNavbar />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
