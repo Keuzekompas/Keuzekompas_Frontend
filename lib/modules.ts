@@ -11,6 +11,14 @@ export async function getModules(
   return Array.isArray(data.data) ? (data.data as ModuleListResponse[]) : [];
 }
 
+export async function getFavoriteModules(
+  language?: string
+): Promise<ModuleListResponse[]> {
+  const query = language ? `?lang=${language.toLowerCase()}` : "";
+  const data = await apiFetch<JsonResponse<ModuleListResponse>>(`/modules/favorites${query}`);
+  return Array.isArray(data.data) ? (data.data as ModuleListResponse[]) : [];
+}
+
 export async function getModuleById(
   id: string,
   language?: string
