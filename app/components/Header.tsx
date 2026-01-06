@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '../../utils/apiFetch';
 import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   title: string;
@@ -25,6 +26,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
     }
   }
   const { language, setLanguage } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <header className="flex justify-between items-center p-4 bg-(--bg-card) shadow-lg border-b border-(--border-divider)" style={{boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'}}>
@@ -38,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
           <div className="absolute right-0 mt-2 w-64 bg-(--bg-card) rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 z-50 p-4 border border-(--border-divider)">
             {/* Language Toggle */}
             <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-medium text-(--text-secondary)">Language</span>
+              <span className="text-sm font-medium text-(--text-secondary)">{t('header.language')}</span>
               <div className="relative grid grid-cols-2 bg-(--bg-input) rounded-full p-1 w-24">
                 <div
                   className={`absolute top-1 bottom-1 left-1 bg-(--bg-card) rounded-full shadow-sm transition-transform duration-300 ease-in-out ${
@@ -63,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
 
             {/* Theme Toggle */}
             <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-medium text-(--text-secondary)" id="theme-toggle-label">Dark Mode</span>
+              <span className="text-sm font-medium text-(--text-secondary)" id="theme-toggle-label">{t('header.darkMode')}</span>
               <button 
                 type="button"
                 role="switch"
@@ -83,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             {/* Logout */}
             <button onClick={handleLogout} className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
               <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
-              Logout
+              {t('header.logout')}
             </button>
           </div>
         </details>

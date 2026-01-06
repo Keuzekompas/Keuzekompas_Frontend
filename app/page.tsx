@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import { loginAPI } from "../lib/login";
 import { getProfile } from "../lib/profile";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -38,17 +41,17 @@ const LoginPage = () => {
 
     // Check if field are empty
     if (!email) {
-      setEmailError("Please enter your email address.");
+      setEmailError(t('login.errors.emailRequired'));
       hasError = true;
     }
     if (!password) {
-      setPasswordError("Please enter your password.");
+      setPasswordError(t('login.errors.passwordRequired'));
       hasError = true;
     }
 
     // Check if email is valid Avans email
     if (email && !email.endsWith("@student.avans.nl")) {
-      setEmailError("Please use a valid Avans email address.");
+      setEmailError(t('login.errors.emailInvalid'));
       hasError = true;
     }
 
@@ -63,15 +66,15 @@ const LoginPage = () => {
       if (error instanceof Error) {
         // Check for network errors
         if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
-          setServerError("Something went wrong. Please try again later.");
+          setServerError(t('login.errors.networkError'));
           return;
         }
 
         const status = (error as {status?: number}).status;
         if (status === 500) {
-          setServerError("The server is temporarily unavailable. Please try again later.");
+          setServerError(t('login.errors.serverError'));
         } else {
-          setServerError(error.message || "An unknown error occurred. Please try again.");
+          setServerError(error.message || t('login.errors.unknownError'));
         }
       }
     }
@@ -82,60 +85,66 @@ const LoginPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow w-full">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {/* noValidate added: this stops the browser popup (like 'missing @') */}
-      <form className="flex flex-col w-full max-w-sm" onSubmit={handleSubmit} noValidate>
-        
-        {/* EMAIL INPUT */}
-        <label htmlFor="email" className="mb-2">Email</label>
-        <input
-          type="email"
-          id="email"
-          className={`p-2 border rounded-lg outline-none ${
-            emailError 
-              ? "border-red-500 bg-red-50 focus:border-red-700 mb-1" 
-              : "border-gray-200 focus:border-blue-500 mb-4"
-          }`}
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (emailError) setEmailError("");
-          }}
-        />
-        {/* Here we show the specific error text for email */}
-        {emailError && <p className="text-red-500 text-sm mb-3">{emailError}</p>}
+    <div className="flex flex-col items-center justify-center grow w-full px-4 sm:px-0">
+      <Card className="w-full max-w-sm bg-(--bg-card) mt-8">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">{t('login.title')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* noValidate added: this stops the browser popup (like 'missing @') */}
+          <form className="flex flex-col w-full" onSubmit={handleSubmit} noValidate>
+            
+            {/* EMAIL INPUT */}
+            <label htmlFor="email" className="mb-2 text-(--text-primary)">{t('login.emailLabel')}</label>
+            <input
+              type="email"
+              id="email"
+              className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
+                emailError 
+                  ? "border-(--color-error) focus:border-red-700 mb-1" 
+                  : "border-(--border-input) focus:border-(--color-brand) mb-4"
+              }`}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
+              }}
+            />
+            {/* Here we show the specific error text for email */}
+            {emailError && <p className="text-(--color-error) text-sm mb-3">{emailError}</p>}
 
-        {/* PASSWORD INPUT */}
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          className={`p-2 border rounded-lg outline-none ${
-            passwordError 
-              ? "border-red-500 bg-red-50 focus:border-red-700 mb-1" 
-              : "border-gray-200 focus:border-blue-500 mb-4"
-          }`}
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (passwordError) setPasswordError("");
-          }}
-        />
-        {/* Here we show the specific error text for password */}
-        {passwordError && <p className="text-red-500 text-sm mb-3">{passwordError}</p>}
+            {/* PASSWORD INPUT */}
+            <label htmlFor="password" className="text-(--text-primary)">{t('login.passwordLabel')}</label>
+            <input
+              type="password"
+              id="password"
+              className={`p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) ${
+                passwordError 
+                  ? "border-(--color-error) focus:border-red-700 mb-1" 
+                  : "border-(--border-input) focus:border-(--color-brand) mb-4"
+              }`}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+            />
+            {/* Here we show the specific error text for password */}
+            {passwordError && <p className="text-(--color-error) text-sm mb-3">{passwordError}</p>}
 
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mt-2">
-            Login
-        </button>
+            <button type="submit" className="p-2 bg-(--color-brand) text-white rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2">
+                {t('login.submitButton')}
+            </button>
 
-        {/* General Server Error display */}
-        {serverError && (
-            <p className="text-red-500 mt-2 text-sm font-medium text-center">
-                {serverError}
-            </p>
-        )}
-      </form>
+            {/* General Server Error display */}
+            {serverError && (
+                <p className="text-(--color-error) mt-2 text-sm font-medium text-center">
+                    {serverError}
+                </p>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

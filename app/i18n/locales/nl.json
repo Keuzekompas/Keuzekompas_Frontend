@@ -1,0 +1,79 @@
+{
+  "login": {
+    "title": "Inloggen",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Wachtwoord",
+    "submitButton": "Inloggen",
+    "errors": {
+      "emailRequired": "Vul alstublieft uw e-mailadres in.",
+      "emailInvalid": "Gebruik alstublieft een geldig Avans e-mailadres.",
+      "passwordRequired": "Vul alstublieft uw wachtwoord in.",
+      "networkError": "Er is iets misgegaan. Probeer het later opnieuw.",
+      "serverError": "De server is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+      "unknownError": "Er is een onbekende fout opgetreden. Probeer het opnieuw."
+    }
+  },
+  "header": {
+    "language": "Taal",
+    "darkMode": "Donkere Modus",
+    "logout": "Uitloggen"
+  },
+  "navbar": {
+    "profile": "Profiel",
+    "modules": "Modules",
+    "ai": "AI",
+    "favorites": "Favorieten"
+  },
+  "moduleFilter": {
+    "searchPlaceholder": "Zoek naar modules",
+    "location": "Locatie",
+    "ects": "EC's",
+    "none": "Geen",
+    "all": "Alle",
+    "noModulesFound": "Geen modules gevonden",
+    "breda": "Breda",
+    "denBosch": "Den Bosch",
+    "tilburg": "Tilburg"
+  },
+  "modulesHeader": {
+    "title": "Keuzemodules van Avans",
+    "description": "Op deze pagina vind je een overzicht van alle beschikbare keuzemodules. Gebruik de filters om te zoeken naar modules die aansluiten bij jouw interesses en studie.",
+    "showInfo": "Toon info",
+    "hideInfo": "Verberg info"
+  },
+  "moduleDetail": {
+    "loading": "Laden...",
+    "notFound": "Module niet gevonden",
+    "detail": "Module detail",
+    "spots": "plaatsen",
+    "location": "Locatie",
+    "start": "Start",
+    "description": "Beschrijving",
+    "tags": "Tags",
+    "noTags": "Geen tags",
+    "moduleInfo": "Module Info",
+    "startDate": "Startdatum",
+    "ec": "EC",
+    "availableSpots": "Beschikbare plaatsen",
+    "level": "Niveau",
+    "actions": "Acties",
+    "enroll": "Inschrijven",
+    "backToModules": "Terug naar modules"
+  },
+  "profile": {
+    "title": "Profiel",
+    "studentNumber": "Studentnummer",
+    "email": "E-mail",
+    "loading": "Laden...",
+    "error": "Profiel kon niet worden geladen."
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oeps! De pagina die je zoekt bestaat niet.",
+    "button": "Ga naar Modules"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden"
+  }
+}

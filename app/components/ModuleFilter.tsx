@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
+import { useTranslation } from "react-i18next";
 
 const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
@@ -55,7 +57,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
       <div className="relative mb-4">
         <input
           type="text"
-          placeholder="Search for modules"
+          placeholder={t('moduleFilter.searchPlaceholder')}
           className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -70,17 +72,17 @@ const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
             htmlFor="location"
             className="block text-sm font-medium text-(--text-secondary)"
           >
-            Location
+            {t('moduleFilter.location')}
           </label>
           <select
             id="location"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setLocation(e.target.value)}
           >
-            <option>None</option>
-            <option>Breda</option>
-            <option>Den Bosch</option>
-            <option>Tilburg</option>
+            <option value="None">{t('moduleFilter.none')}</option>
+            <option value="Breda">{t('moduleFilter.breda')}</option>
+            <option value="Den Bosch">{t('moduleFilter.denBosch')}</option>
+            <option value="Tilburg">{t('moduleFilter.tilburg')}</option>
           </select>
         </div>
         <div className="w-1/2">
@@ -88,14 +90,14 @@ const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
             htmlFor="ects"
             className="block text-sm font-medium text-(--text-secondary)"
           >
-            EC&apos;s
+            {t('moduleFilter.ects')}
           </label>
           <select
             id="ects"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setEcts(Number.parseInt(e.target.value))}
           >
-            <option value="0">All</option>
+            <option value="0">{t('moduleFilter.all')}</option>
             <option value="15">15</option>
             <option value="30">30</option>
           </select>
@@ -116,7 +118,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
           </>
         ) : (
           <div className="text-center text-(--text-secondary) mt-8">
-            No modules found
+            {t('moduleFilter.noModulesFound')}
           </div>
         )}
       </div>

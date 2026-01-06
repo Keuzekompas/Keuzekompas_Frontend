@@ -2,19 +2,21 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserIcon, BookOpenIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 const BottomNavbar = () => {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   if (pathname === '/') {
     return null;
   }
 
   const navItems = [
-    { href: '/profile', icon: UserIcon, label: 'Profile' },
-    { href: '/modules', icon: BookOpenIcon, label: 'Modules' },
-    { href: '/ai', icon: SparklesIcon, label: 'AI' },
-    { href: '/favorites', icon: HeartIcon, label: 'Favorites' },
+    { href: '/profile', icon: UserIcon, label: t('navbar.profile') },
+    { href: '/modules', icon: BookOpenIcon, label: t('navbar.modules') },
+    { href: '/ai', icon: SparklesIcon, label: t('navbar.ai') },
+    { href: '/favorites', icon: HeartIcon, label: t('navbar.favorites') },
   ];
 
   return (

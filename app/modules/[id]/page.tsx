@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getModuleById } from "@/lib/modules";
 import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -52,6 +53,7 @@ export default function Page() {
   const params = useParams<{ id: string }>();
   const id = params?.id;
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   const [module, setModule] = useState<ModuleDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ export default function Page() {
   if (!id || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg">Loading...</p>
+        <p className="text-lg">{t('moduleDetail.loading')}</p>
       </div>
     );
   }
@@ -97,7 +99,7 @@ export default function Page() {
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm text-(--text-secondary)">Module detail</p>
+              <p className="text-sm text-(--text-secondary)">{t('moduleDetail.detail')}</p>
               <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
                 {module.name}
               </h1>
@@ -108,21 +110,21 @@ export default function Page() {
 
             <div className="flex flex-wrap gap-2 sm:justify-end">
               <span className="inline-flex items-center rounded-full bg-(--bg-input) px-3 py-1 text-sm font-medium text-(--text-primary)">
-                {module.studycredit} EC
+                {module.studycredit} {t('moduleDetail.ec')}
               </span>
               <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 {module.level}
               </span>
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-                {module.available_spots} spots
+                {module.available_spots} {t('moduleDetail.spots')}
               </span>
             </div>
           </div>
 
           <div className="mt-4 text-sm text-(--text-secondary)">
-            <span className="font-medium text-(--text-primary)">Location:</span>{" "}
+            <span className="font-medium text-(--text-primary)">{t('moduleDetail.location')}:</span>{" "}
             {module.location} •{" "}
-            <span className="font-medium text-(--text-primary)">Start:</span>{" "}
+            <span className="font-medium text-(--text-primary)">{t('moduleDetail.start')}:</span>{" "}
             {formatDate(module.start_date)}
           </div>
         </div>
@@ -134,7 +136,7 @@ export default function Page() {
         <div className="lg:col-span-2 space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Beschrijving
+              {t('moduleDetail.description')}
             </h2>
             <p className="mt-2 leading-relaxed text-(--text-secondary)">
               {module.description}
@@ -143,7 +145,7 @@ export default function Page() {
 
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Tags
+              {t('moduleDetail.tags')}
             </h2>
 
             <div className="mt-3">
@@ -159,7 +161,7 @@ export default function Page() {
                   ))
                 ) : (
                   <span className="text-sm text-(--text-secondary)">
-                    No tags
+                    {t('moduleDetail.noTags')}
                   </span>
                 )}
               </div>
@@ -171,39 +173,39 @@ export default function Page() {
         <aside className="space-y-6">
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Module Info
+              {t('moduleDetail.moduleInfo')}
             </h2>
 
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Location</dt>
+                <dt className="text-(--text-secondary)">{t('moduleDetail.location')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.location}
                 </dd>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Start date</dt>
+                <dt className="text-(--text-secondary)">{t('moduleDetail.startDate')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {formatDate(module.start_date)}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">EC</dt>
+                <dt className="text-(--text-secondary)">{t('moduleDetail.ec')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.studycredit}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Available spots</dt>
+                <dt className="text-(--text-secondary)">{t('moduleDetail.availableSpots')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.available_spots}
                 </dd>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">Level</dt>
+                <dt className="text-(--text-secondary)">{t('moduleDetail.level')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.level}
                 </dd>
@@ -213,7 +215,7 @@ export default function Page() {
 
           <section className="rounded-2xl bg-(--bg-card) p-5 shadow-sm ring-1 ring-(--border-divider)">
             <h2 className="text-lg font-semibold text-(--text-primary)">
-              Actions
+              {t('moduleDetail.actions')}
             </h2>
 
             <div className="mt-3 flex flex-col gap-2">
@@ -223,13 +225,13 @@ export default function Page() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
-                Enroll
+                {t('moduleDetail.enroll')}
               </a>
               <Link
                 href="/modules"
                 className="inline-flex items-center justify-center rounded-xl bg-(--text-primary) px-4 py-2 text-sm font-semibold text-(--bg-card) hover:opacity-90"
               >
-                Back to modules
+                {t('moduleDetail.backToModules')}
               </Link>
             </div>
           </section>
