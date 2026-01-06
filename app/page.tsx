@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loginAPI } from "../lib/login";
+import { getProfile } from "../lib/profile";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { useTranslation } from "react-i18next";
@@ -15,6 +16,18 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await getProfile();
+        router.push("/modules");
+      } catch {
+        // Not logged in, stay on login page
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +79,10 @@ const LoginPage = () => {
       }
     }
   };
+
+
+
+
 
   return (
     <div className="flex flex-col items-center justify-center grow w-full px-4 sm:px-0">

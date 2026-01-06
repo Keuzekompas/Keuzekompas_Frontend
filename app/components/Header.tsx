@@ -2,6 +2,8 @@
 
 import { Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../context/ThemeContext';
+import { useRouter } from 'next/navigation';
+import { apiFetch } from '../../utils/apiFetch';
 import { useLanguage } from '../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +14,17 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await apiFetch('/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch {
+      // ignore errors on logout
+    } finally {
+      router.push('/');
+    }
+  }
   const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
 
@@ -70,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             <div className="h-px bg-(--border-divider) my-2" />
 
             {/* Logout */}
-            <button className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
+            <button onClick={handleLogout} className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
               <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
               {t('header.logout')}
             </button>

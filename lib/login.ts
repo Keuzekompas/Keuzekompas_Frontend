@@ -22,9 +22,12 @@ export async function loginAPI(
     );
   }
 
-  if (globalThis.window !== undefined && response.data.token) {
-    localStorage.setItem("token", response.data.token);
-  }
+  await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({ email, password }),
+});
 
   return response.data;
 }
