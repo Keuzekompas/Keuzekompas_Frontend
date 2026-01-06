@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { ModuleListResponse } from '../types/moduleList';
 import { useTranslation } from 'react-i18next';
 
-type ModuleCardProps = ModuleListResponse;
+type ModuleCardProps = ModuleListResponse & {
+  onReasonClick?: () => void;
+  showReasonButton?: boolean;
+};
 
-const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit }) => {
+const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit, onReasonClick, showReasonButton }) => {
   const { t } = useTranslation();
   return (
     <Link href={`/modules/${_id}`} className="block mb-4 group">
@@ -23,6 +26,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
               <span>{t('moduleDetail.ec')}: {studycredit}</span>
             </div>
           </div>
+          {showReasonButton && onReasonClick && (
+            <button 
+                onClick={(e) => { e.preventDefault(); onReasonClick(); }}
+                className="text-sm text-(--text-secondary) mt-2"
+            >
+                Waarom deze module?
+            </button>
+          )}
         </div>
         <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color)" />
       </div>
