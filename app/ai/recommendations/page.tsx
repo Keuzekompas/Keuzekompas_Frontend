@@ -36,7 +36,7 @@ const RecommendationsPage = () => {
           <div key={module.ID} className="mb-4">
             <ModuleCard 
                 _id={module.ID}
-                name={module["Module Naam"]}
+                name={module.Module_Name}
                 description={"Je leert veilig om te gaan met code"} // Example description, as it's not in the AI response
                 location={module.Details.location}
                 studycredit={module.Details.ects}
@@ -46,7 +46,7 @@ const RecommendationsPage = () => {
             {showReason === module.ID && (
               <Card className="mt-2 bg-gray-100">
                 <CardContent className="p-4">
-                  <p className="text-sm text-gray-700">{module.AI_Reden}</p>
+                  <p className="text-sm text-gray-700">{module.AI_Reason}</p>
                 </CardContent>
               </Card>
             )}

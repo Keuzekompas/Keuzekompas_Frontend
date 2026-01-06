@@ -1,8 +1,8 @@
 export interface RecommendedModule {
     ID: string;
-    "Module Naam": string;
+    Module_Name: string;
     Score: number;
-    AI_Reden: string;
+    AI_Reason: string;
     Details: {
         ects: number;
         location: string;

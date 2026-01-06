@@ -40,7 +40,7 @@ export const getRecommendations = async (params: RecommendationParams): Promise<
 
     const data = await response.json();
     console.log("Fetched recommendations:", data);
-    return data.aanbevelingen;
+    return data.recommendations as RecommendedModule[];
   } catch (error) {
     console.error("Error fetching recommendations:", error);
     throw error;
