@@ -24,6 +24,9 @@
     "ai": "AI",
     "favorites": "Favorieten"
   },
+  "modules": {
+    "listTitle": "Beschikbare Modules"
+  },
   "moduleFilter": {
     "searchPlaceholder": "Zoek naar modules",
     "location": "Locatie",
@@ -59,6 +62,27 @@
     "actions": "Acties",
     "enroll": "Inschrijven",
     "backToModules": "Terug naar modules"
+  },
+  "ai": {
+    "title": "AI Ondersteuning",
+    "interestsLabel": "Vul je interesses in:",
+    "interestsPlaceholder": "Mijn interesses zijn gamen, techniek en zorg",
+    "locationLabel": "Locatie voorkeur:",
+    "ectsLabel": "Hoeveel EC's:",
+    "tagsLabel": "Selecteer tags die bij jouw interesses passen",
+    "submitButton": "Maak top 5",
+    "loading": "Aanbevelingen laden...",
+    "recommendationsTitle": "Top Vijf Keuzemodules",
+    "explanation": "Hieronder vind je de top 5 modules die het beste bij jouw profiel passen, gebaseerd op je interesses en voorkeuren.",
+    "none": "Geen",
+    "whyThisModule": "Waarom deze module?",
+    "options": {
+        "none": "Geen",
+        "breda": "Breda",
+        "den_bosch": "Den Bosch",
+        "15": "15",
+        "30": "30"
+    }
   },
   "profile": {
     "title": "Profiel",

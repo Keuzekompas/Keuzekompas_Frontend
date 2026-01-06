@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import ModuleCard from '../../components/ModuleCard';
@@ -6,6 +7,7 @@ import { useRecommendations } from '../../context/RecommendationContext';
 import { useRouter } from 'next/navigation';
 
 const RecommendationsPage = () => {
+  const { t } = useTranslation();
   const { recommendations, loading, error } = useRecommendations();
   const [showReason, setShowReason] = useState<string | null>(null);
   const router = useRouter();
@@ -15,7 +17,7 @@ const RecommendationsPage = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-8">Loading recommendations...</div>;
+    return <div className="text-center mt-8">{t('ai.loading')}</div>;
   }
 
   if (error) {
@@ -26,10 +28,10 @@ const RecommendationsPage = () => {
     <div className="flex flex-col items-center grow w-full px-4 sm:px-0">
         <div className='w-full max-w-sm'>
             <button onClick={() => router.back()} className="text-lg font-semibold mb-4 flex items-center">
-                &larr; <span className='ml-2'>Top Vijf Keuzemodules</span>
+                &larr; <span className='ml-2'>{t('ai.recommendationsTitle')}</span>
             </button>
         </div>
-      <p className="text-center mb-4 max-w-sm">Hier komt een uitleg over het systeem en wat die waarom deze module knop doet</p>
+      <p className="text-center mb-4 max-w-sm">{t('ai.explanation')}</p>
 
       <div className="w-full max-w-sm">
         {recommendations.map((module) => (

@@ -31,7 +31,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
                 onClick={(e) => { e.preventDefault(); onReasonClick(); }}
                 className="text-sm text-(--text-secondary) mt-2"
             >
-                Waarom deze module?
+                {t('ai.whyThisModule')}
             </button>
           )}
         </div>

@@ -36,49 +36,49 @@ const AiSupportPage = () => {
     <div className="flex flex-col items-center grow w-full px-4 sm:px-0">
       <Card className="w-full max-w-sm bg-(--bg-card) mt-8">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">AI Ondersteuning</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">{t('ai.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col w-full">
-            <label htmlFor="interests" className="mb-2 text-(--text-primary)">Vul je interesses in:</label>
+            <label htmlFor="interests" className="mb-2 text-(--text-primary)">{t('ai.interestsLabel')}</label>
             <textarea
               id="interests"
               className="p-2 border rounded-lg outline-none bg-(--bg-input) text-(--text-primary) border-(--border-input) focus:border-(--color-brand) mb-4"
               value={interests}
               onChange={(e) => setInterests(e.target.value)}
-              placeholder="Mijn interesses zijn gamen, techniek en zorg"
+              placeholder={t('ai.interestsPlaceholder')}
             />
 
             <div className="flex justify-between mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="location" className="mb-2 text-(--text-primary)">Locatie voorkeur:</label>
+                <label htmlFor="location" className="mb-2 text-(--text-primary)">{t('ai.locationLabel')}</label>
                 <select
                   id="location"
                   className="p-2 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) border-(--border-input) focus:border-(--color-brand)"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 >
-                  <option>Geen</option>
-                  <option>Breda</option>
-                  <option>Den Bosch</option>
+                  <option value="Geen">{t('ai.options.none')}</option>
+                  <option value="Breda">{t('ai.options.breda')}</option>
+                  <option value="Den Bosch">{t('ai.options.den_bosch')}</option>
                 </select>
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="ecs" className="mb-2 text-(--text-primary)">Hoeveel EC's:</label>
+                <label htmlFor="ecs" className="mb-2 text-(--text-primary)">{t('ai.ectsLabel')}</label>
                 <select
                   id="ecs"
                   className="p-2 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) border-(--border-input) focus:border-(--color-brand)"
                   value={ecs}
                   onChange={(e) => setEcs(e.target.value)}
                 >
-                  <option>Geen</option>
-                  <option>15</option>
-                  <option>30</option>
+                  <option value="Geen">{t('ai.options.none')}</option>
+                  <option value="15">{t('ai.options.15')}</option>
+                  <option value="30">{t('ai.options.30')}</option>
                 </select>
               </div>
             </div>
 
-            <label className="mb-2 text-(--text-primary)">Selecteer tags die bij jouw interesses passen</label>
+            <label className="mb-2 text-(--text-primary)">{t('ai.tagsLabel')}</label>
             <div className="flex flex-wrap gap-2 mb-4">
               {allTags.map(tag => (
                 <button
@@ -99,7 +99,7 @@ const AiSupportPage = () => {
               onClick={handleSubmit} 
               className="p-2 bg-(--color-brand) text-white rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2"
             >
-              Maak top 5
+              {t('ai.submitButton')}
             </button>
           </div>
         </CardContent>

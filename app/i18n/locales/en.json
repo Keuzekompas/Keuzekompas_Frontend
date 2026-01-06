@@ -24,6 +24,9 @@
     "ai": "AI",
     "favorites": "Favorites"
   },
+  "modules": {
+    "listTitle": "Available Modules"
+  },
   "moduleFilter": {
     "searchPlaceholder": "Search for modules",
     "location": "Location",
@@ -59,6 +62,27 @@
     "actions": "Actions",
     "enroll": "Enroll",
     "backToModules": "Back to modules"
+  },
+  "ai": {
+    "title": "AI Support",
+    "interestsLabel": "Enter your interests:",
+    "interestsPlaceholder": "My interests are gaming, technology and healthcare",
+    "locationLabel": "Preferred Location:",
+    "ectsLabel": "How many ECTS:",
+    "tagsLabel": "Select tags that match your interests",
+    "submitButton": "Create top 5",
+    "loading": "Loading recommendations...",
+    "recommendationsTitle": "Top Five Elective Modules",
+    "explanation": "Below you will find the top 5 modules that best fit your profile, based on your interests and preferences.",
+    "none": "None",
+    "whyThisModule": "Why this module?",
+    "options": {
+        "none": "None",
+        "breda": "Breda",
+        "den_bosch": "Den Bosch",
+        "15": "15",
+        "30": "30"
+    }
   },
   "profile": {
     "title": "Profile",
