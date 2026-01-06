@@ -13,6 +13,7 @@ const AiSupportPage = () => {
   const [location, setLocation] = useState("Geen");
   const [ecs, setEcs] = useState("Geen");
   const [tags, setTags] = useState<string[]>([]);
+  const [ecsError, setEcsError] = useState<string | null>(null);
 
   const allTags = [
     "Zorg", "Recht", "Techniek", "Dieren", "Kunst", "Brand", 
@@ -28,6 +29,16 @@ const AiSupportPage = () => {
   };
 
   const handleSubmit = async () => {
+    setEcsError(null);
+    let hasError = false;
+
+    if (ecs === "Geen") {
+      setEcsError("Selecteer alsjeblieft een geldig aantal EC's.");
+      hasError = true;
+    }
+
+    if (hasError) return;
+
     await fetchRecommendations({ interests, location, ecs, tags });
     router.push('/ai/recommendations');
   };
@@ -67,14 +78,22 @@ const AiSupportPage = () => {
                 <label htmlFor="ecs" className="mb-2 text-(--text-primary)">{t('ai.ectsLabel')}</label>
                 <select
                   id="ecs"
-                  className="p-2 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) border-(--border-input) focus:border-(--color-brand)"
+                  className={`p-2 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) ${
+                    ecsError 
+                      ? "border-(--color-error) focus:border-red-700 mb-1" 
+                      : "border-(--border-input) focus:border-(--color-brand) mb-4"
+                  }`}
                   value={ecs}
-                  onChange={(e) => setEcs(e.target.value)}
+                  onChange={(e) => {
+                    setEcs(e.target.value);
+                    if (ecsError) setEcsError(null);
+                  }}
                 >
                   <option value="Geen">{t('ai.options.none')}</option>
                   <option value="15">{t('ai.options.15')}</option>
                   <option value="30">{t('ai.options.30')}</option>
                 </select>
+                {ecsError && <p className="text-(--color-error) text-sm mb-3">{ecsError}</p>}
               </div>
             </div>
 
@@ -109,3 +128,4 @@ const AiSupportPage = () => {
 };
 
 export default AiSupportPage;
+

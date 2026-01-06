@@ -29,7 +29,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
           {showReasonButton && onReasonClick && (
             <button 
                 onClick={(e) => { e.preventDefault(); onReasonClick(); }}
-                className="text-sm text-(--text-secondary) mt-2"
+                className="text-sm text-(--color-brand) mt-2 underline"
             >
                 {t('ai.whyThisModule')}
             </button>
