@@ -10,9 +10,10 @@ import { useLanguage } from '@/app/context/LanguageContext';
 
 type ModuleCardProps = ModuleListResponse & {
   initialIsFavorite?: boolean;
+  onRemove?: (id: string) => void;
 };
 
-const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit, initialIsFavorite = false }) => {
+const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit, initialIsFavorite = false, onRemove }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
@@ -29,6 +30,9 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
       let success;
       if (isFavorite) {
         success = await removeFavorite(_id, language);
+        if (success && onRemove) {
+          onRemove(_id);
+        }
       } else {
         success = await addFavorite(_id, language);
       }
