@@ -67,7 +67,7 @@
     "title": "AI Support",
     "interestsLabel": "Enter your interests:",
     "interestsPlaceholder": "My interests are gaming, technology and healthcare",
-    "locationLabel": "Preferred Location:",
+    "locationLabel": "Preferred City:",
     "ectsLabel": "How many ECTS:",
     "tagsLabel": "Select tags that match your interests",
     "submitButton": "Create top 5",

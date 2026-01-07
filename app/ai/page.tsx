@@ -107,22 +107,22 @@ const AiSupportPage = () => {
     // Validate Interests
     const sanitizedInterests = sanitizeInput(interests);
     if (!sanitizedInterests) {
-        setInterestsError(t('ai.validation.interestsRequired') || "Vul alstublieft uw interesses in.");
+        setInterestsError(t('ai.validation.interestsRequired'));
         hasError = true;
     } else if (sanitizedInterests.length < 10) {
-        setInterestsError(t('ai.validation.interestsTooShort') || "De beschrijving moet minimaal 10 tekens bevatten.");
+        setInterestsError(t('ai.validation.interestsTooShort'));
         hasError = true;
     }
 
     // Validate ECTS
     if (ecs === "Geen") {
-      setEcsError(t('ai.validation.ectsRequired') || "Selecteer alsjeblieft een geldig aantal EC's.");
+      setEcsError(t('ai.validation.ectsRequired'));
       hasError = true;
     }
 
     // Validate Tags
     if (tags.length === 0) {
-        setTagsError(t('ai.validation.tagsRequired') || "Selecteer minimaal 1 tag.");
+        setTagsError(t('ai.validation.tagsRequired'));
         hasError = true;
     }
 
