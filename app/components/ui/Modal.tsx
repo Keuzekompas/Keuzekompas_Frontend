@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useId, useRef } from "react";
 
 interface ModalProps {
@@ -19,19 +21,24 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     if (isOpen) {
       if (!dialog.open) dialog.showModal();
       setTimeout(() => closeBtnRef.current?.focus(), 0);
-    } else {
-      if (dialog.open) dialog.close();
+      return;
     }
+
+    if (dialog.open) dialog.close();
   }, [isOpen]);
 
   
-  const handleClose = () => {
-    onClose();
-  };
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+    const handleNativeClose = () => {
+      onClose();
+    };
+
+    dialog.addEventListener("close", handleNativeClose);
+    return () => dialog.removeEventListener("close", handleNativeClose);
+  }, [onClose]);
 
   if (!isOpen) return null;
 
@@ -40,13 +47,17 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
       ref={dialogRef}
       aria-labelledby={title ? titleId : undefined}
       className="p-0 border-0 bg-transparent"
-      onClose={handleClose}
-      onClick={handleBackdropClick}
     >
-      {/* Backdrop styling via wrapper */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+        {/* Backdrop */}
+        <button
+          type="button"
+          aria-label="Close modal"
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+        />
 
+        {/* Panel */}
         <div className="relative bg-(--bg-card) rounded-xl shadow-lg w-full max-w-md overflow-hidden">
           <div className="flex justify-between items-center p-4 border-b border-(--border-divider)">
             {title && (
