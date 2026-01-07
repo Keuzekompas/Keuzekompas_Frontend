@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { apiFetch } from '../../utils/apiFetch';
 import { useLanguage } from '../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
+import { useRecommendations } from '../context/RecommendationContext';
 
 interface HeaderProps {
   title: string;
@@ -13,11 +14,13 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
+  const { clearRecommendations } = useRecommendations();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
 
   async function handleLogout() {
     try {
+      clearRecommendations();
       await apiFetch('/auth/logout', { method: 'POST', credentials: 'include' });
     } catch {
       // ignore errors on logout

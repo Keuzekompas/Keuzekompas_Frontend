@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import BottomNavbar from "./components/BottomNavbar";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import { RecommendationProvider } from "./context/RecommendationContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,9 +25,11 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider>
           <LanguageProvider>
-            <Header title="Avans*" showSettings />
-            <main className="pb-16 grow flex flex-col">{children}</main>
-            <BottomNavbar />
+            <RecommendationProvider>
+              <Header title="Avans*" showSettings />
+              <main className="pb-16 grow flex flex-col">{children}</main>
+              <BottomNavbar />
+            </RecommendationProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

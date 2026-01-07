@@ -35,6 +35,7 @@ export const getRecommendations = async (params: RecommendationParams): Promise<
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Important: Sends the HttpOnly cookie
       body: JSON.stringify(requestBody),
     });
 

@@ -95,7 +95,11 @@ const AiSupportPage = () => {
   };
 
   const sanitizeInput = (input: string) => {
-      return input.replace(/<[^>]*>?/gm, "").trim();
+      // Basic sanitization: strip HTML tags and potential script injections
+      let sanitized = input.replace(/<[^>]*>?/gm, "");
+      sanitized = sanitized.replace(/javascript:/gi, "");
+      // Trim and limit length (e.g. max 500 chars for interests)
+      return sanitized.trim().slice(0, 500);
   };
 
   const handleSubmit = async () => {
@@ -104,25 +108,29 @@ const AiSupportPage = () => {
     setTagsError(null);
     let hasError = false;
 
-    // Validate Interests
+    // Validate & Sanitize Interests
     const sanitizedInterests = sanitizeInput(interests);
+    
+    // Also sanitize other string inputs just in case
+    const sanitizedLocation = sanitizeInput(location);
+
     if (!sanitizedInterests) {
-        setInterestsError(t('ai.validation.interestsRequired'));
+        setInterestsError(t('ai.validation.interestsRequired') || "Vul alstublieft uw interesses in.");
         hasError = true;
     } else if (sanitizedInterests.length < 10) {
-        setInterestsError(t('ai.validation.interestsTooShort'));
+        setInterestsError(t('ai.validation.interestsTooShort') || "De beschrijving moet minimaal 10 tekens bevatten.");
         hasError = true;
     }
 
     // Validate ECTS
     if (ecs === "Geen") {
-      setEcsError(t('ai.validation.ectsRequired'));
+      setEcsError(t('ai.validation.ectsRequired') || "Selecteer alsjeblieft een geldig aantal EC's.");
       hasError = true;
     }
 
     // Validate Tags
     if (tags.length === 0) {
-        setTagsError(t('ai.validation.tagsRequired'));
+        setTagsError(t('ai.validation.tagsRequired') || "Selecteer minimaal 1 tag.");
         hasError = true;
     }
 
@@ -139,7 +147,7 @@ const AiSupportPage = () => {
         }
     });
 
-    await fetchRecommendations({ interests: sanitizedInterests, location, ecs, tags: expandedTags, language });
+    await fetchRecommendations({ interests: sanitizedInterests, location: sanitizedLocation, ecs, tags: expandedTags, language });
     router.push('/ai/recommendations');
   };
 
