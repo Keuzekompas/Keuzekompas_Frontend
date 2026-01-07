@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getFavoriteModules } from "@/lib/modules";
 import { useLanguage } from "@/app/context/LanguageContext";
 import type { ModuleListResponse } from "@/app/types/moduleList";
+import ModuleCard from "@/app/components/ModuleCard";
 
 const FavoritesPage = () => {
   const [favoriteModules, setFavoriteModules] = useState<ModuleListResponse[]>([]);
@@ -47,10 +48,24 @@ const FavoritesPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-between p-5">
-      <h2 className="text-xl font-bold text-(--text-primary)]">
-        {t("favoritesHeader.title")}
-      </h2>
+    <div className="p-5">
+       <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold text-(--text-primary)">
+          {t("favoritesHeader.title")}
+        </h2>
+       </div>
+
+       {favoriteModules.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {favoriteModules.map((module) => (
+             <ModuleCard key={module._id} {...module} initialIsFavorite={true} />
+          ))}
+        </div>
+       ) : (
+        <div className="flex justify-center items-center mt-10">
+          <p className="text-(--text-secondary)">{t('moduleFilter.noModulesFound')}</p>
+        </div>
+       )}
     </div>
   );
 };

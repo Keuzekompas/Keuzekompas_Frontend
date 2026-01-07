@@ -15,8 +15,9 @@ export async function getFavoriteModules(
   language?: string
 ): Promise<ModuleListResponse[]> {
   const query = language ? `?lang=${language.toLowerCase()}` : "";
-  const data = await apiFetch<JsonResponse<ModuleListResponse>>(`/modules/favorites${query}`);
-  return Array.isArray(data.data) ? (data.data as ModuleListResponse[]) : [];
+  const data = await apiFetch<JsonResponse<ModuleListResponse[]>>(`/user/favorites${query}`);
+  console.log("Favorite Modules Data:", data);
+  return Array.isArray(data.data) ? data.data : [];
 }
 
 export async function getModuleById(
@@ -28,5 +29,27 @@ export async function getModuleById(
     return await apiFetch<JsonResponse<ModuleDetailResponse>>(`/modules/${id}${query}`);
   } catch {
     return null;
+  }
+}
+
+export async function addFavorite(id: string, language?: string): Promise<boolean> {
+  try {
+    const query = language ? `?lang=${language.toLowerCase()}` : "";
+    await apiFetch(`/user/favorites/${id}${query}`, { method: 'POST' });
+    return true;
+  } catch (error) {
+    console.error("Failed to add favorite:", error);
+    return false;
+  }
+}
+
+export async function removeFavorite(id: string, language?: string): Promise<boolean> {
+  try {
+    const query = language ? `?lang=${language.toLowerCase()}` : "";
+    await apiFetch(`/user/favorites/${id}${query}`, { method: 'DELETE' });
+    return true;
+  } catch (error) {
+    console.error("Failed to remove favorite:", error);
+    return false;
   }
 }
