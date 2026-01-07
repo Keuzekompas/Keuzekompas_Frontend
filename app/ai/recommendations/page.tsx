@@ -103,7 +103,7 @@ const RecommendationsPage = () => {
       >
         <div className="space-y-4">
             <p className="text-base leading-relaxed text-(--text-primary) font-medium italic opacity-90">
-                "{currentReason.replace(/^💡 AI-(Inzicht|Insight): /, "").replace(/"/g, "")}"
+                "{currentReason.replace(/^💡 AI-(Inzicht|Insight): /, "").replaceAll(/"/g, "")}"
             </p>
             <div className="pt-4 border-t border-(--border-divider) text-sm text-(--text-secondary)">
                 {t('ai.reasonExplanation') || "Dit inzicht is gebaseerd op een match tussen jouw interesses, tags en de inhoud van deze module."}

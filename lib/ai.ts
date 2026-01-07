@@ -24,7 +24,7 @@ export const getRecommendations = async (params: RecommendationParams): Promise<
   }
 
   if (params.ecs !== "Geen") {
-    requestBody.current_ects = parseInt(params.ecs, 10);
+    requestBody.current_ects = Number.parseInt(params.ecs, 10);
   }
 
   const lang = params.language || "NL";

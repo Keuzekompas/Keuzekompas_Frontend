@@ -96,8 +96,8 @@ const AiSupportPage = () => {
 
   const sanitizeInput = (input: string) => {
       // Basic sanitization: strip HTML tags and potential script injections
-      let sanitized = input.replace(/<[^>]*>?/gm, "");
-      sanitized = sanitized.replace(/javascript:/gi, "");
+      let sanitized = input.replaceAll(/<[^>]*>?/gm, "");
+      sanitized = sanitized.replaceAll(/javascript:/gi, "");
       // Trim and limit length (e.g. max 500 chars for interests)
       return sanitized.trim().slice(0, 500);
   };
