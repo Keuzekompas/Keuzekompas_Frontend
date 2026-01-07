@@ -5,7 +5,7 @@ import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
 
-const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
+const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleListResponse[], favoriteIds?: Set<string> }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("None");
@@ -108,7 +108,7 @@ const ModuleFilter = ({ modules }: { modules: ModuleListResponse[] }) => {
         {displayedModules.length > 0 ? (
           <>
             {displayedModules.map((module) => (
-              <ModuleCard key={module._id} {...module} />
+              <ModuleCard key={module._id} {...module} initialIsFavorite={favoriteIds.has(module._id)} />
             ))}
             {visibleCount < filteredModules.length && (
               <div ref={observerTarget} className="h-10 flex justify-center items-center">

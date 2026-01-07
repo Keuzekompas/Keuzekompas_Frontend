@@ -115,5 +115,8 @@
   "common": {
     "loading": "Laden...",
     "error": "Er is een fout opgetreden"
+  },
+  "favoritesHeader": {
+    "title": "Jouw Favoriete Modules"
   }
 }
