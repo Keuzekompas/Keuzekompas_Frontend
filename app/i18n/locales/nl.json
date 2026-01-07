@@ -72,14 +72,30 @@
     "tagsLabel": "Selecteer tags die bij jouw interesses passen",
     "submitButton": "Maak top 5",
     "loading": "Aanbevelingen laden...",
-    "recommendationsTitle": "Top Vijf Keuzemodules",
+    "recommendationsTitle": "Top Vijf modules",
     "explanation": "Hieronder vind je de top 5 modules die het beste bij jouw profiel passen, gebaseerd op je interesses en voorkeuren.",
     "none": "Geen",
     "whyThisModule": "Waarom deze module?",
+    "reasonTitle": "AI Inzicht",
+    "reasonExplanation": "Dit inzicht is gebaseerd op de match tussen jouw interesses, de geselecteerde tags en de specifieke inhoud van deze module.",
+    "score": {
+        "veryGood": "Zeer Goed",
+        "good": "Goed",
+        "okay": "Oké",
+        "bad": "Matig"
+    },
+    "validation": {
+        "interestsRequired": "Vul alstublieft uw interesses in.",
+        "interestsTooShort": "De beschrijving moet minimaal 10 tekens bevatten.",
+        "ectsRequired": "Selecteer alsjeblieft een geldig aantal EC's.",
+        "tagsRequired": "Selecteer minimaal 1 tag."
+    },
     "options": {
-        "none": "Geen",
+        "none-ec": "-",
+        "none-location": "Geen",
         "breda": "Breda",
         "den_bosch": "Den Bosch",
+        "tilburg": "Tilburg",
         "15": "15",
         "30": "30"
     }

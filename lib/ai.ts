@@ -5,6 +5,7 @@ interface RecommendationParams {
   location: string;
   ecs: string;
   tags?: string[];
+  language?: string;
 }
 
 export const getRecommendations = async (params: RecommendationParams): Promise<RecommendedModule[]> => {
@@ -12,8 +13,10 @@ export const getRecommendations = async (params: RecommendationParams): Promise<
     description: string;
     preferred_location?: string;
     current_ects?: number;
+    tags?: string[];
   } = {
     description: params.interests,
+    tags: params.tags || [],
   };
 
   if (params.location !== "Geen") {
@@ -24,8 +27,10 @@ export const getRecommendations = async (params: RecommendationParams): Promise<
     requestBody.current_ects = parseInt(params.ecs, 10);
   }
 
+  const lang = params.language || "NL";
+
   try {
-    const response = await fetch('http://localhost:8000/api/predict', {
+    const response = await fetch(`http://localhost:8000/api/predict?language=${lang}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
