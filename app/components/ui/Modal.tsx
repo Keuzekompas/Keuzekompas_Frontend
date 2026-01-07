@@ -9,61 +9,69 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   const titleId = useId();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-    // focus naar close button (minimale a11y)
-    closeBtnRef.current?.focus();
+    if (isOpen) {
+      if (!dialog.open) dialog.showModal();
+      setTimeout(() => closeBtnRef.current?.focus(), 0);
+    } else {
+      if (dialog.open) dialog.close();
+    }
+  }, [isOpen]);
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+  
+  const handleClose = () => {
+    onClose();
+  };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isOpen, onClose]);
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop = native button, dus geen Sonar warning */}
-      <button
-        type="button"
-        aria-label="Close modal"
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={title ? titleId : undefined}
+      className="p-0 border-0 bg-transparent"
+      onClose={handleClose}
+      onClick={handleBackdropClick}
+    >
+      {/* Backdrop styling via wrapper */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
-      {/* Dialog panel */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        className="relative bg-(--bg-card) rounded-xl shadow-lg w-full max-w-md overflow-hidden"
-      >
-        <div className="flex justify-between items-center p-4 border-b border-(--border-divider)">
-          {title && (
-            <h3 id={titleId} className="text-lg font-semibold text-(--text-primary)">
-              {title}
-            </h3>
-          )}
+        <div className="relative bg-(--bg-card) rounded-xl shadow-lg w-full max-w-md overflow-hidden">
+          <div className="flex justify-between items-center p-4 border-b border-(--border-divider)">
+            {title && (
+              <h3
+                id={titleId}
+                className="text-lg font-semibold text-(--text-primary)"
+              >
+                {title}
+              </h3>
+            )}
 
-          <button
-            ref={closeBtnRef}
-            type="button"
-            onClick={onClose}
-            className="text-(--text-secondary) hover:text-(--text-primary) text-xl font-bold px-2"
-          >
-            &times;
-          </button>
+            <button
+              ref={closeBtnRef}
+              type="button"
+              onClick={onClose}
+              className="text-(--text-secondary) hover:text-(--text-primary) text-xl font-bold px-2"
+            >
+              &times;
+            </button>
+          </div>
+
+          <div className="p-6 text-(--text-primary)">{children}</div>
         </div>
-
-        <div className="p-6 text-(--text-primary)">{children}</div>
       </div>
-    </div>
+    </dialog>
   );
 };
 

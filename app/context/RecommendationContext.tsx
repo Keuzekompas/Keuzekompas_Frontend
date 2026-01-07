@@ -1,8 +1,16 @@
 "use client";
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { RecommendedModule } from '../types/ai';
-import { getRecommendations } from '../../lib/ai';
-import Cookies from 'js-cookie';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import { RecommendedModule } from "../types/ai";
+import { getRecommendations } from "../../lib/ai";
+import Cookies from "js-cookie";
 
 interface SearchParams {
   interests: string;
@@ -17,11 +25,13 @@ interface RecommendationContextType {
   error: string | null;
   searchParams: SearchParams | null;
   fetchRecommendations: (params: SearchParams & { language: string }) => Promise<void>;
-  setSearchParams: (params: SearchParams) => void;
+  setSearchParams: (params: SearchParams | null) => void; // <- kleine fix: jij zet ook null
   clearRecommendations: () => void;
 }
 
-const RecommendationContext = createContext<RecommendationContextType | undefined>(undefined);
+const RecommendationContext = createContext<RecommendationContextType | undefined>(
+  undefined
+);
 
 export const RecommendationProvider = ({ children }: { children: ReactNode }) => {
   const [recommendations, setRecommendations] = useState<RecommendedModule[]>([]);
@@ -29,11 +39,10 @@ export const RecommendationProvider = ({ children }: { children: ReactNode }) =>
   const [error, setError] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
 
-  // Load RESULTS from cookie on mount
   useEffect(() => {
-    const savedResults = Cookies.get('ai_results');
-    const savedParams = Cookies.get('ai_last_params'); // We store params loosely to allow language switch after reload
-    
+    const savedResults = Cookies.get("ai_results");
+    const savedParams = Cookies.get("ai_last_params");
+
     if (savedResults) {
       try {
         setRecommendations(JSON.parse(savedResults));
@@ -41,53 +50,74 @@ export const RecommendationProvider = ({ children }: { children: ReactNode }) =>
         console.error("Failed to parse saved recommendations", e);
       }
     }
+
     if (savedParams) {
-        try {
-            setSearchParams(JSON.parse(savedParams));
-        } catch (e) {
-            console.error("Failed to parse saved params", e);
-        }
+      try {
+        setSearchParams(JSON.parse(savedParams));
+      } catch (e) {
+        console.error("Failed to parse saved params", e);
+      }
     }
   }, []);
 
-  const fetchRecommendations = async (params: SearchParams & { language: string }) => {
-    setLoading(true);
-    setError(null);
-    
-    // Update params in state
-    const paramsToSave = {
+  const fetchRecommendations = useCallback(
+    async (params: SearchParams & { language: string }) => {
+      setLoading(true);
+      setError(null);
+
+      const paramsToSave: SearchParams = {
         interests: params.interests,
         location: params.location,
         ecs: params.ecs,
-        tags: params.tags
-    };
-    setSearchParams(paramsToSave);
-    
-    // Save minimal context to cookie to support language switch after reload if results exist
-    Cookies.set('ai_last_params', JSON.stringify(paramsToSave), { expires: 1 });
+        tags: params.tags,
+      };
 
-    try {
-      const data = await getRecommendations(params);
-      setRecommendations(data);
-      // Save results to cookie
-      Cookies.set('ai_results', JSON.stringify(data), { expires: 1 }); // 1 day
-    } catch (err) {
-      setError('Failed to fetch recommendations.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+      setSearchParams(paramsToSave);
+      Cookies.set("ai_last_params", JSON.stringify(paramsToSave), { expires: 1 });
 
-  const clearRecommendations = () => {
-      setRecommendations([]);
-      setSearchParams(null);
-      Cookies.remove('ai_results');
-      Cookies.remove('ai_last_params');
-  };
+      try {
+        const data = await getRecommendations(params);
+        setRecommendations(data);
+        Cookies.set("ai_results", JSON.stringify(data), { expires: 1 });
+      } catch (err) {
+        setError("Failed to fetch recommendations.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const clearRecommendations = useCallback(() => {
+    setRecommendations([]);
+    setSearchParams(null);
+    Cookies.remove("ai_results");
+    Cookies.remove("ai_last_params");
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      recommendations,
+      loading,
+      error,
+      searchParams,
+      setSearchParams,
+      fetchRecommendations,
+      clearRecommendations,
+    }),
+    [
+      recommendations,
+      loading,
+      error,
+      searchParams,
+      fetchRecommendations,
+      clearRecommendations,
+    ]
+  );
 
   return (
-    <RecommendationContext.Provider value={{ recommendations, loading, error, searchParams, setSearchParams, fetchRecommendations, clearRecommendations: clearRecommendations }}>
+    <RecommendationContext.Provider value={value}>
       {children}
     </RecommendationContext.Provider>
   );
@@ -96,7 +126,7 @@ export const RecommendationProvider = ({ children }: { children: ReactNode }) =>
 export const useRecommendations = () => {
   const context = useContext(RecommendationContext);
   if (context === undefined) {
-    throw new Error('useRecommendations must be used within a RecommendationProvider');
+    throw new Error("useRecommendations must be used within a RecommendationProvider");
   }
   return context;
 };
