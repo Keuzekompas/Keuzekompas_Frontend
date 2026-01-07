@@ -3,33 +3,38 @@
 import { useState, useEffect } from "react";
 import ModuleFilter from "../components/ModuleFilter";
 import ModulesHeader from "../components/ModulesHeader";
-import { getModules } from "@/lib/modules";
+import { getModules, getFavoriteModules } from "@/lib/modules";
 import type { ModuleListResponse } from "@/app/types/moduleList";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
 const ModulesPage = () => {
   const [modules, setModules] = useState<ModuleListResponse[]>([]);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { language } = useLanguage();
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchModules = async () => {
+    const fetchModulesAndFavorites = async () => {
       try {
         setLoading(true);
-        const fetchedModules = await getModules(language);
+        const [fetchedModules, fetchedFavorites] = await Promise.all([
+          getModules(language),
+          getFavoriteModules(language)
+        ]);
         setModules(fetchedModules);
+        setFavoriteIds(new Set(fetchedFavorites.map(m => m._id)));
       } catch (err) {
-        console.error("Failed to fetch modules:", err);
+        console.error("Failed to fetch modules or favorites:", err);
         setError(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchModules();
+    fetchModulesAndFavorites();
   }, [language, t]);
 
   if (loading && modules.length === 0) {
@@ -52,7 +57,7 @@ const ModulesPage = () => {
     <div className="p-4">
       <ModulesHeader />
       <div className={`transition-opacity duration-300 ease-in-out ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-        <ModuleFilter modules={modules} />
+        <ModuleFilter modules={modules} favoriteIds={favoriteIds} />
       </div>
     </div>
   );

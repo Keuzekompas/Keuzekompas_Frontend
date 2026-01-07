@@ -75,5 +75,9 @@
   "common": {
     "loading": "Loading...",
     "error": "An error occurred"
+  },
+  "favoritesHeader": {
+    "title": "Your Favorite Modules"
   }
+
 }
