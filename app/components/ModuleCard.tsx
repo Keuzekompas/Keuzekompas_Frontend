@@ -6,7 +6,6 @@ import { ModuleListResponse } from '../types/moduleList';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { addFavorite, removeFavorite } from '@/lib/modules';
-import { useLanguage } from '@/app/context/LanguageContext';
 
 type ModuleCardProps = ModuleListResponse & {
   initialIsFavorite?: boolean;
@@ -15,7 +14,6 @@ type ModuleCardProps = ModuleListResponse & {
 
 const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit, initialIsFavorite = false, onRemove }) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
 
