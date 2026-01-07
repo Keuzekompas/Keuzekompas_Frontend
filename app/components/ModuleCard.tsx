@@ -29,12 +29,12 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
     try {
       let success;
       if (isFavorite) {
-        success = await removeFavorite(_id, language);
+        success = await removeFavorite(_id);
         if (success && onRemove) {
           onRemove(_id);
         }
       } else {
-        success = await addFavorite(_id, language);
+        success = await addFavorite(_id);
       }
       
       if (success) {
