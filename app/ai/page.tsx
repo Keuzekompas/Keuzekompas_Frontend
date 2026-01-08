@@ -192,7 +192,7 @@ const AiSupportPage = () => {
               htmlFor="interests"
               className="mb-2 text-(--text-primary) font-medium"
             >
-              {t("ai.interestsLabel")}
+              {t("ai.interestsLabel")}*
             </label>
             <textarea
               id="interests"
@@ -257,7 +257,7 @@ const AiSupportPage = () => {
                   htmlFor="ecs"
                   className="block text-(--text-primary) font-medium min-h-12 items-end pb-2"
                 >
-                  {t("ai.ectsLabel")}
+                  {t("ai.ectsLabel")}*
                 </label>
                 <div className="relative">
                   <select
@@ -300,7 +300,7 @@ const AiSupportPage = () => {
             </div>
 
             <label className="mb-2 text-(--text-primary) font-medium">
-              {t("ai.tagsLabel")} (Min 1, Max 3)
+              {t("ai.tagsLabel")}* (Min 1, Max 3)
             </label>
             <div
               className={`grid grid-cols-2 gap-2 mb-2 p-2 rounded-lg border ${

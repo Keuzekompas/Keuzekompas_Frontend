@@ -84,10 +84,10 @@
         "bad": "Matig"
     },
     "validation": {
-        "interestsRequired": "Vul alstublieft uw interesses in.",
+        "interestsRequired": "Vul uw interesses in.",
         "interestsTooShort": "De beschrijving moet minimaal 10 tekens bevatten.",
-        "ectsRequired": "Selecteer alsjeblieft een geldig aantal EC's.",
-        "tagsRequired": "Selecteer minimaal 1 tag."
+        "ectsRequired": "Selecteer het aantal EC's.",
+        "tagsRequired": "Selecteer minimaal één tag."
     },
     "options": {
         "none-ec": "-",

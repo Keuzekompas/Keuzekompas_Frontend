@@ -85,9 +85,9 @@
     },
     "validation": {
         "interestsRequired": "Please enter your interests.",
-        "interestsTooShort": "The description must contain at least 10 characters.",
-        "ectsRequired": "Please select a valid amount of ECs.",
-        "tagsRequired": "Select at least 1 tag."
+        "interestsTooShort": "Description must be at least 10 characters.",
+        "ectsRequired": "Please select the number of ECs.",
+        "tagsRequired": "Please select at least one tag."
     },
     "options": {
         "none-ec": "-",
