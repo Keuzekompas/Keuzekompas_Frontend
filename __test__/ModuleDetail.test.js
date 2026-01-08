@@ -1,36 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '../utils/test-utils';
 import Page from '../app/modules/[id]/page';
 import { getModuleById } from '../lib/modules';
 import { notFound, useParams } from 'next/navigation';
 import '@testing-library/jest-dom';
-import { LanguageProvider } from '../app/context/LanguageContext';
 
 // Mock dependencies
 jest.mock('../lib/modules', () => ({
   getModuleById: jest.fn(),
 }));
 
+// We need to override the global mock to control useParams and notFound
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(),
   useParams: jest.fn(),
-}));
-
-jest.mock('next/link', () => {
-  // eslint-disable-next-line react/prop-types
-  return ({ children, href }) => {
-    return <a href={href}>{children}</a>;
-  };
-});
-
-// Mock i18next
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key) => key,
-  }),
-  initReactI18next: {
-    type: '3rdParty',
-    init: jest.fn(),
-  },
 }));
 
 const mockModule = {
@@ -45,15 +27,6 @@ const mockModule = {
   available_spots: 20,
 };
 
-// Helper to render with providers
-const renderWithProviders = (ui) => {
-  return render(
-    <LanguageProvider>
-      {ui}
-    </LanguageProvider>
-  );
-};
-
 describe('Module Detail Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -63,7 +36,7 @@ describe('Module Detail Page', () => {
     (useParams).mockReturnValue({ id: '999' });
     (getModuleById).mockResolvedValue(null);
 
-    renderWithProviders(<Page />);
+    render(<Page />);
     
     await waitFor(() => {
       expect(notFound).toHaveBeenCalled();
@@ -74,7 +47,7 @@ describe('Module Detail Page', () => {
     (useParams).mockReturnValue({ id: '1' });
     (getModuleById).mockResolvedValue({ data: mockModule });
 
-    renderWithProviders(<Page />);
+    render(<Page />);
 
     await waitFor(() => {
       expect(screen.getAllByText('Test Module NL')[0]).toBeInTheDocument();
@@ -91,7 +64,7 @@ describe('Module Detail Page', () => {
     (useParams).mockReturnValue({ id: '1' });
     (getModuleById).mockResolvedValue({ data: moduleWithBadTags });
 
-    renderWithProviders(<Page />);
+    render(<Page />);
 
     await waitFor(() => {
       expect(screen.getByText('Bad Tag Format')).toBeInTheDocument();
@@ -107,7 +80,7 @@ describe('Module Detail Page', () => {
     (useParams).mockReturnValue({ id: '1' });
     (getModuleById).mockResolvedValue({ data: moduleWithNoTags });
 
-    renderWithProviders(<Page />);
+    render(<Page />);
 
     await waitFor(() => {
       expect(screen.getByText('moduleDetail.noTags')).toBeInTheDocument();

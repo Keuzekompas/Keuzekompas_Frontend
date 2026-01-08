@@ -1,8 +1,8 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act } from '../utils/test-utils';
 import NotFound from '../app/not-found'; 
 import '@testing-library/jest-dom';
 
-// Mock i18next
+// Specific mock for this test to match text content expectations
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key) => {
