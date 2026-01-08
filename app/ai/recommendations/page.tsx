@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "../../context/LanguageContext";
 import ModuleCard from "../../components/ModuleCard";
 import Modal from "../../components/ui/Modal";
+import InfoToggle from "../../components/ui/InfoToggle";
 
 const RecommendationsPage = () => {
   const { t } = useTranslation();
@@ -83,16 +84,19 @@ const RecommendationsPage = () => {
       <div className="w-full max-w-sm">
         <button
           onClick={handleBack}
-          className="text-lg font-semibold mb-4 flex items-center"
+          className="text-sm font-medium mb-4 flex items-center text-(--text-secondary) hover:text-(--color-brand) transition-colors"
         >
-          &larr; <span className="ml-2">{t("ai.recommendationsTitle")}</span>
+          &larr; <span className="ml-2">{t("ai.submitButton")}</span>
         </button>
-      </div>
-      <p className="text-center mb-4 max-w-sm min-h-12">
-        {t("ai.explanation")}
-      </p>
 
-      <div className="w-full max-w-sm">
+        <InfoToggle 
+          title={t("ai.recommendationsTitle")}
+          subtitle={t("ai.recommendationsSubtitle")}
+          description={t("ai.recommendationsHeaderDescription")}
+        />
+      </div>
+
+      <div className="w-full max-w-sm mt-2">
         {recommendations.map((module) => (
           <div key={module.ID} className="mb-4">
             <ModuleCard

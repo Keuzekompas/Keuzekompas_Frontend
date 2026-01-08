@@ -42,6 +42,7 @@
   },
   "modulesHeader": {
     "title": "Keuzemodules van Avans",
+    "subtitle": "Bekijk het complete aanbod van Avans keuzemodules.",
     "description": "Op deze pagina vind je een overzicht van alle beschikbare keuzemodules. Gebruik de filters om te zoeken naar modules die aansluiten bij jouw interesses en studie.",
     "showInfo": "Toon info",
     "hideInfo": "Verberg info"
@@ -66,6 +67,8 @@
   },
   "ai": {
     "title": "AI Ondersteuning",
+    "subtitle": "Beschrijf je interesses en vind de perfecte match.",
+    "headerDescription": "Deze AI-tool helpt je bij het vinden van de perfecte module. Vul je interesses in (hoe meer detail, hoe beter!), kies je voorkeurslocatie en het aantal gewenste studiepunten. De AI analyseert je input en matcht deze met alle beschikbare modules om een persoonlijke top 5 samen te stellen.",
     "interestsLabel": "Vul je interesses in",
     "interestsPlaceholder": "Beschrijf hier je interesses, hobby's of toekomstige carrière. Bijvoorbeeld: 'Ik hou van gamen en wil leren ondernemen', of 'Ik wil mij verdiepen in psychologie en recht'.",
     "locationLabel": "Locatie voorkeur",
@@ -73,7 +76,9 @@
     "tagsLabel": "Selecteer tags die bij jouw interesses passen",
     "submitButton": "Maak top 5",
     "loading": "Aanbevelingen laden...",
-    "recommendationsTitle": "Top Vijf modules",
+    "recommendationsTitle": "Jouw Top 5 Modules",
+    "recommendationsSubtitle": "Gepersonaliseerd op basis van jouw profiel.",
+    "recommendationsHeaderDescription": "Onze AI heeft alle beschikbare modules geanalyseerd en een score berekend op basis van de overeenkomst met jouw interesses en tags. Klik op 'Waarom deze module?' bij een resultaat om te zien wat de AI ervan vindt!",
     "explanation": "Hieronder vind je de top 5 modules die het beste bij jouw profiel passen, gebaseerd op je interesses en voorkeuren.",
     "none": "Geen",
     "whyThisModule": "Waarom deze module?",

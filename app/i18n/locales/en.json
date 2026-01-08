@@ -42,6 +42,7 @@
   },
   "modulesHeader": {
     "title": "Elective modules of Avans",
+    "subtitle": "Explore the complete range of Avans elective modules.",
     "description": "On this page you will find an overview of all available elective modules. Use the filters to search for modules that match your interests and study.",
     "showInfo": "Show info",
     "hideInfo": "Hide info"
@@ -66,6 +67,8 @@
   },
   "ai": {
     "title": "AI Support",
+    "subtitle": "Describe your interests and find the perfect match.",
+    "headerDescription": "This AI tool helps you find the perfect module. Enter your interests (the more detail, the better!), choose your preferred location, and the number of ECTS. The AI analyzes your input and matches it with all available modules to create a personal top 5.",
     "interestsLabel": "Enter your interests",
     "interestsPlaceholder": "Describe your interests, hobbies, or future career here. For example: 'I love gaming and want to learn entrepreneurship', or 'I want to dive deeper into psychology and law'.",
     "locationLabel": "Preferred City",
@@ -73,7 +76,9 @@
     "tagsLabel": "Select tags that match your interests",
     "submitButton": "Create top 5",
     "loading": "Loading recommendations...",
-    "recommendationsTitle": "Top Five Modules",
+    "recommendationsTitle": "Your Top 5 Modules",
+    "recommendationsSubtitle": "Personalized based on your profile.",
+    "recommendationsHeaderDescription": "Our AI has analyzed all available modules and calculated a score based on the similarity to your interests and tags. Click on 'Why this module?' on a result to see what the AI thinks!",
     "explanation": "Below you will find the top 5 modules that best fit your profile, based on your interests and preferences.",
     "none": "None",
     "whyThisModule": "Why this module?",

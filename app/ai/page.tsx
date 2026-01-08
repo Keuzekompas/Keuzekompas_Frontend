@@ -5,11 +5,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "../components/ui/card";
 import { useTranslation } from "react-i18next";
 import { useRecommendations } from "../context/RecommendationContext";
 import { useLanguage } from "../context/LanguageContext";
+import InfoToggle from "../components/ui/InfoToggle";
 
 // Define Mapping: Category -> [Boost Tags]
 const CATEGORY_MAPPING: Record<string, Record<string, string[]>> = {
@@ -182,9 +182,11 @@ const AiSupportPage = () => {
     <div className="flex flex-col items-center grow w-full px-4 sm:px-0 min-h-[700px]">
       <Card className="w-full max-w-lg bg-(--bg-card) mt-8 transition-all duration-300">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">
-            {t("ai.title")}
-          </CardTitle>
+          <InfoToggle 
+            title={t("ai.title")} 
+            subtitle={t("ai.subtitle")}
+            description={t("ai.headerDescription")} 
+          />
         </CardHeader>
         <CardContent>
           <div className="flex flex-col w-full">
