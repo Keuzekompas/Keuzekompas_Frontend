@@ -2,11 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: {
-    appIsrStatus: false,
   },
   experimental: {
-    allowedDevOrigins: ["192.168.2.5", "localhost"],
   },
+  allowedDevOrigins: process.env.LOCAL_IPV4 
+    ? [process.env.LOCAL_IPV4, "localhost"] 
+    : ["localhost"],
 };
 
 export default nextConfig;
