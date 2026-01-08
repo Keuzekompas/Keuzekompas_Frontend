@@ -100,7 +100,7 @@ const LoginPage = () => {
       setOtpError("");
       setServerError(null);
 
-      if (!otpCode || otpCode.length !== 6) {
+      if (otpCode?.length !== 6) {
           setOtpError("Code must be 6 digits");
           return;
       }
