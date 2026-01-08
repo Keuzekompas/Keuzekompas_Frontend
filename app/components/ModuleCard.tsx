@@ -68,7 +68,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
           <div className="flex justify-between items-center mb-1">
              <h3 className="font-bold text-lg leading-tight">{name}</h3>
           </div>
-          <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis text-sm">{description}</p>
+          <p className="text-(--text-secondary) text-sm line-clamp-2">{description}</p>
           <div className="flex items-center mt-3 text-(--text-secondary) text-xs sm:text-sm">
             <div className="flex items-center mr-4">
               <MapPinIcon className="w-4 h-4 mr-1" />
