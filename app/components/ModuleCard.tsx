@@ -10,12 +10,28 @@ import { addFavorite, removeFavorite } from '@/lib/modules';
 type ModuleCardProps = ModuleListResponse & {
   initialIsFavorite?: boolean;
   onRemove?: (id: string) => void;
+  score?: number;
+  showReasonButton?: boolean;
+  onReasonClick?: () => void;
 };
 
-const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, location, studycredit, initialIsFavorite = false, onRemove }) => {
+const ModuleCard: React.FC<ModuleCardProps> = ({ 
+  _id, 
+  name, 
+  description, 
+  location, 
+  studycredit, 
+  initialIsFavorite = false, 
+  onRemove,
+  showReasonButton: explicitShowReasonButton,
+  onReasonClick: explicitOnReasonClick
+}) => {
   const { t } = useTranslation();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const showReasonButton = explicitShowReasonButton ?? false;
+  const onReasonClick = explicitOnReasonClick;
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigating to detail page
@@ -64,7 +80,11 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ _id, name, description, locatio
           </div>
           {showReasonButton && onReasonClick && (
             <button 
-                onClick={(e) => { e.preventDefault(); onReasonClick(); }}
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  e.stopPropagation();
+                  onReasonClick(); 
+                }}
                 className="text-sm text-(--color-brand) mt-2 underline z-10 relative hover:text-(--color-brand-hover)"
             >
                 {t('ai.whyThisModule')}
