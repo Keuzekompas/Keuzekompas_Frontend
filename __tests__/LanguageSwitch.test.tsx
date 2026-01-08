@@ -17,7 +17,7 @@ jest.mock('../lib/ai', () => ({
 describe('Language Switch Functionality', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    global.localStorage.clear();
+    globalThis.localStorage.clear();
   });
 
   const renderHeader = () => {
@@ -45,7 +45,7 @@ describe('Language Switch Functionality', () => {
     fireEvent.click(enButton);
 
     expect(i18n.changeLanguage).toHaveBeenCalledWith('EN');
-    expect(global.localStorage.setItem).toHaveBeenCalledWith('language', 'EN');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('language', 'EN');
   });
 
   test('switches language back to NL when NL button is clicked', () => {
@@ -62,11 +62,11 @@ describe('Language Switch Functionality', () => {
     fireEvent.click(nlButton);
     
     expect(i18n.changeLanguage).toHaveBeenCalledWith('NL');
-    expect(global.localStorage.setItem).toHaveBeenCalledWith('language', 'NL');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('language', 'NL');
   });
 
   test('loads language from localStorage on mount', () => {
-    global.localStorage.getItem.mockReturnValue('EN');
+    globalThis.localStorage.getItem.mockReturnValue('EN');
 
     renderHeader();
 

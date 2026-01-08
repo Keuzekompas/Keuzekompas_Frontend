@@ -11,7 +11,7 @@ jest.mock('../lib/ai', () => ({
 describe('Theme Toggle Functionality', () => {
   beforeEach(() => {
     // Clear the global localStorage mock we set up in jest.setup.js
-    global.localStorage.clear();
+    globalThis.localStorage.clear();
     document.documentElement.className = '';
   });
 
@@ -34,7 +34,7 @@ describe('Theme Toggle Functionality', () => {
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
     expect(toggleButton).toHaveAttribute('aria-checked', 'true');
     expect(document.documentElement).toHaveClass('dark');
-    expect(global.localStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
 
     // Click again to toggle back
     fireEvent.click(toggleButton);
@@ -43,13 +43,13 @@ describe('Theme Toggle Functionality', () => {
     expect(toggleButton).toHaveClass('bg-gray-200');
     expect(toggleButton).toHaveAttribute('aria-checked', 'false');
     expect(document.documentElement).toHaveClass('light');
-    expect(global.localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
+    expect(globalThis.localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
   });
 
   test('respects system preference if no local storage', () => {
     // Mock system preference to dark
     // @ts-ignore
-    global.matchMedia.mockImplementation(query => ({
+    globalThis.matchMedia.mockImplementation(query => ({
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
       onchange: null,
@@ -71,7 +71,7 @@ describe('Theme Toggle Functionality', () => {
   });
 
   test('loads theme from local storage', () => {
-    global.localStorage.getItem.mockReturnValue('dark');
+    globalThis.localStorage.getItem.mockReturnValue('dark');
 
     render(<Header title="Test Header" showSettings={true} />);
 
