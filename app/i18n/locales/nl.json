@@ -118,5 +118,11 @@
   },
   "favoritesHeader": {
     "title": "Jouw Favoriete Modules"
+  },
+  "twoFactor": {
+    "title": "2FA Verificatie",
+    "codeLabel": "Verificatiecode",
+    "submitButton": "Verifiëren",
+    "error": "Ongeldige code of sessie verlopen"
   }
 }
