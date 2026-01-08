@@ -75,7 +75,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
               <span>{location}</span>
             </div>
             <div>
-              <span>{t('moduleDetail.ec')}: {studycredit}</span>
+              <span>{studycredit} {t('moduleDetail.ec')}</span>
             </div>
           </div>
           {showReasonButton && onReasonClick && (
