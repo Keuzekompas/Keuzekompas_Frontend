@@ -51,9 +51,15 @@ Object.defineProperty(globalThis, 'localStorage', {
 
 // Mock ResizeObserver
 globalThis.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() {
+    // do nothing
+  }
+  unobserve() {
+    // do nothing
+  }
+  disconnect() {
+    // do nothing
+  }
 };
 
 // Mock Next.js Navigation
