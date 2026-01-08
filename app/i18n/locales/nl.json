@@ -65,10 +65,10 @@
   },
   "ai": {
     "title": "AI Ondersteuning",
-    "interestsLabel": "Vul je interesses in:",
-    "interestsPlaceholder": "Mijn interesses zijn gamen, techniek en zorg",
-    "locationLabel": "Locatie voorkeur:",
-    "ectsLabel": "Hoeveel EC's:",
+    "interestsLabel": "Vul je interesses in",
+    "interestsPlaceholder": "Beschrijf hier je interesses, hobby's of toekomstige carrière. Bijvoorbeeld: 'Ik hou van gamen en wil leren ondernemen', of 'Ik wil mij verdiepen in psychologie en recht'.",
+    "locationLabel": "Locatie voorkeur",
+    "ectsLabel": "Hoeveel EC's",
     "tagsLabel": "Selecteer tags die bij jouw interesses passen",
     "submitButton": "Maak top 5",
     "loading": "Aanbevelingen laden...",
@@ -123,6 +123,7 @@
     "title": "2FA Verificatie",
     "codeLabel": "Verificatiecode",
     "submitButton": "Verifiëren",
-    "error": "Ongeldige code of sessie verlopen"
+    "error": "Ongeldige code of sessie verlopen",
+    "backToLogin": "Terug naar Inloggen"
   }
 }

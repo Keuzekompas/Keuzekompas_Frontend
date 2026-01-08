@@ -311,11 +311,8 @@ const AiSupportPage = () => {
                 <button
                   key={tag}
                   onClick={() => handleTagClick(tag)}
-                  className={`p-2 rounded-lg transition-all duration-200 text-sm sm:text-base ${
-                    tags.includes(tag)
-                      ? "bg-(--color-brand) text-white shadow-md transform scale-105"
-                      : "bg-(--bg-input) text-(--text-primary) border border-(--border-input) hover:border-(--color-brand)"
-                  } ${
+                  data-selected={tags.includes(tag)}
+                  className={`btn-tag rounded-lg ${
                     !tags.includes(tag) && tags.length >= 3
                       ? "opacity-50 cursor-not-allowed"
                       : ""
@@ -336,7 +333,7 @@ const AiSupportPage = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full p-3 bg-(--color-brand) text-white font-bold rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2 shadow-sm"
+              className="btn btn-primary w-full mt-2"
             >
               {t("ai.submitButton")}
             </button>

@@ -94,13 +94,13 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
         <button 
           onClick={toggleFavorite}
           disabled={isLoading}
-          className="cursor-pointer focus:outline-hidden p-1 rounded-full hover:bg-(--bg-hover) transition-colors"
+          className="cursor-pointer focus:outline-hidden p-1 rounded-full hover:bg-(--bg-input) transition-colors"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           {isFavorite ? (
-            <HeartIconSolid className="w-6 h-6 shrink-0 text-red-500" />
+            <HeartIconSolid className="w-6 h-6 shrink-0 text-(--color-brand)" />
           ) : (
-            <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color) hover:text-red-500" />
+            <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color) hover:text-(--color-brand)" />
           )}
         </button>
       </div>

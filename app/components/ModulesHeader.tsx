@@ -10,11 +10,11 @@ export default function ModulesHeader() {
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-(--text-primary)]">{t('modulesHeader.title')}</h2>
+        <h2 className="text-xl font-bold text-(--text-primary)">{t('modulesHeader.title')}</h2>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`inline-flex items-center justify-center rounded-full p-1 hover:bg-(--bg-input)] focus:outline-none transition-colors ${
-            isOpen ? "text-(--color-brand)]" : "text-(--text-primary)]"
+          className={`inline-flex items-center justify-center rounded-full p-1 hover:bg-(--bg-input) focus:outline-none transition-colors ${
+            isOpen ? "text-(--color-brand)" : "text-(--text-primary)"
           }`}
           aria-label={isOpen ? t('modulesHeader.hideInfo') : t('modulesHeader.showInfo')}
         >

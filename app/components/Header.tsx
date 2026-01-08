@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ title, showSettings = false }) => {
             <div className="h-px bg-(--border-divider) my-2" />
 
             {/* Logout */}
-            <button onClick={handleLogout} className="w-full flex items-center px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors">
+            <button onClick={handleLogout} className="w-full flex items-center px-2 py-2 text-sm btn-danger rounded-md">
               <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
               {t('header.logout')}
             </button>

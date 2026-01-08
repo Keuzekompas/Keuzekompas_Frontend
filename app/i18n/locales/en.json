@@ -65,10 +65,10 @@
   },
   "ai": {
     "title": "AI Support",
-    "interestsLabel": "Enter your interests:",
-    "interestsPlaceholder": "My interests are gaming, technology and healthcare",
-    "locationLabel": "Preferred City:",
-    "ectsLabel": "How many ECTS:",
+    "interestsLabel": "Enter your interests",
+    "interestsPlaceholder": "Describe your interests, hobbies, or future career here. For example: 'I love gaming and want to learn entrepreneurship', or 'I want to dive deeper into psychology and law'.",
+    "locationLabel": "Preferred City",
+    "ectsLabel": "How many ECTS",
     "tagsLabel": "Select tags that match your interests",
     "submitButton": "Create top 5",
     "loading": "Loading recommendations...",
@@ -123,6 +123,7 @@
       "title": "2FA Verification",
       "codeLabel": "Verification Code",
       "submitButton": "Verify",
-      "error": "Invalid code or session expired"
+      "error": "Invalid code or session expired",
+      "backToLogin": "Back to Login"
     }
   }
