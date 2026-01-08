@@ -24,6 +24,9 @@
     "ai": "AI",
     "favorites": "Favorites"
   },
+  "modules": {
+    "listTitle": "Available Modules"
+  },
   "moduleFilter": {
     "searchPlaceholder": "Search for modules",
     "location": "Location",
@@ -59,6 +62,43 @@
     "actions": "Actions",
     "enroll": "Enroll",
     "backToModules": "Back to modules"
+  },
+  "ai": {
+    "title": "AI Support",
+    "interestsLabel": "Enter your interests:",
+    "interestsPlaceholder": "My interests are gaming, technology and healthcare",
+    "locationLabel": "Preferred City:",
+    "ectsLabel": "How many ECTS:",
+    "tagsLabel": "Select tags that match your interests",
+    "submitButton": "Create top 5",
+    "loading": "Loading recommendations...",
+    "recommendationsTitle": "Top Five Modules",
+    "explanation": "Below you will find the top 5 modules that best fit your profile, based on your interests and preferences.",
+    "none": "None",
+    "whyThisModule": "Why this module?",
+    "reasonTitle": "AI Insight",
+    "reasonExplanation": "This insight is based on the match between your interests, selected tags, and the specific content of this module.",
+    "score": {
+        "veryGood": "Very Good",
+        "good": "Good",
+        "okay": "Okay",
+        "bad": "Poor"
+    },
+    "validation": {
+        "interestsRequired": "Please enter your interests.",
+        "interestsTooShort": "The description must contain at least 10 characters.",
+        "ectsRequired": "Please select a valid amount of ECs.",
+        "tagsRequired": "Select at least 1 tag."
+    },
+    "options": {
+        "none-ec": "-",
+        "none-location": "None",
+        "breda": "Breda",
+        "den_bosch": "Den Bosch",
+        "tilburg": "Tilburg",
+        "15": "15",
+        "30": "30"
+    }
   },
   "profile": {
     "title": "Profile",
