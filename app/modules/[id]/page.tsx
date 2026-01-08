@@ -115,9 +115,6 @@ export default function Page() {
               <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 {module.level}
               </span>
-              <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-                {module.available_spots} {t('moduleDetail.spots')}
-              </span>
             </div>
           </div>
 
@@ -194,13 +191,6 @@ export default function Page() {
                 <dt className="text-(--text-secondary)">{t('moduleDetail.ec')}</dt>
                 <dd className="text-right font-medium text-(--text-primary)">
                   {module.studycredit}
-                </dd>
-              </div>
-
-              <div className="flex items-start justify-between gap-4">
-                <dt className="text-(--text-secondary)">{t('moduleDetail.availableSpots')}</dt>
-                <dd className="text-right font-medium text-(--text-primary)">
-                  {module.available_spots}
                 </dd>
               </div>
 
