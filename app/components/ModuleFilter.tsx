@@ -22,7 +22,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
   const observerTarget = useRef<HTMLDivElement>(null);
   const LIMIT = 10;
 
-  const fetchModulesData = useCallback(async (isLoadMore: boolean = false, currentPage: number) => {
+  const fetchModulesData = useCallback(async (currentPage: number, isLoadMore: boolean = false) => {
     setLoading(true);
     try {
       const newModules = await getModules(
@@ -59,7 +59,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
     // When filters change, we reset the list. 
     // We can't rely on 'page' state being 1 immediately inside fetchModulesData if we just set it.
     // So we pass 1 explicitly.
-    fetchModulesData(false, 1);
+    fetchModulesData(1, false);
   }, [fetchModulesData]);
 
   // Infinite scroll
@@ -69,7 +69,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
         if (entries[0].isIntersecting && hasMore && !loading) {
           setPage((prev) => {
             const nextPage = prev + 1;
-            fetchModulesData(true, nextPage);
+            fetchModulesData(nextPage, true);
             return nextPage;
           });
         }
