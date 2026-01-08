@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import ModuleFilter, { FilterState } from "../components/ModuleFilter";
 import ModulesHeader from "../components/ModulesHeader";
+import BackToTopButton from "../components/BackToTopButton";
 import { getModules, getFavoriteModules } from "@/lib/modules";
 import type { ModuleListResponse } from "@/app/types/moduleList";
 import { useLanguage } from "@/app/context/LanguageContext";
@@ -135,6 +136,7 @@ const ModulesPage = () => {
              {t('common.loading')}
            </div>
         )}
+        <BackToTopButton />
       </div>
     </div>
   );
