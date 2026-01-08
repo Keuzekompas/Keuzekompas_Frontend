@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import ModuleFilter from "../components/ModuleFilter";
 import ModulesHeader from "../components/ModulesHeader";
-import { getModules, getFavoriteModules } from "@/lib/modules";
-import type { ModuleListResponse } from "@/app/types/moduleList";
+import { getFavoriteModules } from "@/lib/modules";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
 const ModulesPage = () => {
-  const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,27 +15,23 @@ const ModulesPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchModulesAndFavorites = async () => {
+    const fetchFavorites = async () => {
       try {
         setLoading(true);
-        const [fetchedModules, fetchedFavorites] = await Promise.all([
-          getModules(language),
-          getFavoriteModules(language)
-        ]);
-        setModules(fetchedModules);
+        const fetchedFavorites = await getFavoriteModules(language);
         setFavoriteIds(new Set(fetchedFavorites.map(m => m._id)));
       } catch (err) {
-        console.error("Failed to fetch modules or favorites:", err);
+        console.error("Failed to fetch favorites:", err);
         setError(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchModulesAndFavorites();
+    fetchFavorites();
   }, [language, t]);
 
-  if (loading && modules.length === 0) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-lg text-(--text-primary)">{t('common.loading')}</p>
@@ -57,7 +51,7 @@ const ModulesPage = () => {
     <div className="p-4">
       <ModulesHeader />
       <div className={`transition-opacity duration-300 ease-in-out ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-        <ModuleFilter modules={modules} favoriteIds={favoriteIds} />
+        <ModuleFilter favoriteIds={favoriteIds} />
       </div>
     </div>
   );

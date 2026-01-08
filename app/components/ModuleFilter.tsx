@@ -1,41 +1,77 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
+import { getModules } from "@/lib/modules";
+import { useDebounce } from "@/app/hooks/useDebounce";
+import { useLanguage } from "@/app/context/LanguageContext";
 
-const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleListResponse[], favoriteIds?: Set<string> }) => {
+const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
+  const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const LIMIT = 10;
 
-  const filteredModules = modules.filter((module) => {
-    const searchMatch = module.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const locationMatch =
-      location === "None" ||
-      module.location?.toLowerCase().includes(location.toLowerCase());
+  const fetchModulesData = useCallback(async (isLoadMore: boolean = false, currentPage: number) => {
+    setLoading(true);
+    try {
+      const newModules = await getModules(
+        language,
+        currentPage,
+        LIMIT,
+        debouncedSearch,
+        location,
+        ects
+      );
 
-    const ectsMatch = ects === 0 || module.studycredit === ects;
-    return searchMatch && locationMatch && ectsMatch;
-  });
+      if (newModules.length < LIMIT) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
 
-  const displayedModules = filteredModules.slice(0, visibleCount);
+      setModules((prev) => {
+        if (!isLoadMore) return newModules;
+        const existingIds = new Set(prev.map((m) => m._id));
+        const uniqueNewModules = newModules.filter((m) => !existingIds.has(m._id));
+        return [...prev, ...uniqueNewModules];
+      });
+    } catch (error) {
+      console.error("Failed to fetch modules", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [language, debouncedSearch, location, ects]);
 
+  // Initial fetch and filter changes
   useEffect(() => {
-    setVisibleCount(10);
-  }, [searchQuery, location, ects]);
+    setPage(1);
+    // When filters change, we reset the list. 
+    // We can't rely on 'page' state being 1 immediately inside fetchModulesData if we just set it.
+    // So we pass 1 explicitly.
+    fetchModulesData(false, 1);
+  }, [fetchModulesData]);
 
+  // Infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount((prev) => prev + 10);
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prev) => {
+            const nextPage = prev + 1;
+            fetchModulesData(true, nextPage);
+            return nextPage;
+          });
         }
       },
       { threshold: 0.1 }
@@ -50,7 +86,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [displayedModules.length]);
+  }, [hasMore, loading, fetchModulesData]);
 
   return (
     <div>
@@ -60,6 +96,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
           placeholder={t('moduleFilter.searchPlaceholder')}
           className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
           onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-5 h-5 text-(--icon-color)" />
@@ -78,6 +115,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
             id="location"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setLocation(e.target.value)}
+            value={location}
           >
             <option value="None">{t('moduleFilter.none')}</option>
             <option value="Breda">{t('moduleFilter.breda')}</option>
@@ -96,6 +134,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
             id="ects"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setEcts(Number.parseInt(e.target.value))}
+            value={ects}
           >
             <option value="0">{t('moduleFilter.all')}</option>
             <option value="15">15</option>
@@ -105,21 +144,28 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
       </div>
 
       <div className="space-y-4">
-        {displayedModules.length > 0 ? (
+        {modules.length > 0 ? (
           <>
-            {displayedModules.map((module) => (
+            {modules.map((module) => (
               <ModuleCard key={module._id} {...module} initialIsFavorite={favoriteIds.has(module._id)} />
             ))}
-            {visibleCount < filteredModules.length && (
+            {hasMore && (
               <div ref={observerTarget} className="h-10 flex justify-center items-center">
-                {/* Sentinel for infinite scroll */}
+                {loading && <p>{t('common.loading')}</p>}
               </div>
             )}
           </>
         ) : (
-          <div className="text-center text-(--text-secondary) mt-8">
-            {t('moduleFilter.noModulesFound')}
-          </div>
+           !loading && (
+            <div className="text-center text-(--text-secondary) mt-8">
+              {t('moduleFilter.noModulesFound')}
+            </div>
+          )
+        )}
+        {loading && modules.length === 0 && (
+           <div className="flex justify-center items-center h-20">
+             <p className="text-lg text-(--text-primary)">{t('common.loading')}</p>
+           </div>
         )}
       </div>
     </div>
