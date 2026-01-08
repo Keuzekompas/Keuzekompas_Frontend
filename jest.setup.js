@@ -77,6 +77,7 @@ jest.mock('next/navigation', () => ({
 
 // Mock Next.js Link
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/prop-types
   return ({ children, href }) => {
     return <a href={href}>{children}</a>;
   };
