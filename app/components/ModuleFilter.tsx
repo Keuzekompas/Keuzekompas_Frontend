@@ -16,7 +16,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
   const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
-  const [, setPage] = useState(1);
+  const [_page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
