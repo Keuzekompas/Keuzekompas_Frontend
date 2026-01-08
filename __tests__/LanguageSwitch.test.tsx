@@ -65,7 +65,29 @@ Object.defineProperty(globalThis, 'matchMedia', {
   })),
 });
 
+// Mock js-cookie
+jest.mock('js-cookie', () => ({
+  get: jest.fn(),
+  set: jest.fn(),
+  remove: jest.fn(),
+}));
+
+// Mock lib/ai
+jest.mock('../lib/ai', () => ({
+  getRecommendations: jest.fn().mockResolvedValue([]),
+}));
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+  }),
+}));
+
 import i18n from '../app/i18n/i18n';
+import { RecommendationProvider } from '../app/context/RecommendationContext';
 
 describe('Language Switch Functionality', () => {
   beforeEach(() => {
@@ -77,7 +99,9 @@ describe('Language Switch Functionality', () => {
     return render(
       <ThemeProvider>
         <LanguageProvider>
-          <Header title="Test App" showSettings={true} />
+          <RecommendationProvider>
+            <Header title="Test App" showSettings={true} />
+          </RecommendationProvider>
         </LanguageProvider>
       </ThemeProvider>
     );

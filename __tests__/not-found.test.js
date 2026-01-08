@@ -1,5 +1,22 @@
 import { render, screen, act } from '@testing-library/react';
 import NotFound from '../app/not-found'; 
+import '@testing-library/jest-dom';
+
+// Mock i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      if (key === 'notFound.title') return '404';
+      if (key === 'notFound.message') return "Oops! The page you're looking for doesn't exist.";
+      if (key === 'notFound.button') return 'Go to Modules';
+      return key;
+    },
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+}));
 
 describe('NotFound Page', () => {
   

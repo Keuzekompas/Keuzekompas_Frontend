@@ -3,6 +3,29 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Header from '../app/components/Header';
 import { ThemeProvider } from '../app/context/ThemeContext';
+import { RecommendationProvider } from '../app/context/RecommendationContext';
+import { LanguageProvider } from '../app/context/LanguageContext';
+
+// Mock js-cookie
+jest.mock('js-cookie', () => ({
+  get: jest.fn(),
+  set: jest.fn(),
+  remove: jest.fn(),
+}));
+
+// Mock lib/ai
+jest.mock('../lib/ai', () => ({
+  getRecommendations: jest.fn().mockResolvedValue([]),
+}));
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+  }),
+}));
 
 // Mock matchMedia
 Object.defineProperty(globalThis, 'matchMedia', {
@@ -49,12 +72,16 @@ describe('Theme Toggle Functionality', () => {
   test('toggles theme from light to dark and back', () => {
     render(
       <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
+        <LanguageProvider>
+          <RecommendationProvider>
+            <Header title="Test Header" showSettings={true} />
+          </RecommendationProvider>
+        </LanguageProvider>
       </ThemeProvider>
     );
 
     // Find the toggle button by role
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /donkere modus/i });
     expect(toggleButton).toBeInTheDocument();
     
     // Initial state should be light (bg-gray-200)
@@ -96,11 +123,15 @@ describe('Theme Toggle Functionality', () => {
 
     render(
       <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
+        <LanguageProvider>
+          <RecommendationProvider>
+            <Header title="Test Header" showSettings={true} />
+          </RecommendationProvider>
+        </LanguageProvider>
       </ThemeProvider>
     );
 
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /donkere modus/i });
 
     // Should be dark initially due to system preference
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
@@ -113,11 +144,15 @@ describe('Theme Toggle Functionality', () => {
 
     render(
       <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
+        <LanguageProvider>
+          <RecommendationProvider>
+            <Header title="Test Header" showSettings={true} />
+          </RecommendationProvider>
+        </LanguageProvider>
       </ThemeProvider>
     );
 
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /donkere modus/i });
 
     // Should be dark initially due to local storage
     expect(toggleButton).toHaveClass('bg-(--color-brand)');

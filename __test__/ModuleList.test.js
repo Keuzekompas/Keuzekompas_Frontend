@@ -1,6 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ModuleFilter from '../app/components/ModuleFilter';
 import '@testing-library/jest-dom';
+import { LanguageProvider } from '../app/context/LanguageContext';
+import { RecommendationProvider } from '../app/context/RecommendationContext';
+import { ThemeProvider } from '../app/context/ThemeContext';
 
 // Mock next/link
 jest.mock('next/link', () => {
@@ -10,114 +13,223 @@ jest.mock('next/link', () => {
   };
 });
 
-// Mock data
+// Mock js-cookie
+jest.mock('js-cookie', () => ({
+  get: jest.fn(),
+  set: jest.fn(),
+  remove: jest.fn(),
+}));
+
+// Mock matchMedia
+Object.defineProperty(globalThis, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+// Mock localStorage
+const localStorageMock = (function() {
+  let store = {};
+  return {
+    getItem: jest.fn(key => store[key] || null),
+    setItem: jest.fn((key, value) => {
+      store[key] = value.toString();
+    }),
+    clear: jest.fn(() => {
+      store = {};
+    }),
+    removeItem: jest.fn(key => {
+      delete store[key];
+    }),
+  };
+})();
+
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+});
+
+// Mock IntersectionObserver
+const observe = jest.fn();
+const unobserve = jest.fn();
+const disconnect = jest.fn();
+
+globalThis.IntersectionObserver = jest.fn((callback) => ({
+  observe,
+  unobserve,
+  disconnect,
+  takeRecords: jest.fn(),
+}));
+
+// Mock modules lib
 const mockModules = [
   {
     _id: '1',
-    name_nl: 'Introductie Programmeren',
-    description_nl: 'Leer de basis van programmeren.',
+    name: 'Introductie Programmeren',
+    description: 'Leer de basis van programmeren.',
     location: 'Breda',
     studycredit: 30,
-    name_en: 'Introduction to Programming',
-    description_en: 'Learn the basics of programming.',
-    level: 'Beginner',
-    module_tags_en: 'Programming, Basics',
-    module_tags_nl: 'Programmeren, Basis',
-    start_date: '2024-09-01',
-    available_spots: 20,
   },
   {
     _id: '2',
-    name_nl: 'Geavanceerde AI',
-    description_nl: 'Verdieping in kunstmatige intelligentie.',
+    name: 'Geavanceerde AI',
+    description: 'Verdieping in kunstmatige intelligentie.',
     location: 'Den Bosch',
     studycredit: 15,
-    name_en: 'Advanced AI',
-    description_en: 'Deep dive into artificial intelligence.',
-    level: 'Advanced',
-    module_tags_en: 'AI, Machine Learning',
-    module_tags_nl: 'AI, Machine Learning',
-    start_date: '2024-09-01',
-    available_spots: 15,
   },
   {
     _id: '3',
-    name_nl: 'Web Development',
-    description_nl: 'Bouw moderne websites.',
+    name: 'Web Development',
+    description: 'Bouw moderne websites.',
     location: 'Breda',
     studycredit: 30,
-    name_en: 'Web Development',
-    description_en: 'Build modern websites.',
-    level: 'Intermediate',
-    module_tags_en: 'Web, Frontend',
-    module_tags_nl: 'Web, Frontend',
-    start_date: '2024-09-01',
-    available_spots: 25,
   },
 ];
 
-describe('ModuleFilter Component', () => {
-  test('renders all modules initially', () => {
-    render(<ModuleFilter modules={mockModules} />);
+jest.mock('../lib/modules', () => ({
+  getModules: jest.fn().mockImplementation(async (lang, page, limit, search, location, ects) => {
+    let filtered = [...mockModules];
     
-    expect(screen.getByText('Introductie Programmeren')).toBeInTheDocument();
-    expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
-    expect(screen.getByText('Web Development')).toBeInTheDocument();
+    if (search) {
+      filtered = filtered.filter(m => m.name.toLowerCase().includes(search.toLowerCase()));
+    }
+    if (location && location !== 'None') {
+      filtered = filtered.filter(m => m.location === location);
+    }
+    if (ects && ects !== 0) {
+      filtered = filtered.filter(m => m.studycredit === ects);
+    }
+    
+    // Simple pagination mock
+    return filtered.slice(0, limit);
+  }),
+}));
+
+// Mock useDebounce
+jest.mock('../app/hooks/useDebounce', () => ({
+  useDebounce: (value) => value,
+}));
+
+// Mock i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+}));
+
+// Helper to render with providers
+const renderWithProviders = (ui) => {
+  return render(
+    <ThemeProvider>
+      <LanguageProvider>
+        <RecommendationProvider>
+          {ui}
+        </RecommendationProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  );
+};
+
+describe('ModuleFilter Component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('filters modules by search query', () => {
-    render(<ModuleFilter modules={mockModules} />);
+  test('renders all modules initially', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
     
-    const searchInput = screen.getByPlaceholderText('Search for modules');
+    await waitFor(() => {
+      expect(screen.getByText('Introductie Programmeren')).toBeInTheDocument();
+      expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
+      expect(screen.getByText('Web Development')).toBeInTheDocument();
+    });
+  });
+
+  test('filters modules by search query', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
+    
+    // Wait for initial load
+    await waitFor(() => screen.getByText('Introductie Programmeren'));
+
+    const searchInput = screen.getByPlaceholderText('moduleFilter.searchPlaceholder');
     fireEvent.change(searchInput, { target: { value: 'AI' } });
 
-    expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
-    expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
-    expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
+      expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
+      expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    });
   });
 
-  test('filters modules by location', () => {
-    render(<ModuleFilter modules={mockModules} />);
+  test('filters modules by location', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
     
-    const locationSelect = screen.getByLabelText('Locatie');
+    await waitFor(() => screen.getByText('Introductie Programmeren'));
+
+    const locationSelect = screen.getByLabelText('moduleFilter.location');
     fireEvent.change(locationSelect, { target: { value: 'Den Bosch' } });
 
-    expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
-    expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
-    expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
+      expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
+      expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    });
   });
 
-  test('filters modules by ECTS', () => {
-    render(<ModuleFilter modules={mockModules} />);
+  test('filters modules by ECTS', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
     
-    const ectsSelect = screen.getByLabelText("EC's");
+    await waitFor(() => screen.getByText('Introductie Programmeren'));
+    
+    const ectsSelect = screen.getByLabelText('moduleFilter.ects');
     fireEvent.change(ectsSelect, { target: { value: '15' } });
 
-    expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
-    expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
-    expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Introductie Programmeren')).not.toBeInTheDocument();
+      expect(screen.getByText('Geavanceerde AI')).toBeInTheDocument();
+      expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    });
   });
 
-  test('filters modules by combined criteria', () => {
-    render(<ModuleFilter modules={mockModules} />);
+  test('filters modules by combined criteria', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
     
-    const searchInput = screen.getByPlaceholderText('Search for modules');
-    const locationSelect = screen.getByLabelText('Locatie');
+    await waitFor(() => screen.getByText('Introductie Programmeren'));
+    
+    const searchInput = screen.getByPlaceholderText('moduleFilter.searchPlaceholder');
+    const locationSelect = screen.getByLabelText('moduleFilter.location');
     
     fireEvent.change(searchInput, { target: { value: 'Programmeren' } });
     fireEvent.change(locationSelect, { target: { value: 'Breda' } });
 
-    expect(screen.getByText('Introductie Programmeren')).toBeInTheDocument();
-    expect(screen.queryByText('Geavanceerde AI')).not.toBeInTheDocument();
-    expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Introductie Programmeren')).toBeInTheDocument();
+      expect(screen.queryByText('Geavanceerde AI')).not.toBeInTheDocument();
+      expect(screen.queryByText('Web Development')).not.toBeInTheDocument();
+    });
   });
 
-  test('shows "Geen module gevonden" when no modules match', () => {
-    render(<ModuleFilter modules={mockModules} />);
+  test('shows "Geen module gevonden" when no modules match', async () => {
+    renderWithProviders(<ModuleFilter favoriteIds={new Set()} />);
     
-    const searchInput = screen.getByPlaceholderText('Search for modules');
+    await waitFor(() => screen.getByText('Introductie Programmeren'));
+    
+    const searchInput = screen.getByPlaceholderText('moduleFilter.searchPlaceholder');
     fireEvent.change(searchInput, { target: { value: 'NonExistentModule' } });
 
-    expect(screen.getByText('Geen module gevonden.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('moduleFilter.noModulesFound')).toBeInTheDocument();
+    });
   });
 });
