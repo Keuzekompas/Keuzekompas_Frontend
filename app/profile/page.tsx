@@ -53,16 +53,10 @@ const ProfilePage = () => {
           <UserIcon className="w-12 h-12 mr-4" />
           <h3 className="text-2xl font-bold">{user.name}</h3>
         </div>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center text-(--text-primary)">
-            <span className="font-medium">{t('profile.studentNumber')}</span>
-            <span className="px-4 py-1 bg-(--bg-input) rounded-full">{user.studentNumber}</span>
-          </div>
           <div className="flex justify-between items-center text-(--text-primary)">
             <span className="font-medium">{t('profile.email')}</span>
             <span className="px-4 py-1 bg-(--bg-input) rounded-full">{user.email}</span>
           </div>
-        </div>
       </div>
   );
 };
