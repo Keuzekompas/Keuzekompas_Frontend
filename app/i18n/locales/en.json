@@ -108,7 +108,6 @@
   },
   "profile": {
     "title": "Profile",
-    "studentNumber": "Studentnumber",
     "email": "E-mail",
     "loading": "Loading...",
     "error": "Profile could not be loaded."
