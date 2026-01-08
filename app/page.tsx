@@ -34,6 +34,24 @@ const LoginPage = () => {
     checkAuth();
   }, [router]);
 
+  const handleLoginError = (error: unknown) => {
+    console.error("Login error:", error);
+    if (error instanceof Error) {
+      // Check for network errors
+      if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
+        setServerError(t('login.errors.networkError'));
+        return;
+      }
+
+      const status = (error as { status?: number })?.status;
+      if (status === 500) {
+        setServerError(t('login.errors.serverError'));
+      } else {
+        setServerError(error.message || t('login.errors.unknownError'));
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -65,7 +83,7 @@ const LoginPage = () => {
     // 3. API call
     try {
       const response = await loginAPI(email, password);
-      
+
       if (response.requires2FA) {
         setIs2FA(true);
         // tempToken is now handled via HttpOnly cookie
@@ -73,21 +91,7 @@ const LoginPage = () => {
         router.push("/modules");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      if (error instanceof Error) {
-        // Check for network errors
-        if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
-          setServerError(t('login.errors.networkError'));
-          return;
-        }
-
-        const status = (error as {status?: number}).status;
-        if (status === 500) {
-          setServerError(t('login.errors.serverError'));
-        } else {
-          setServerError(error.message || t('login.errors.unknownError'));
-        }
-      }
+      handleLoginError(error);
     }
   };
 
@@ -135,7 +139,7 @@ const LoginPage = () => {
                   }`}
                   value={otpCode}
                   onChange={(e) => {
-                    setOtpCode(e.target.value.replace(/[^0-9]/g, ''));
+                    setOtpCode(e.target.value.replaceAll(/\D/g, ''));
                     if (otpError) setOtpError("");
                   }}
                 />
