@@ -34,6 +34,8 @@
     "none": "Geen",
     "all": "Alle",
     "noModulesFound": "Geen modules gevonden",
+    "totalCount": "{{count}} modules",
+    "resultsFound": "{{count}} resultaten gevonden",
     "breda": "Breda",
     "denBosch": "Den Bosch",
     "tilburg": "Tilburg"

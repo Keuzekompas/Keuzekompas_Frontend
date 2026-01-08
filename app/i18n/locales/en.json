@@ -34,6 +34,8 @@
     "none": "None",
     "all": "All",
     "noModulesFound": "No modules found",
+    "totalCount": "{{count}} modules",
+    "resultsFound": "{{count}} results found",
     "breda": "Breda",
     "denBosch": "Den Bosch",
     "tilburg": "Tilburg"

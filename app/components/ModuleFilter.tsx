@@ -1,41 +1,50 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
 
-const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleListResponse[], favoriteIds?: Set<string> }) => {
+export interface FilterState {
+  search: string;
+  location: string;
+  studycredit: number;
+}
+
+interface ModuleFilterProps {
+  modules: ModuleListResponse[];
+  favoriteIds?: Set<string>;
+  totalCount: number;
+  onFilterChange: (filters: FilterState) => void;
+  onLoadMore: () => void;
+  hasMore: boolean;
+}
+
+const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterChange, onLoadMore, hasMore }: ModuleFilterProps) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("None");
-  const [ects, setEcts] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [studycredit, setStudycredit] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  const filteredModules = modules.filter((module) => {
-    const searchMatch = module.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const locationMatch =
-      location === "None" ||
-      module.location?.toLowerCase().includes(location.toLowerCase());
-
-    const ectsMatch = ects === 0 || module.studycredit === ects;
-    return searchMatch && locationMatch && ectsMatch;
-  });
-
-  const displayedModules = filteredModules.slice(0, visibleCount);
-
+  // Debounce filter changes
   useEffect(() => {
-    setVisibleCount(10);
-  }, [searchQuery, location, ects]);
+    const timer = setTimeout(() => {
+      onFilterChange({
+        search: searchQuery,
+        location,
+        studycredit
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, location, studycredit, onFilterChange]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount((prev) => prev + 10);
+        if (entries[0].isIntersecting && hasMore) {
+          onLoadMore();
         }
       },
       { threshold: 0.1 }
@@ -50,7 +59,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [displayedModules.length]);
+  }, [hasMore, onLoadMore]);
 
   return (
     <div>
@@ -95,7 +104,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
           <select
             id="ects"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
-            onChange={(e) => setEcts(Number.parseInt(e.target.value))}
+            onChange={(e) => setStudycredit(Number.parseInt(e.target.value))}
           >
             <option value="0">{t('moduleFilter.all')}</option>
             <option value="15">15</option>
@@ -104,15 +113,22 @@ const ModuleFilter = ({ modules, favoriteIds = new Set() }: { modules: ModuleLis
         </div>
       </div>
 
+      <div className="mb-4 text-sm text-(--text-secondary) font-medium">
+        {searchQuery !== "" || location !== "None" || studycredit !== 0 
+          ? t('moduleFilter.resultsFound', { count: totalCount })
+          : t('moduleFilter.totalCount', { count: totalCount })
+        }
+      </div>
+
       <div className="space-y-4">
-        {displayedModules.length > 0 ? (
+        {modules.length > 0 ? (
           <>
-            {displayedModules.map((module) => (
+            {modules.map((module) => (
               <ModuleCard key={module._id} {...module} initialIsFavorite={favoriteIds.has(module._id)} />
             ))}
-            {visibleCount < filteredModules.length && (
+            {hasMore && (
               <div ref={observerTarget} className="h-10 flex justify-center items-center">
-                {/* Sentinel for infinite scroll */}
+                <span className="text-sm text-(--text-secondary)">Loading more...</span>
               </div>
             )}
           </>

@@ -8,7 +8,8 @@ import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
-function formatDate(iso: string) {
+function formatDate(iso: string | unknown) {
+  if (typeof iso !== 'string') return '';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("nl-NL", {
@@ -30,8 +31,11 @@ function parseTags(tags: string | string[] | undefined | null): string[] {
     } else {
       return tags.map(String);
     }
+  } else if (typeof tags === 'object') {
+      // If it's an object but not an array (and not null), try stringifying it or return empty
+      return []; 
   } else {
-    stringToParse = tags;
+    stringToParse = String(tags);
   }
 
   try {
@@ -103,9 +107,6 @@ export default function Page() {
               <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
                 {module.name}
               </h1>
-              <p className="mt-1 text-sm text-(--text-secondary)">
-                {module.name}
-              </p>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:justify-end">
