@@ -7,12 +7,13 @@ jest.mock("../utils/apiFetch", () => ({
 
 const { apiFetch } = require("../utils/apiFetch");
 
-// Mock localStorage
-Object.defineProperty(window, "localStorage", {
+// Mock localStorage (Node-safe)
+Object.defineProperty(globalThis, "localStorage", {
   value: {
     setItem: jest.fn(),
     getItem: jest.fn(),
     removeItem: jest.fn(),
+    clear: jest.fn(),
   },
   writable: true,
 });
@@ -44,32 +45,30 @@ describe("loginAPI", () => {
       }),
       skipAuth: true,
     });
+
     expect(localStorage.setItem).toHaveBeenCalledWith("token", "fake-token");
     expect(result).toEqual(mockResponse.data);
   });
 
   it("should throw error if no token in response", async () => {
-    const mockResponse = {
-      data: {
-        user: { id: "123" },
-        // no token
-      },
-    };
-    apiFetch.mockResolvedValue(mockResponse);
+    apiFetch.mockResolvedValue({
+      data: { user: { id: "123" } },
+    });
 
     await expect(loginAPI("test@student.avans.nl", "password")).rejects.toThrow(
       "Something went wrong. Please try again later. (No token received.)"
     );
+
     expect(localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it("should propagate apiFetch errors", async () => {
-    const error = new Error("Network error");
-    apiFetch.mockRejectedValue(error);
+    apiFetch.mockRejectedValue(new Error("Network error"));
 
     await expect(loginAPI("test@student.avans.nl", "password")).rejects.toThrow(
       "Network error"
     );
+
     expect(localStorage.setItem).not.toHaveBeenCalled();
   });
 });
