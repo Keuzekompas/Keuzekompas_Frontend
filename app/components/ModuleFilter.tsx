@@ -16,7 +16,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
   const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
   const [ects, setEcts] = useState(0);
-  const [_page, setPage] = useState(1);
+  const pageRef = useRef(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
 
   // Initial fetch and filter changes
   useEffect(() => {
-    setPage(1);
+    pageRef.current = 1;
     // When filters change, we reset the list. 
     // We can't rely on 'page' state being 1 immediately inside fetchModulesData if we just set it.
     // So we pass 1 explicitly.
@@ -67,11 +67,8 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
-          setPage((prev) => {
-            const nextPage = prev + 1;
-            fetchModulesData(nextPage, true);
-            return nextPage;
-          });
+          pageRef.current += 1;
+          fetchModulesData(pageRef.current, true);
         }
       },
       { threshold: 0.1 }
