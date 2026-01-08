@@ -118,5 +118,14 @@
   },
   "favoritesHeader": {
     "title": "Jouw Favoriete Modules"
+  },
+  "apiErrors": {
+    "Invalid credentials": "Ongeldige inloggegevens",
+    "Invalid email or password": "Ongeldig e-mailadres of wachtwoord",
+    "User not found": "Gebruiker niet gevonden",
+    "Account locked": "Account geblokkeerd",
+    "Too many attempts": "Te veel inlogpogingen",
+    "Network error": "Netwerkfout",
+    "Server error": "Serverfout"
   }
 }
