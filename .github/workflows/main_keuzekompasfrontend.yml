@@ -26,8 +26,12 @@ jobs:
           npm run build --if-present
           npm run test --if-present
           
+          # Kopieer de statische bestanden naar de standalone map
           cp -r public .next/standalone/public
           cp -r .next/static .next/standalone/.next/static
+          
+          # Hernoem .next naar _next zodat Azure hem niet negeert
+          mv .next/standalone/.next .next/standalone/_next
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
