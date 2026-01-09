@@ -1,11 +1,9 @@
 "use client";
-import { MapPinIcon, HeartIcon } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { MapPinIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { ModuleListResponse } from '../types/moduleList';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import { addFavorite, removeFavorite } from '@/lib/modules';
+import FavoriteIcon from './FavoriteIcon';
 
 type ModuleCardProps = ModuleListResponse & {
   initialIsFavorite?: boolean;
@@ -21,45 +19,13 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
   description, 
   location, 
   studycredit, 
-  initialIsFavorite = false, 
   onRemove,
   showReasonButton: explicitShowReasonButton,
   onReasonClick: explicitOnReasonClick
 }) => {
   const { t } = useTranslation();
-  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
-  const [isLoading, setIsLoading] = useState(false);
-  
   const showReasonButton = explicitShowReasonButton ?? false;
   const onReasonClick = explicitOnReasonClick;
-
-  const toggleFavorite = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to detail page
-    e.stopPropagation();
-    
-    if (isLoading) return;
-    setIsLoading(true);
-
-    try {
-      let success;
-      if (isFavorite) {
-        success = await removeFavorite(_id);
-        if (success && onRemove) {
-          onRemove(_id);
-        }
-      } else {
-        success = await addFavorite(_id);
-      }
-      
-      if (success) {
-        setIsFavorite(!isFavorite);
-      }
-    } catch (error) {
-      console.error("Error toggling favorite", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Link href={`/modules/${_id}`} className="block mb-4 group relative">
@@ -91,18 +57,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
             </button>
           )}
         </div>
-        <button 
-          onClick={toggleFavorite}
-          disabled={isLoading}
-          className="cursor-pointer focus:outline-hidden p-1 rounded-full hover:bg-(--bg-input) transition-colors"
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        >
-          {isFavorite ? (
-            <HeartIconSolid className="w-6 h-6 shrink-0 text-(--color-brand)" />
-          ) : (
-            <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color) hover:text-(--color-brand)" />
-          )}
-        </button>
+        <FavoriteIcon moduleId={_id} onRemove={onRemove} />
       </div>
     </Link>
   );

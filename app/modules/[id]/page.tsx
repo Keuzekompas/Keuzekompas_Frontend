@@ -7,6 +7,7 @@ import { getModuleById } from "@/lib/modules";
 import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
+import FavoriteIcon from "@/app/components/FavoriteIcon";
 
 function formatDate(iso: unknown) {
   if (typeof iso !== 'string') return '';
@@ -104,9 +105,12 @@ export default function Page() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
               <p className="text-sm text-(--text-secondary)">{t('moduleDetail.detail')}</p>
-              <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
-                {module.name}
-              </h1>
+              <div className="mt-1 flex items-center gap-3">
+                <h1 className="truncate text-2xl font-bold tracking-tight text-(--text-primary) sm:text-3xl">
+                  {module.name}
+                </h1>
+                <FavoriteIcon moduleId={module._id} />
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:justify-end">
