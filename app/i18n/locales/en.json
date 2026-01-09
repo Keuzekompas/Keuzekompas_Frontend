@@ -112,12 +112,17 @@
     "message": "Oops! The page you're looking for doesn't exist.",
     "button": "Go to Modules"
   },
-  "common": {
-    "loading": "Loading...",
-    "error": "An error occurred"
-  },
-  "favoritesHeader": {
-    "title": "Your Favorite Modules"
+    "common": {
+      "loading": "Loading...",
+      "error": "An error occurred"
+    },
+    "favoritesHeader": {
+      "title": "Your Favorite Modules"
+    },
+    "twoFactor": {
+      "title": "2FA Verification",
+      "codeLabel": "Verification Code",
+      "submitButton": "Verify",
+      "error": "Invalid code or session expired"
+    }
   }
-
-}
