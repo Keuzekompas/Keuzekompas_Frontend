@@ -1,60 +1,25 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '../utils/test-utils';
 import '@testing-library/jest-dom';
 import Header from '../app/components/Header';
-import { ThemeProvider } from '../app/context/ThemeContext';
 
-// Mock matchMedia
-Object.defineProperty(globalThis, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
-// Mock localStorage
-const localStorageMock = (function() {
-  let store = {};
-  return {
-    getItem: jest.fn(key => store[key] || null),
-    setItem: jest.fn((key, value) => {
-      store[key] = value.toString();
-    }),
-    clear: jest.fn(() => {
-      store = {};
-    }),
-    removeItem: jest.fn(key => {
-      delete store[key];
-    }),
-  };
-})();
-
-Object.defineProperty(globalThis, 'localStorage', {
-  value: localStorageMock,
-});
+// Mock lib/ai (specific to this context/component usage)
+jest.mock('../lib/ai', () => ({
+  getRecommendations: jest.fn().mockResolvedValue([]),
+}));
 
 describe('Theme Toggle Functionality', () => {
   beforeEach(() => {
+    // Clear the global localStorage mock we set up in jest.setup.js
     globalThis.localStorage.clear();
     document.documentElement.className = '';
   });
 
   test('toggles theme from light to dark and back', () => {
-    render(
-      <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
-      </ThemeProvider>
-    );
+    render(<Header title="Test Header" showSettings={true} />);
 
     // Find the toggle button by role
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /header.darkMode/i });
     expect(toggleButton).toBeInTheDocument();
     
     // Initial state should be light (bg-gray-200)
@@ -83,6 +48,7 @@ describe('Theme Toggle Functionality', () => {
 
   test('respects system preference if no local storage', () => {
     // Mock system preference to dark
+    // @ts-ignore
     globalThis.matchMedia.mockImplementation(query => ({
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
@@ -94,13 +60,9 @@ describe('Theme Toggle Functionality', () => {
       dispatchEvent: jest.fn(),
     }));
 
-    render(
-      <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
-      </ThemeProvider>
-    );
+    render(<Header title="Test Header" showSettings={true} />);
 
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /header.darkMode/i });
 
     // Should be dark initially due to system preference
     expect(toggleButton).toHaveClass('bg-(--color-brand)');
@@ -111,13 +73,9 @@ describe('Theme Toggle Functionality', () => {
   test('loads theme from local storage', () => {
     globalThis.localStorage.getItem.mockReturnValue('dark');
 
-    render(
-      <ThemeProvider>
-        <Header title="Test Header" showSettings={true} />
-      </ThemeProvider>
-    );
+    render(<Header title="Test Header" showSettings={true} />);
 
-    const toggleButton = screen.getByRole('switch', { name: /dark mode/i });
+    const toggleButton = screen.getByRole('switch', { name: /header.darkMode/i });
 
     // Should be dark initially due to local storage
     expect(toggleButton).toHaveClass('bg-(--color-brand)');

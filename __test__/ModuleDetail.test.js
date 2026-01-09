@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '../utils/test-utils';
 import Page from '../app/modules/[id]/page';
 import { getModuleById } from '../lib/modules';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import '@testing-library/jest-dom';
 
 // Mock dependencies
@@ -9,28 +9,20 @@ jest.mock('../lib/modules', () => ({
   getModuleById: jest.fn(),
 }));
 
+// We need to override the global mock to control useParams and notFound
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(),
+  useParams: jest.fn(),
 }));
-
-jest.mock('next/link', () => {
-  // eslint-disable-next-line react/prop-types
-  return ({ children, href }) => {
-    return <a href={href}>{children}</a>;
-  };
-});
 
 const mockModule = {
   _id: '1',
-  name_nl: 'Test Module NL',
-  name_en: 'Test Module EN',
-  description_nl: 'Beschrijving van de module',
-  description_en: 'Description of the module',
+  name: 'Test Module NL',
+  description: 'Beschrijving van de module',
   studycredit: 5,
   location: 'Breda',
   level: 'HBO-ICT',
-  module_tags_nl: "['Tag1', 'Tag2']",
-  module_tags_en: "['Tag1', 'Tag2']",
+  module_tags: "['Tag1', 'Tag2']",
   start_date: '2024-09-01T00:00:00.000Z',
   available_spots: 20,
 };
@@ -41,41 +33,57 @@ describe('Module Detail Page', () => {
   });
 
   test('calls notFound when module is not found', async () => {
+    (useParams).mockReturnValue({ id: '999' });
     (getModuleById).mockResolvedValue(null);
 
-    const params = Promise.resolve({ id: '999' });
+    render(<Page />);
     
-    await expect(Page({ params })).rejects.toThrow();
+    await waitFor(() => {
+      expect(notFound).toHaveBeenCalled();
+    });
+  });
 
-    expect(notFound).toHaveBeenCalled();
+  test('renders module details when found', async () => {
+    (useParams).mockReturnValue({ id: '1' });
+    (getModuleById).mockResolvedValue({ data: mockModule });
+
+    render(<Page />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Test Module NL')[0]).toBeInTheDocument();
+      expect(screen.getByText('Beschrijving van de module')).toBeInTheDocument();
+      expect(screen.getByText('Tag1')).toBeInTheDocument();
+    });
   });
 
   test('handles malformed tags gracefully', async () => {
     const moduleWithBadTags = {
       ...mockModule,
-      module_tags_nl: "Bad Tag Format, Another Tag", // Not JSON array
+      module_tags: "Bad Tag Format, Another Tag", // Not JSON array
     };
-    (getModuleById).mockResolvedValue(moduleWithBadTags);
+    (useParams).mockReturnValue({ id: '1' });
+    (getModuleById).mockResolvedValue({ data: moduleWithBadTags });
 
-    const params = Promise.resolve({ id: '1' });
-    const jsx = await Page({ params });
-    render(jsx);
+    render(<Page />);
 
-    expect(screen.getByText('Bad Tag Format')).toBeInTheDocument();
-    expect(screen.getByText('Another Tag')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Bad Tag Format')).toBeInTheDocument();
+      expect(screen.getByText('Another Tag')).toBeInTheDocument();
+    });
   });
 
   test('handles empty tags', async () => {
     const moduleWithNoTags = {
       ...mockModule,
-      module_tags_nl: "[]",
+      module_tags: "[]",
     };
-    (getModuleById).mockResolvedValue(moduleWithNoTags);
+    (useParams).mockReturnValue({ id: '1' });
+    (getModuleById).mockResolvedValue({ data: moduleWithNoTags });
 
-    const params = Promise.resolve({ id: '1' });
-    const jsx = await Page({ params });
-    render(jsx);
+    render(<Page />);
 
-    expect(screen.getByText('Geen tags')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('moduleDetail.noTags')).toBeInTheDocument();
+    });
   });
 });
