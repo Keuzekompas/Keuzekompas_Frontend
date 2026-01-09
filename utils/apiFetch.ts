@@ -44,7 +44,7 @@ async function parseResponse(res: Response) {
   return await res.text();
 }
 
-function handleNonOk(res: Response, response: any): never {
+function handleNonOk(res: Response, response: any): never { //Find out what type of response this can be to remove usage of any
   const message =
     typeof response === "object" && response?.message
       ? response.message
