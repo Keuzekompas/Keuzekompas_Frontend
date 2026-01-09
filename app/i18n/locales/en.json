@@ -10,7 +10,8 @@
       "passwordRequired": "Please enter your password.",
       "networkError": "Something went wrong. Please try again later.",
       "serverError": "The server is temporarily unavailable. Please try again later.",
-      "unknownError": "An unknown error occurred. Please try again."
+      "unknownError": "An unknown error occurred. Please try again.",
+      "Invalid email or password": "Invalid email or password"
     }
   },
   "header": {
@@ -117,6 +118,20 @@
     "message": "Oops! The page you're looking for doesn't exist.",
     "button": "Go to Modules"
   },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "favoritesHeader": {
+    "title": "Your Favorite Modules"
+  },
+  "apiErrors": {
+    "Invalid credentials": "Invalid credentials",
+    "Invalid email or password": "Invalid email or password",
+    "User not found": "User not found",
+    "Too many attempts": "Too many login attempts",
+    "Network error": "Network error",
+    "Server error": "Server error"
     "common": {
       "loading": "Loading...",
       "error": "An error occurred"

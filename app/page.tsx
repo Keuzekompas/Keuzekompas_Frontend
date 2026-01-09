@@ -87,6 +87,25 @@ const LoginPage = () => {
 
     // 3. API call
     try {
+      await loginAPI(email, password);
+      router.push("/modules");
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error instanceof Error) {
+        // Check for network errors
+        if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
+          setServerError(t('login.errors.networkError'));
+          return;
+        }
+
+        const status = (error as {status?: number}).status;
+        if (status === 500) {
+          setServerError(t('login.errors.serverError'));
+        } else {
+          setServerError(
+            t(`login.errors.${error.message}`) ||
+            t('login.errors.unknownError')
+          );
       const response = await loginAPI(email, password);
       
       if (response.requires2FA) {
