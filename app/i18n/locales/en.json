@@ -1,0 +1,143 @@
+{
+  "login": {
+    "title": "Login",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submitButton": "Login",
+    "errors": {
+      "emailRequired": "Please enter your email address.",
+      "emailInvalid": "Please use a valid Avans email address.",
+      "passwordRequired": "Please enter your password.",
+      "networkError": "Something went wrong. Please try again later.",
+      "serverError": "The server is temporarily unavailable. Please try again later.",
+      "unknownError": "An unknown error occurred. Please try again.",
+      "Invalid email or password": "Invalid email or password"
+    }
+  },
+  "header": {
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "logout": "Logout"
+  },
+  "navbar": {
+    "profile": "Profile",
+    "modules": "Modules",
+    "ai": "AI",
+    "favorites": "Favorites"
+  },
+  "modules": {
+    "listTitle": "Available Modules"
+  },
+  "moduleFilter": {
+    "searchPlaceholder": "Search for modules",
+    "location": "Location",
+    "ects": "EC's",
+    "none": "None",
+    "all": "All",
+    "noModulesFound": "No modules found",
+    "totalCount": "{{count}} modules",
+    "resultsFound": "{{count}} results found",
+    "breda": "Breda",
+    "denBosch": "Den Bosch",
+    "tilburg": "Tilburg"
+  },
+  "modulesHeader": {
+    "title": "Elective modules of Avans",
+    "subtitle": "Explore the complete range of Avans elective modules.",
+    "description": "On this page you will find an overview of all available elective modules. Use the filters to search for modules that match your interests and study.",
+    "showInfo": "Show info",
+    "hideInfo": "Hide info"
+  },
+  "moduleDetail": {
+    "loading": "Loading...",
+    "notFound": "Module not found",
+    "detail": "Module detail",
+    "spots": "spots",
+    "location": "Location",
+    "start": "Start",
+    "description": "Description",
+    "tags": "Tags",
+    "noTags": "No tags",
+    "moduleInfo": "Module Info",
+    "startDate": "Start date",
+    "ec": "EC",
+    "level": "Level",
+    "actions": "Actions",
+    "enroll": "Enroll",
+    "backToModules": "Back to modules"
+  },
+  "ai": {
+    "title": "AI Support",
+    "subtitle": "Describe your interests and find the perfect match.",
+    "headerDescription": "This AI tool helps you find the perfect module. Enter your interests (the more detail, the better!), choose your preferred location, and the number of ECTS. The AI analyzes your input and matches it with all available modules to create a personal top 5.",
+    "interestsLabel": "Enter your interests",
+    "interestsPlaceholder": "Describe your interests, hobbies, or future career here. For example: 'I love gaming and want to learn entrepreneurship', or 'I want to dive deeper into psychology and law'.",
+    "locationLabel": "Preferred City",
+    "ectsLabel": "How many ECTS",
+    "tagsLabel": "Select tags that match your interests",
+    "submitButton": "Create top 5",
+    "loading": "Loading recommendations...",
+    "recommendationsTitle": "Your Top 5 Modules",
+    "recommendationsSubtitle": "Personalized based on your profile.",
+    "recommendationsHeaderDescription": "Our AI has analyzed all available modules and calculated a score based on the similarity to your interests and tags. Click on 'Why this module?' on a result to see what the AI thinks!",
+    "explanation": "Below you will find the top 5 modules that best fit your profile, based on your interests and preferences.",
+    "none": "None",
+    "whyThisModule": "Why this module?",
+    "reasonTitle": "AI Insight",
+    "reasonExplanation": "This insight is based on the match between your interests, selected tags, and the specific content of this module.",
+    "score": {
+        "veryGood": "Very Good",
+        "good": "Good",
+        "okay": "Okay",
+        "bad": "Poor"
+    },
+    "validation": {
+        "interestsRequired": "Please enter your interests.",
+        "interestsTooShort": "Description must be at least 10 characters.",
+        "ectsRequired": "Please select the number of ECs.",
+        "tagsRequired": "Please select at least one tag."
+    },
+    "options": {
+        "none-ec": "-",
+        "none-location": "None",
+        "breda": "Breda",
+        "den_bosch": "Den Bosch",
+        "tilburg": "Tilburg",
+        "15": "15",
+        "30": "30"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "email": "E-mail",
+    "loading": "Loading...",
+    "error": "Profile could not be loaded."
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oops! The page you're looking for doesn't exist.",
+    "button": "Go to Modules"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "favoritesHeader": {
+    "title": "Your Favorite Modules"
+  },
+  "apiErrors": {
+    "Invalid credentials": "Invalid credentials",
+    "Invalid email or password": "Invalid email or password",
+    "User not found": "User not found",
+    "Too many attempts": "Too many login attempts",
+    "Network error": "Network error",
+    "Server error": "Server error"
+  },
+  "twoFactor": {
+    "title": "2FA Verification",
+    "codeLabel": "Verification Code",
+    "submitButton": "Verify",
+    "error": "Invalid code or session expired",
+    "backToLogin": "Back to Login"
+  }
+}

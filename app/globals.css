@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* 1. Brand Colors (Tekst & Iconen) */
+  --color-brand: #cc002c;
+  --color-brand-hover: #a30023;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* 2. Status Colors */
+  --color-error: #ef4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+
+  /* 3. Achtergronden */
+  --bg-page: linear-gradient(180deg, #ffffff 60%, #fff1f2 100%);
+  --bg-card: #ffffff;
+  --bg-input: #f8fafc;
+
+  /* 4. Borders */
+  --border-input: #cbd5e1;
+  --border-divider: #e2e8f0;
+
+  /* 5. BUTTONS (Specifiek voor Light Mode) */
+  --button-bg-submit: #cc002c;
+  --button-bg-submit-hover: #a30023;
+  --button-color-text: #ffffff;
+
+  /* 6. Tekst Algemeen */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-placeholder: #94a3b8;
+
+  --icon-color: #64748b;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not(.light) {
+    --bg-page: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+
+    --bg-card: #1e293b;
+    --bg-input: #0f172a;
+    --border-input: #334155;
+    --border-divider: #334155;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-placeholder: #475569;
+
+    --icon-color: #94a3b8;
+
+    /* --- DARK MODE AANPASSINGEN --- */
+
+    /* 1. Brand: Fel roze/rood (ALLEEN voor tekst/links/randjes) */
+
+    --color-brand: #ff5c75;
+    --color-brand-hover: #ff7d92;
+    --color-error: #fca5a5;
+
+    /* 2. Buttons: RUSTIGER (Gebroken wit / Lichtgrijs) */
+    --button-bg-submit: #f1f5f9;
+    --button-bg-submit-hover: #e2e8f0;
+    --button-color-text: #0f172a;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root.dark {
+  --bg-page: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+
+  --bg-card: #1e293b;
+  --bg-input: #0f172a;
+  --border-input: #334155;
+  --border-divider: #334155;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-placeholder: #475569;
+
+  --icon-color: #94a3b8;
+
+  /* Manual Dark Mode Variables */
+  --color-brand: #ff5c75;
+  --color-brand-hover: #ff7d92;
+  --color-error: #fca5a5;
+
+  /* Button Colors Manual Override */
+  --button-bg-submit: #f1f5f9;
+  --button-bg-submit-hover: #e2e8f0;
+  --button-color-text: #0f172a;
+}
+
+main {
+  background: var(--bg-page);
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* --- BUTTON COMPONENT CLASES --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem; 
+  border-radius: 0.5rem; 
+  font-weight: 700; 
+  transition-property: background-color, color, border-color, transform,
+    box-shadow;
+  transition-duration: 200ms;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--color-brand);
+}
+
+
+.btn-primary {
+  background-color: var(--button-bg-submit);
+  color: var(--button-color-text);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-bg-submit-hover);
+}
+
+
+.btn-secondary {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+.btn-danger {
+  background-color: transparent;
+  color: var(--color-error); 
+  font-weight: 500;
+}
+
+.btn-danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Tag/Selection Button */
+.btn-tag {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+  font-size: 0.875rem; 
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .btn-tag {
+    font-size: 1rem;
+  }
+}
+
+.btn-tag:hover {
+  border-color: var(--color-brand);
+}
+
+.btn-tag[data-selected="true"] {
+  background-color: var(--color-brand);
+  color: #ffffff; 
+  border-color: var(--color-brand);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+/* Dark mode override for tags specifically if we want readable text on bright brand color */
+:root.dark .btn-tag[data-selected="true"] {
+  background-color: var(--color-brand);
+  color: #1e293b; 
 }
