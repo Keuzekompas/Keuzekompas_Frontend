@@ -5,7 +5,6 @@ export interface ModuleDetailResponse {
   location: string;
   studycredit: number;
   level: string;
-  available_spots: number;
   start_date: string;
   module_tags: string | string[];
 }
