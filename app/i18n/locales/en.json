@@ -132,18 +132,12 @@
     "Too many attempts": "Too many login attempts",
     "Network error": "Network error",
     "Server error": "Server error"
-    "common": {
-      "loading": "Loading...",
-      "error": "An error occurred"
-    },
-    "favoritesHeader": {
-      "title": "Your Favorite Modules"
-    },
-    "twoFactor": {
-      "title": "2FA Verification",
-      "codeLabel": "Verification Code",
-      "submitButton": "Verify",
-      "error": "Invalid code or session expired",
-      "backToLogin": "Back to Login"
-    }
+  },
+  "twoFactor": {
+    "title": "2FA Verification",
+    "codeLabel": "Verification Code",
+    "submitButton": "Verify",
+    "error": "Invalid code or session expired",
+    "backToLogin": "Back to Login"
   }
+}

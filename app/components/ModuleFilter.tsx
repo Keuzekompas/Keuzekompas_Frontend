@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
+import { useDebounce } from "../hooks/useDebounce";
 
 export interface FilterState {
   search: string;
@@ -25,20 +26,45 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("None");
   const [studycredit, setStudycredit] = useState(0);
+  const [isVisible, setIsVisible] = useState(false); // Controls mounting
+  const [isOpen, setIsOpen] = useState(false); // Controls animation classes
   const observerTarget = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
 
-  // Debounce filter changes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onFilterChange({
-        search: searchQuery,
-        location,
-        studycredit
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  // Handle drawer toggle
+  const toggleDrawer = (open: boolean) => {
+    if (open) {
+      setIsVisible(true);
+      // Small delay to allow mount before starting animation
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsOpen(true));
       });
-    }, 300);
+      document.body.style.overflow = 'hidden';
+    } else {
+      setIsOpen(false);
+      // Wait for animation to finish before unmounting
+      setTimeout(() => {
+        setIsVisible(false);
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  };
 
-    return () => clearTimeout(timer);
-  }, [searchQuery, location, studycredit, onFilterChange]);
+  // Handle filter changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    onFilterChange({
+      search: debouncedSearchQuery,
+      location,
+      studycredit
+    });
+  }, [debouncedSearchQuery, location, studycredit, onFilterChange]);
 
   // Infinite scroll
   useEffect(() => {
@@ -62,59 +88,126 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
     };
   }, [hasMore, onLoadMore]);
 
+  // Reusable Filter Options Component
+  const FilterOptions = () => (
+    <div className="flex flex-col gap-4 mb-8">
+      <div>
+        <label className="block text-sm font-medium text-(--text-secondary) mb-2">
+          {t('moduleFilter.location')}
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: t('moduleFilter.none'), value: "None" },
+            { label: t('moduleFilter.breda'), value: "Breda" },
+            { label: t('moduleFilter.denBosch'), value: "Den Bosch" },
+            { label: t('moduleFilter.tilburg'), value: "Tilburg" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setLocation(opt.value)}
+              data-selected={location === opt.value}
+              className="btn-tag rounded-lg"
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-(--text-secondary) mb-2">
+          {t('moduleFilter.ects')}
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: t('moduleFilter.all'), value: 0 },
+            { label: "15", value: 15 },
+            { label: "30", value: 30 },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setStudycredit(opt.value)}
+              data-selected={studycredit === opt.value}
+              className="btn-tag rounded-lg"
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div>
-      <div className="relative mb-4">
-        <input
-          type="text"
-          placeholder={t('moduleFilter.searchPlaceholder')}
-          className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
-          onChange={(e) => setSearchQuery(e.target.value)}
-          value={searchQuery}
-        />
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <MagnifyingGlassIcon className="w-5 h-5 text-(--icon-color)" />
+      <div className="relative mb-4 flex gap-2">
+        <div className="relative grow">
+          <input
+            type="text"
+            placeholder={t('moduleFilter.searchPlaceholder')}
+            className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+          />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <MagnifyingGlassIcon className="w-5 h-5 text-(--icon-color)" />
+          </div>
         </div>
+        <button 
+          className="md:hidden btn btn-secondary px-3"
+          onClick={() => toggleDrawer(true)}
+          aria-label="Open filters"
+        >
+          <AdjustmentsHorizontalIcon className="w-6 h-6" />
+        </button>
       </div>
 
-      <div className="flex flex-row gap-4 mb-4">
-        <div className="w-1/2">
-          <label
-            htmlFor="location"
-            className="block text-sm font-medium text-(--text-secondary)"
-          >
-            {t('moduleFilter.location')}
-          </label>
-          <select
-            id="location"
-            className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
-            onChange={(e) => setLocation(e.target.value)}
-            value={location}
-          >
-            <option value="None">{t('moduleFilter.none')}</option>
-            <option value="Breda">{t('moduleFilter.breda')}</option>
-            <option value="Den Bosch">{t('moduleFilter.denBosch')}</option>
-            <option value="Tilburg">{t('moduleFilter.tilburg')}</option>
-          </select>
-        </div>
-        <div className="w-1/2">
-          <label
-            htmlFor="ects"
-            className="block text-sm font-medium text-(--text-secondary)"
-          >
-            {t('moduleFilter.ects')}
-          </label>
-          <select
-            id="ects"
-            className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
-            onChange={(e) => setStudycredit(Number.parseInt(e.target.value))}
-          >
-            <option value="0">{t('moduleFilter.all')}</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-          </select>
-        </div>
+      {/* Desktop Filters */}
+      <div className="hidden md:block">
+        <FilterOptions />
       </div>
+
+      {/* Mobile Drawer */}
+      {isVisible && (
+        <div className="fixed inset-0 z-[60] flex justify-end md:hidden">
+           {/* Backdrop */}
+           <div 
+             className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+               isOpen ? 'opacity-100' : 'opacity-0'
+             }`} 
+             onClick={() => toggleDrawer(false)}
+           />
+           
+           {/* Drawer Panel */}
+           <div 
+             className={`relative w-full mt-auto bg-(--bg-card) rounded-t-3xl shadow-2xl transition-transform duration-300 ease-in-out p-6 pb-24 flex flex-col ${
+               isOpen ? 'translate-y-0' : 'translate-y-full'
+             }`}
+           >
+              <div className="w-12 h-1.5 bg-(--border-divider) rounded-full mx-auto mb-6 opacity-50 shrink-0" />
+              
+              <div className="flex justify-between items-center mb-6 shrink-0">
+                <h3 className="text-lg font-bold text-(--text-primary)">Filters</h3>
+                <button 
+                  onClick={() => toggleDrawer(false)}
+                  className="p-1 hover:bg-(--bg-input) rounded-full text-(--text-secondary)"
+                >
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <FilterOptions />
+              
+              <div className="mt-6">
+                <button 
+                  className="btn btn-primary w-full py-3"
+                  onClick={() => toggleDrawer(false)}
+                >
+                  {t('moduleFilter.resultsFound', { count: totalCount })}
+                </button>
+              </div>
+           </div>
+        </div>
+      )}
 
       <div className="mb-4 text-sm text-(--text-secondary) font-medium">
         {searchQuery !== "" || location !== "None" || studycredit !== 0 
