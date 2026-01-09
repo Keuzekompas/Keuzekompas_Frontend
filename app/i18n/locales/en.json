@@ -123,7 +123,6 @@
     "Invalid credentials": "Invalid credentials",
     "Invalid email or password": "Invalid email or password",
     "User not found": "User not found",
-    "Account locked": "Account locked",
     "Too many attempts": "Too many login attempts",
     "Network error": "Network error",
     "Server error": "Server error"
