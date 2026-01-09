@@ -10,7 +10,8 @@
       "passwordRequired": "Vul alstublieft uw wachtwoord in.",
       "networkError": "Er is iets misgegaan. Probeer het later opnieuw.",
       "serverError": "De server is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
-      "unknownError": "Er is een onbekende fout opgetreden. Probeer het opnieuw."
+      "unknownError": "Er is een onbekende fout opgetreden. Probeer het opnieuw.",
+      "Invalid email or password": "Ongeldig e-mailadres of wachtwoord"
     }
   },
   "header": {

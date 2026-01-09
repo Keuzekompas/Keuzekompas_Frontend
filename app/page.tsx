@@ -5,7 +5,6 @@ import { getProfile } from "../lib/profile";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { useTranslation } from "react-i18next";
-import { translateApiError } from "../utils/translateApiError";
 
 const LoginPage = () => {
   const { t } = useTranslation();
@@ -75,7 +74,10 @@ const LoginPage = () => {
         if (status === 500) {
           setServerError(t('login.errors.serverError'));
         } else {
-          setServerError(translateApiError(t, error.message) || t('login.errors.unknownError'));
+          setServerError(
+            t(`login.errors.${error.message}`) ||
+            t('login.errors.unknownError')
+          );
         }
       }
     }
