@@ -15,8 +15,7 @@ export async function loginAPI(
     skipAuth: true,
   });
 
-  // Check if we got a user object or if 2FA is required.
-  // We no longer check for 'token' in the body because it's in a cookie now.
+  // Check if token is present or 2FA is required
   if (!response.data.user && !response.data.requires2FA) {
     throw new Error(
       "Something went wrong. Please try again later."
@@ -27,19 +26,18 @@ export async function loginAPI(
 }
 
 export async function verify2faAPI(
-  code: string
+  code: string,
+  tempToken?: string // Optional fallback
 ): Promise<LoginResponse> {
-  // We no longer send tempToken in body, backend reads it from cookie
   const response = await apiFetch<JsonResponse<LoginResponse>>("/auth/verify-2fa", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ code }),
+    body: JSON.stringify({ code, tempToken }), // Send it if available
     skipAuth: true,
   });
 
-  // Success check: we should have a user object
   if (!response.data.user) {
     throw new Error("Verification failed.");
   }

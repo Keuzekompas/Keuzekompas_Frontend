@@ -34,12 +34,15 @@
     "none": "Geen",
     "all": "Alle",
     "noModulesFound": "Geen modules gevonden",
+    "totalCount": "{{count}} modules",
+    "resultsFound": "{{count}} resultaten gevonden",
     "breda": "Breda",
     "denBosch": "Den Bosch",
     "tilburg": "Tilburg"
   },
   "modulesHeader": {
     "title": "Keuzemodules van Avans",
+    "subtitle": "Bekijk het complete aanbod van Avans keuzemodules.",
     "description": "Op deze pagina vind je een overzicht van alle beschikbare keuzemodules. Gebruik de filters om te zoeken naar modules die aansluiten bij jouw interesses en studie.",
     "showInfo": "Toon info",
     "hideInfo": "Verberg info"
@@ -57,7 +60,6 @@
     "moduleInfo": "Module Info",
     "startDate": "Startdatum",
     "ec": "EC",
-    "availableSpots": "Beschikbare plaatsen",
     "level": "Niveau",
     "actions": "Acties",
     "enroll": "Inschrijven",
@@ -65,14 +67,18 @@
   },
   "ai": {
     "title": "AI Ondersteuning",
-    "interestsLabel": "Vul je interesses in:",
-    "interestsPlaceholder": "Mijn interesses zijn gamen, techniek en zorg",
-    "locationLabel": "Locatie voorkeur:",
-    "ectsLabel": "Hoeveel EC's:",
+    "subtitle": "Beschrijf je interesses en vind de perfecte match.",
+    "headerDescription": "Deze AI-tool helpt je bij het vinden van de perfecte module. Vul je interesses in (hoe meer detail, hoe beter!), kies je voorkeurslocatie en het aantal gewenste studiepunten. De AI analyseert je input en matcht deze met alle beschikbare modules om een persoonlijke top 5 samen te stellen.",
+    "interestsLabel": "Vul je interesses in",
+    "interestsPlaceholder": "Beschrijf hier je interesses, hobby's of toekomstige carrière. Bijvoorbeeld: 'Ik hou van gamen en wil leren ondernemen', of 'Ik wil mij verdiepen in psychologie en recht'.",
+    "locationLabel": "Locatie voorkeur",
+    "ectsLabel": "Hoeveel EC's",
     "tagsLabel": "Selecteer tags die bij jouw interesses passen",
     "submitButton": "Maak top 5",
     "loading": "Aanbevelingen laden...",
-    "recommendationsTitle": "Top Vijf modules",
+    "recommendationsTitle": "Jouw Top 5 Modules",
+    "recommendationsSubtitle": "Gepersonaliseerd op basis van jouw profiel.",
+    "recommendationsHeaderDescription": "Onze AI heeft alle beschikbare modules geanalyseerd en een score berekend op basis van de overeenkomst met jouw interesses en tags. Klik op 'Waarom deze module?' bij een resultaat om te zien wat de AI ervan vindt!",
     "explanation": "Hieronder vind je de top 5 modules die het beste bij jouw profiel passen, gebaseerd op je interesses en voorkeuren.",
     "none": "Geen",
     "whyThisModule": "Waarom deze module?",
@@ -85,10 +91,10 @@
         "bad": "Matig"
     },
     "validation": {
-        "interestsRequired": "Vul alstublieft uw interesses in.",
+        "interestsRequired": "Vul uw interesses in.",
         "interestsTooShort": "De beschrijving moet minimaal 10 tekens bevatten.",
-        "ectsRequired": "Selecteer alsjeblieft een geldig aantal EC's.",
-        "tagsRequired": "Selecteer minimaal 1 tag."
+        "ectsRequired": "Selecteer het aantal EC's.",
+        "tagsRequired": "Selecteer minimaal één tag."
     },
     "options": {
         "none-ec": "-",
@@ -102,7 +108,6 @@
   },
   "profile": {
     "title": "Profiel",
-    "studentNumber": "Studentnummer",
     "email": "E-mail",
     "loading": "Laden...",
     "error": "Profiel kon niet worden geladen."
@@ -123,6 +128,7 @@
     "title": "2FA Verificatie",
     "codeLabel": "Verificatiecode",
     "submitButton": "Verifiëren",
-    "error": "Ongeldige code of sessie verlopen"
+    "error": "Ongeldige code of sessie verlopen",
+    "backToLogin": "Terug naar Inloggen"
   }
 }

@@ -68,14 +68,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
           <div className="flex justify-between items-center mb-1">
              <h3 className="font-bold text-lg leading-tight">{name}</h3>
           </div>
-          <p className="text-(--text-secondary) max-h-12 overflow-hidden text-ellipsis text-sm">{description}</p>
+          <p className="text-(--text-secondary) text-sm line-clamp-2">{description}</p>
           <div className="flex items-center mt-3 text-(--text-secondary) text-xs sm:text-sm">
             <div className="flex items-center mr-4">
               <MapPinIcon className="w-4 h-4 mr-1" />
               <span>{location}</span>
             </div>
             <div>
-              <span>{t('moduleDetail.ec')}: {studycredit}</span>
+              <span>{studycredit} {t('moduleDetail.ec')}</span>
             </div>
           </div>
           {showReasonButton && onReasonClick && (
@@ -94,13 +94,13 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
         <button 
           onClick={toggleFavorite}
           disabled={isLoading}
-          className="cursor-pointer focus:outline-hidden p-1 rounded-full hover:bg-(--bg-hover) transition-colors"
+          className="cursor-pointer focus:outline-hidden p-1 rounded-full hover:bg-(--bg-input) transition-colors"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           {isFavorite ? (
-            <HeartIconSolid className="w-6 h-6 shrink-0 text-red-500" />
+            <HeartIconSolid className="w-6 h-6 shrink-0 text-(--color-brand)" />
           ) : (
-            <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color) hover:text-red-500" />
+            <HeartIcon className="w-6 h-6 shrink-0 text-(--icon-color) hover:text-(--color-brand)" />
           )}
         </button>
       </div>

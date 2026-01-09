@@ -8,67 +8,51 @@ import { getModules } from "@/lib/modules";
 import { useDebounce } from "@/app/hooks/useDebounce";
 import { useLanguage } from "@/app/context/LanguageContext";
 
-const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }) => {
+export interface FilterState {
+  search: string;
+  location: string;
+  studycredit: number;
+}
+
+interface ModuleFilterProps {
+  modules: ModuleListResponse[];
+  favoriteIds?: Set<string>;
+  totalCount: number;
+  onFilterChange: (filters: FilterState) => void;
+  onLoadMore: () => void;
+  hasMore: boolean;
+}
+
+const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterChange, onLoadMore, hasMore }: ModuleFilterProps) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
-  const [ects, setEcts] = useState(0);
-  const pageRef = useRef(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [studycredit, setStudycredit] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
   const LIMIT = 10;
 
-  const fetchModulesData = useCallback(async (currentPage: number, isLoadMore: boolean = false) => {
-    setLoading(true);
-    try {
-      const newModules = await getModules(
-        language,
-        currentPage,
-        LIMIT,
-        debouncedSearch,
-        location,
-        ects
-      );
-
-      if (newModules.length < LIMIT) {
-        setHasMore(false);
-      } else {
-        setHasMore(true);
-      }
-
-      setModules((prev) => {
-        if (!isLoadMore) return newModules;
-        const existingIds = new Set(prev.map((m) => m._id));
-        const uniqueNewModules = newModules.filter((m) => !existingIds.has(m._id));
-        return [...prev, ...uniqueNewModules];
-      });
-    } catch (error) {
-      console.error("Failed to fetch modules", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [language, debouncedSearch, location, ects]);
-
-  // Initial fetch and filter changes
+  // Debounce filter changes
   useEffect(() => {
-    pageRef.current = 1;
-    // When filters change, we reset the list. 
-    // We can't rely on 'page' state being 1 immediately inside fetchModulesData if we just set it.
-    // So we pass 1 explicitly.
-    fetchModulesData(1, false);
-  }, [fetchModulesData]);
+    const timer = setTimeout(() => {
+      onFilterChange({
+        search: searchQuery,
+        location,
+        studycredit
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, location, studycredit, onFilterChange]);
 
   // Infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          pageRef.current += 1;
-          fetchModulesData(pageRef.current, true);
+        if (entries[0].isIntersecting && hasMore) {
+          onLoadMore();
         }
       },
       { threshold: 0.1 }
@@ -83,7 +67,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [hasMore, loading, fetchModulesData]);
+  }, [hasMore, onLoadMore]);
 
   return (
     <div>
@@ -130,14 +114,20 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
           <select
             id="ects"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
-            onChange={(e) => setEcts(Number.parseInt(e.target.value))}
-            value={ects}
+            onChange={(e) => setStudycredit(Number.parseInt(e.target.value))}
           >
             <option value="0">{t('moduleFilter.all')}</option>
             <option value="15">15</option>
             <option value="30">30</option>
           </select>
         </div>
+      </div>
+
+      <div className="mb-4 text-sm text-(--text-secondary) font-medium">
+        {searchQuery !== "" || location !== "None" || studycredit !== 0 
+          ? t('moduleFilter.resultsFound', { count: totalCount })
+          : t('moduleFilter.totalCount', { count: totalCount })
+        }
       </div>
 
       <div className="space-y-4">
@@ -148,7 +138,7 @@ const ModuleFilter = ({ favoriteIds = new Set() }: { favoriteIds?: Set<string> }
             ))}
             {hasMore && (
               <div ref={observerTarget} className="h-10 flex justify-center items-center">
-                {loading && <p>{t('common.loading')}</p>}
+                <span className="text-sm text-(--text-secondary)">Loading more...</span>
               </div>
             )}
           </>

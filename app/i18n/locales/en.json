@@ -34,12 +34,15 @@
     "none": "None",
     "all": "All",
     "noModulesFound": "No modules found",
+    "totalCount": "{{count}} modules",
+    "resultsFound": "{{count}} results found",
     "breda": "Breda",
     "denBosch": "Den Bosch",
     "tilburg": "Tilburg"
   },
   "modulesHeader": {
     "title": "Elective modules of Avans",
+    "subtitle": "Explore the complete range of Avans elective modules.",
     "description": "On this page you will find an overview of all available elective modules. Use the filters to search for modules that match your interests and study.",
     "showInfo": "Show info",
     "hideInfo": "Hide info"
@@ -57,7 +60,6 @@
     "moduleInfo": "Module Info",
     "startDate": "Start date",
     "ec": "EC",
-    "availableSpots": "Available spots",
     "level": "Level",
     "actions": "Actions",
     "enroll": "Enroll",
@@ -65,14 +67,18 @@
   },
   "ai": {
     "title": "AI Support",
-    "interestsLabel": "Enter your interests:",
-    "interestsPlaceholder": "My interests are gaming, technology and healthcare",
-    "locationLabel": "Preferred City:",
-    "ectsLabel": "How many ECTS:",
+    "subtitle": "Describe your interests and find the perfect match.",
+    "headerDescription": "This AI tool helps you find the perfect module. Enter your interests (the more detail, the better!), choose your preferred location, and the number of ECTS. The AI analyzes your input and matches it with all available modules to create a personal top 5.",
+    "interestsLabel": "Enter your interests",
+    "interestsPlaceholder": "Describe your interests, hobbies, or future career here. For example: 'I love gaming and want to learn entrepreneurship', or 'I want to dive deeper into psychology and law'.",
+    "locationLabel": "Preferred City",
+    "ectsLabel": "How many ECTS",
     "tagsLabel": "Select tags that match your interests",
     "submitButton": "Create top 5",
     "loading": "Loading recommendations...",
-    "recommendationsTitle": "Top Five Modules",
+    "recommendationsTitle": "Your Top 5 Modules",
+    "recommendationsSubtitle": "Personalized based on your profile.",
+    "recommendationsHeaderDescription": "Our AI has analyzed all available modules and calculated a score based on the similarity to your interests and tags. Click on 'Why this module?' on a result to see what the AI thinks!",
     "explanation": "Below you will find the top 5 modules that best fit your profile, based on your interests and preferences.",
     "none": "None",
     "whyThisModule": "Why this module?",
@@ -86,9 +92,9 @@
     },
     "validation": {
         "interestsRequired": "Please enter your interests.",
-        "interestsTooShort": "The description must contain at least 10 characters.",
-        "ectsRequired": "Please select a valid amount of ECs.",
-        "tagsRequired": "Select at least 1 tag."
+        "interestsTooShort": "Description must be at least 10 characters.",
+        "ectsRequired": "Please select the number of ECs.",
+        "tagsRequired": "Please select at least one tag."
     },
     "options": {
         "none-ec": "-",
@@ -102,7 +108,6 @@
   },
   "profile": {
     "title": "Profile",
-    "studentNumber": "Studentnumber",
     "email": "E-mail",
     "loading": "Loading...",
     "error": "Profile could not be loaded."
@@ -123,6 +128,7 @@
       "title": "2FA Verification",
       "codeLabel": "Verification Code",
       "submitButton": "Verify",
-      "error": "Invalid code or session expired"
+      "error": "Invalid code or session expired",
+      "backToLogin": "Back to Login"
     }
   }

@@ -5,11 +5,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "../components/ui/card";
 import { useTranslation } from "react-i18next";
 import { useRecommendations } from "../context/RecommendationContext";
 import { useLanguage } from "../context/LanguageContext";
+import InfoToggle from "../components/ui/InfoToggle";
 
 // Define Mapping: Category -> [Boost Tags]
 const CATEGORY_MAPPING: Record<string, Record<string, string[]>> = {
@@ -182,9 +182,11 @@ const AiSupportPage = () => {
     <div className="flex flex-col items-center grow w-full px-4 sm:px-0 min-h-[700px]">
       <Card className="w-full max-w-lg bg-(--bg-card) mt-8 transition-all duration-300">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">
-            {t("ai.title")}
-          </CardTitle>
+          <InfoToggle 
+            title={t("ai.title")} 
+            subtitle={t("ai.subtitle")}
+            description={t("ai.headerDescription")} 
+          />
         </CardHeader>
         <CardContent>
           <div className="flex flex-col w-full">
@@ -192,7 +194,7 @@ const AiSupportPage = () => {
               htmlFor="interests"
               className="mb-2 text-(--text-primary) font-medium"
             >
-              {t("ai.interestsLabel")}
+              {t("ai.interestsLabel")}*
             </label>
             <textarea
               id="interests"
@@ -257,7 +259,7 @@ const AiSupportPage = () => {
                   htmlFor="ecs"
                   className="block text-(--text-primary) font-medium min-h-12 items-end pb-2"
                 >
-                  {t("ai.ectsLabel")}
+                  {t("ai.ectsLabel")}*
                 </label>
                 <div className="relative">
                   <select
@@ -300,7 +302,7 @@ const AiSupportPage = () => {
             </div>
 
             <label className="mb-2 text-(--text-primary) font-medium">
-              {t("ai.tagsLabel")} (Min 1, Max 3)
+              {t("ai.tagsLabel")}* (Min 1, Max 3)
             </label>
             <div
               className={`grid grid-cols-2 gap-2 mb-2 p-2 rounded-lg border ${
@@ -311,11 +313,8 @@ const AiSupportPage = () => {
                 <button
                   key={tag}
                   onClick={() => handleTagClick(tag)}
-                  className={`p-2 rounded-lg transition-all duration-200 text-sm sm:text-base ${
-                    tags.includes(tag)
-                      ? "bg-(--color-brand) text-white shadow-md transform scale-105"
-                      : "bg-(--bg-input) text-(--text-primary) border border-(--border-input) hover:border-(--color-brand)"
-                  } ${
+                  data-selected={tags.includes(tag)}
+                  className={`btn-tag rounded-lg ${
                     !tags.includes(tag) && tags.length >= 3
                       ? "opacity-50 cursor-not-allowed"
                       : ""
@@ -336,7 +335,7 @@ const AiSupportPage = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full p-3 bg-(--color-brand) text-white font-bold rounded-lg hover:bg-(--color-brand-hover) transition-colors mt-2 shadow-sm"
+              className="btn btn-primary w-full mt-2"
             >
               {t("ai.submitButton")}
             </button>
