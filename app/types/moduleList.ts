@@ -6,4 +6,11 @@ export interface ModuleListResponse {
   studycredit: number;
 }
 
+export interface PaginatedModuleListResponse {
+  modules: ModuleListResponse[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type Modules = ModuleListResponse[];
