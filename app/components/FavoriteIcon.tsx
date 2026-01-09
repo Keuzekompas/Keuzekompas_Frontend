@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { addFavorite, removeFavorite, getFavoriteModules } from "@/lib/modules";
-import { useLanguage } from "@/app/context/LanguageContext";
 
 type FavoriteIconProps = {
   moduleId: string;
@@ -15,7 +14,6 @@ const FavoriteIcon: React.FC<FavoriteIconProps> = ({
   moduleId,
   onRemove,
 }) => {
-  const { language } = useLanguage();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -24,7 +22,7 @@ const FavoriteIcon: React.FC<FavoriteIconProps> = ({
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       try {
-        const favorites = await getFavoriteModules(language);
+        const favorites = await getFavoriteModules();
         setIsFavorite(favorites.some(fav => fav._id === moduleId));
       } catch (error) {
         console.error("Error checking favorite status", error);
@@ -34,7 +32,7 @@ const FavoriteIcon: React.FC<FavoriteIconProps> = ({
     };
 
     checkFavoriteStatus();
-  }, [moduleId, language]);
+  }, [moduleId]);
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
