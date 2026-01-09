@@ -1,12 +1,9 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
-import { getModules } from "@/lib/modules";
-import { useDebounce } from "@/app/hooks/useDebounce";
-import { useLanguage } from "@/app/context/LanguageContext";
 
 export interface FilterState {
   search: string;
@@ -25,14 +22,10 @@ interface ModuleFilterProps {
 
 const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterChange, onLoadMore, hasMore }: ModuleFilterProps) => {
   const { t } = useTranslation();
-  const { language } = useLanguage();
-  const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
   const [studycredit, setStudycredit] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
-  const LIMIT = 10;
 
   // Debounce filter changes
   useEffect(() => {
@@ -143,16 +136,9 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
             )}
           </>
         ) : (
-           !loading && (
             <div className="text-center text-(--text-secondary) mt-8">
               {t('moduleFilter.noModulesFound')}
             </div>
-          )
-        )}
-        {loading && modules.length === 0 && (
-           <div className="flex justify-center items-center h-20">
-             <p className="text-lg text-(--text-primary)">{t('common.loading')}</p>
-           </div>
         )}
       </div>
     </div>
