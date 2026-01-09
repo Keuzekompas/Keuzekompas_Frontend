@@ -21,6 +21,63 @@ interface ModuleFilterProps {
   hasMore: boolean;
 }
 
+// Moved FilterOptions outside the parent component
+interface FilterOptionsProps {
+  location: string;
+  setLocation: (loc: string) => void;
+  studycredit: number;
+  setStudycredit: (credit: number) => void;
+  t: (key: string) => string;
+}
+
+const FilterOptions = ({ location, setLocation, studycredit, setStudycredit, t }: FilterOptionsProps) => (
+  <div className="flex flex-col gap-4 mb-8">
+    <div>
+      <label className="block text-sm font-medium text-(--text-secondary) mb-2">
+        {t('moduleFilter.location')}
+      </label>
+      <div className="flex flex-wrap gap-2">
+        {[
+          { label: t('moduleFilter.none'), value: "None" },
+          { label: t('moduleFilter.breda'), value: "Breda" },
+          { label: t('moduleFilter.denBosch'), value: "Den Bosch" },
+          { label: t('moduleFilter.tilburg'), value: "Tilburg" },
+        ].map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => setLocation(opt.value)}
+            data-selected={location === opt.value}
+            className="btn-tag rounded-lg"
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-(--text-secondary) mb-2">
+        {t('moduleFilter.ects')}
+      </label>
+      <div className="flex flex-wrap gap-2">
+        {[
+          { label: t('moduleFilter.all'), value: 0 },
+          { label: "15", value: 15 },
+          { label: "30", value: 30 },
+        ].map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => setStudycredit(opt.value)}
+            data-selected={studycredit === opt.value}
+            className="btn-tag rounded-lg"
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterChange, onLoadMore, hasMore }: ModuleFilterProps) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,23 +90,24 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  // Handle drawer toggle
-  const toggleDrawer = (open: boolean) => {
-    if (open) {
-      setIsVisible(true);
-      // Small delay to allow mount before starting animation
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => setIsOpen(true));
-      });
-      document.body.style.overflow = 'hidden';
-    } else {
-      setIsOpen(false);
-      // Wait for animation to finish before unmounting
-      setTimeout(() => {
-        setIsVisible(false);
-        document.body.style.overflow = '';
-      }, 300);
-    }
+  // Handle drawer open
+  const openDrawer = () => {
+    setIsVisible(true);
+    // Small delay to allow mount before starting animation
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setIsOpen(true));
+    });
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Handle drawer close
+  const closeDrawer = () => {
+    setIsOpen(false);
+    // Wait for animation to finish before unmounting
+    setTimeout(() => {
+      setIsVisible(false);
+      document.body.style.overflow = '';
+    }, 300);
   };
 
   // Handle filter changes
@@ -88,55 +146,6 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
     };
   }, [hasMore, onLoadMore]);
 
-  // Reusable Filter Options Component
-  const FilterOptions = () => (
-    <div className="flex flex-col gap-4 mb-8">
-      <div>
-        <label className="block text-sm font-medium text-(--text-secondary) mb-2">
-          {t('moduleFilter.location')}
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { label: t('moduleFilter.none'), value: "None" },
-            { label: t('moduleFilter.breda'), value: "Breda" },
-            { label: t('moduleFilter.denBosch'), value: "Den Bosch" },
-            { label: t('moduleFilter.tilburg'), value: "Tilburg" },
-          ].map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setLocation(opt.value)}
-              data-selected={location === opt.value}
-              className="btn-tag rounded-lg"
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-(--text-secondary) mb-2">
-          {t('moduleFilter.ects')}
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { label: t('moduleFilter.all'), value: 0 },
-            { label: "15", value: 15 },
-            { label: "30", value: 30 },
-          ].map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setStudycredit(opt.value)}
-              data-selected={studycredit === opt.value}
-              className="btn-tag rounded-lg"
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div>
       <div className="relative mb-4 flex gap-2">
@@ -154,7 +163,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
         </div>
         <button 
           className="md:hidden btn btn-secondary px-3"
-          onClick={() => toggleDrawer(true)}
+          onClick={openDrawer}
           aria-label="Open filters"
         >
           <AdjustmentsHorizontalIcon className="w-6 h-6" />
@@ -163,7 +172,13 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
 
       {/* Desktop Filters */}
       <div className="hidden md:block">
-        <FilterOptions />
+        <FilterOptions 
+          location={location} 
+          setLocation={setLocation} 
+          studycredit={studycredit} 
+          setStudycredit={setStudycredit} 
+          t={t} 
+        />
       </div>
 
       {/* Mobile Drawer */}
@@ -171,10 +186,18 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
         <div className="fixed inset-0 z-[60] flex justify-end md:hidden">
            {/* Backdrop */}
            <div 
+             role="button"
+             tabIndex={0}
              className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
                isOpen ? 'opacity-100' : 'opacity-0'
              }`} 
-             onClick={() => toggleDrawer(false)}
+             onClick={closeDrawer}
+             onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  closeDrawer();
+                }
+             }}
+             aria-label="Close filters"
            />
            
            {/* Drawer Panel */}
@@ -188,19 +211,25 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
               <div className="flex justify-between items-center mb-6 shrink-0">
                 <h3 className="text-lg font-bold text-(--text-primary)">Filters</h3>
                 <button 
-                  onClick={() => toggleDrawer(false)}
+                  onClick={closeDrawer}
                   className="p-1 hover:bg-(--bg-input) rounded-full text-(--text-secondary)"
                 >
                   <XMarkIcon className="w-6 h-6" />
                 </button>
               </div>
               
-              <FilterOptions />
+              <FilterOptions 
+                location={location} 
+                setLocation={setLocation} 
+                studycredit={studycredit} 
+                setStudycredit={setStudycredit} 
+                t={t} 
+              />
               
               <div className="mt-6">
                 <button 
                   className="btn btn-primary w-full py-3"
-                  onClick={() => toggleDrawer(false)}
+                  onClick={closeDrawer}
                 >
                   {t('moduleFilter.resultsFound', { count: totalCount })}
                 </button>
