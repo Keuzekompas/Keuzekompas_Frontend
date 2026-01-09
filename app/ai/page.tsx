@@ -44,6 +44,38 @@ const CATEGORY_KEYS = {
   EN: Object.keys(CATEGORY_MAPPING.EN),
 };
 
+// Helper Component for Radio Groups
+interface RadioGroupProps {
+  label: string;
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+}
+
+const RadioGroup = ({ label, options, value, onChange, error }: RadioGroupProps) => (
+  <div>
+    <label className="block text-(--text-primary) font-medium mb-2">
+      {label}
+    </label>
+    <div className="flex flex-wrap gap-2">
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          onClick={() => onChange(opt.value)}
+          data-selected={value === opt.value}
+          className={`btn-tag rounded-lg ${
+            error && value === "Geen" ? "border-(--color-error)" : ""
+          }`}
+          type="button" // Ensure it doesn't submit forms if inside one
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 const AiSupportPage = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
@@ -220,58 +252,32 @@ const AiSupportPage = () => {
             </div>
 
             <div className="flex flex-col gap-4 mb-4">
-              <div>
-                <label
-                  className="block text-(--text-primary) font-medium mb-2"
-                >
-                  {t("ai.locationLabel")}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                   {[
-                     { label: t("ai.options.none-location"), value: "Geen" },
-                     { label: t("ai.options.breda"), value: "Breda" },
-                     { label: t("ai.options.den_bosch"), value: "Den Bosch" },
-                     { label: t("ai.options.tilburg"), value: "Tilburg" },
-                   ].map((opt) => (
-                     <button
-                       key={opt.value}
-                       onClick={() => setLocation(opt.value)}
-                       data-selected={location === opt.value}
-                       className="btn-tag rounded-lg"
-                     >
-                       {opt.label}
-                     </button>
-                   ))}
-                </div>
-              </div>
-              <div>
-                <label
-                  className="block text-(--text-primary) font-medium mb-2"
-                >
-                  {t("ai.ectsLabel")}*
-                </label>
-                <div className="flex flex-wrap gap-2">
-                   {[
-                     { label: t("ai.options.none-ec"), value: "Geen" },
-                     { label: t("ai.options.15"), value: "15" },
-                     { label: t("ai.options.30"), value: "30" },
-                   ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => {
-                          setEcs(opt.value);
-                          if (ecsError) setEcsError(null);
-                        }}
-                        data-selected={ecs === opt.value}
-                        className={`btn-tag rounded-lg ${
-                           ecsError && ecs === "Geen" ? "border-(--color-error)" : ""
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                   ))}
-                </div>
-              </div>
+              <RadioGroup
+                label={t("ai.locationLabel")}
+                value={location}
+                onChange={setLocation}
+                options={[
+                  { label: t("ai.options.none-location"), value: "Geen" },
+                  { label: t("ai.options.breda"), value: "Breda" },
+                  { label: t("ai.options.den_bosch"), value: "Den Bosch" },
+                  { label: t("ai.options.tilburg"), value: "Tilburg" },
+                ]}
+              />
+
+              <RadioGroup
+                label={t("ai.ectsLabel") + "*"}
+                value={ecs}
+                onChange={(val) => {
+                  setEcs(val);
+                  if (ecsError) setEcsError(null);
+                }}
+                error={!!ecsError}
+                options={[
+                  { label: t("ai.options.none-ec"), value: "Geen" },
+                  { label: t("ai.options.15"), value: "15" },
+                  { label: t("ai.options.30"), value: "30" },
+                ]}
+              />
             </div>
 
             {/* Fixed height container for ECTS error */}
