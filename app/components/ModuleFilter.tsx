@@ -185,18 +185,12 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
       {isVisible && (
         <div className="fixed inset-0 z-[60] flex justify-end md:hidden">
            {/* Backdrop */}
-           <div 
-             role="button"
-             tabIndex={0}
-             className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+           <button 
+             type="button"
+             className={`absolute inset-0 w-full h-full bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out border-none p-0 cursor-default ${
                isOpen ? 'opacity-100' : 'opacity-0'
              }`} 
              onClick={closeDrawer}
-             onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  closeDrawer();
-                }
-             }}
              aria-label="Close filters"
            />
            
