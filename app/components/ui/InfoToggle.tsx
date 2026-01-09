@@ -9,7 +9,7 @@ interface InfoToggleProps {
   description: string;
 }
 
-export default function InfoToggle({ title, subtitle, description }: InfoToggleProps) {
+export default function InfoToggle({ title, subtitle, description }: Readonly<InfoToggleProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 

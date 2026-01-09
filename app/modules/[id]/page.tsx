@@ -8,7 +8,7 @@ import type { ModuleDetailResponse } from "@/app/types/moduleDetail";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
-function formatDate(iso: string | unknown) {
+function formatDate(iso: unknown) {
   if (typeof iso !== 'string') return '';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;

@@ -9,6 +9,13 @@ import type { ModuleListResponse } from "@/app/types/moduleList";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
+const mergeUniqueModules = (prev: ModuleListResponse[], newModules: ModuleListResponse[]) => {
+  const uniqueNewModules = newModules.filter(
+    newM => !prev.some(existingM => existingM._id === newM._id)
+  );
+  return [...prev, ...uniqueNewModules];
+};
+
 const ModulesPage = () => {
   const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -86,12 +93,7 @@ const ModulesPage = () => {
       const data = await getModules({ ...filters, page: nextPage, limit: 10, language });
       
       if (isMounted.current) {
-        setModules(prev => {
-          const newModules = data.modules.filter(
-            newM => !prev.some(existingM => existingM._id === newM._id)
-          );
-          return [...prev, ...newModules];
-        });
+        setModules(prev => mergeUniqueModules(prev, data.modules));
         
         setPage(nextPage);
         setHasMore((modules.length + data.modules.length) < data.total);

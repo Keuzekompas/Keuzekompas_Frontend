@@ -36,6 +36,45 @@ const LoginPage = () => {
     checkAuth();
   }, [router]);
 
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!email) {
+      setEmailError(t('login.errors.emailRequired'));
+      isValid = false;
+    }
+    if (!password) {
+      setPasswordError(t('login.errors.passwordRequired'));
+      isValid = false;
+    }
+
+    // Check if email is valid Avans email
+    if (email && !email.endsWith("@student.avans.nl")) {
+      setEmailError(t('login.errors.emailInvalid'));
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleLoginError = (error: unknown) => {
+    console.error("Login error:", error);
+    if (error instanceof Error) {
+      // Check for network errors
+      if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
+        setServerError(t('login.errors.networkError'));
+        return;
+      }
+
+      const status = (error as {status?: number}).status;
+      if (status === 500) {
+        setServerError(t('login.errors.serverError'));
+      } else {
+        setServerError(error.message || t('login.errors.unknownError'));
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -44,25 +83,7 @@ const LoginPage = () => {
     setEmailError("");
     setPasswordError("");
 
-    let hasError = false;
-
-    // Check if field are empty
-    if (!email) {
-      setEmailError(t('login.errors.emailRequired'));
-      hasError = true;
-    }
-    if (!password) {
-      setPasswordError(t('login.errors.passwordRequired'));
-      hasError = true;
-    }
-
-    // Check if email is valid Avans email
-    if (email && !email.endsWith("@student.avans.nl")) {
-      setEmailError(t('login.errors.emailInvalid'));
-      hasError = true;
-    }
-
-    if (hasError) return;
+    if (!validateForm()) return;
 
     // 3. API call
     try {
@@ -78,21 +99,7 @@ const LoginPage = () => {
         router.push("/modules");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      if (error instanceof Error) {
-        // Check for network errors
-        if (error.message === "NETWORK_ERROR" || error.message.includes("fetch")) {
-          setServerError(t('login.errors.networkError'));
-          return;
-        }
-
-        const status = (error as {status?: number}).status;
-        if (status === 500) {
-          setServerError(t('login.errors.serverError'));
-        } else {
-          setServerError(error.message || t('login.errors.unknownError'));
-        }
-      }
+      handleLoginError(error);
     }
   };
 
