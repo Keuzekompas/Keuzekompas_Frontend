@@ -44,6 +44,38 @@ const CATEGORY_KEYS = {
   EN: Object.keys(CATEGORY_MAPPING.EN),
 };
 
+// Helper Component for Radio Groups
+interface RadioGroupProps {
+  label: string;
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+}
+
+const RadioGroup = ({ label, options, value, onChange, error }: RadioGroupProps) => (
+  <div>
+    <label className="block text-(--text-primary) font-medium mb-2">
+      {label}
+    </label>
+    <div className="flex flex-wrap gap-2">
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          onClick={() => onChange(opt.value)}
+          data-selected={value === opt.value}
+          className={`btn-tag rounded-lg ${
+            error && value === "Geen" ? "border-(--color-error)" : ""
+          }`}
+          type="button" // Ensure it doesn't submit forms if inside one
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 const AiSupportPage = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
@@ -219,77 +251,33 @@ const AiSupportPage = () => {
               )}
             </div>
 
-            <div className="flex justify-between gap-4 mb-1">
-              <div className="w-1/2">
-                <label
-                  htmlFor="location"
-                  className="block text-(--text-primary) font-medium min-h-12 items-end pb-2"
-                >
-                  {t("ai.locationLabel")}
-                </label>
-                <div className="relative">
-                  <select
-                    id="location"
-                    className="p-3 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) border-(--border-input) focus:border-(--color-brand) appearance-none"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  >
-                    <option value="Geen">
-                      {t("ai.options.none-location")}
-                    </option>
-                    <option value="Breda">{t("ai.options.breda")}</option>
-                    <option value="Den Bosch">
-                      {t("ai.options.den_bosch")}
-                    </option>
-                    <option value="Tilburg">{t("ai.options.tilburg")}</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-(--text-secondary)">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2">
-                <label
-                  htmlFor="ecs"
-                  className="block text-(--text-primary) font-medium min-h-12 items-end pb-2"
-                >
-                  {t("ai.ectsLabel")}*
-                </label>
-                <div className="relative">
-                  <select
-                    id="ecs"
-                    className={`p-3 border rounded-lg outline-none w-full bg-(--bg-input) text-(--text-primary) appearance-none ${
-                      ecsError
-                        ? "border-(--color-error) focus:border-red-700"
-                        : "border-(--border-input) focus:border-(--color-brand)"
-                    }`}
-                    value={ecs}
-                    onChange={(e) => {
-                      setEcs(e.target.value);
-                      if (ecsError) setEcsError(null);
-                    }}
-                  >
-                    <option value="Geen">{t("ai.options.none-ec")}</option>
-                    <option value="15">{t("ai.options.15")}</option>
-                    <option value="30">{t("ai.options.30")}</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-(--text-secondary)">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col gap-4 mb-4">
+              <RadioGroup
+                label={t("ai.locationLabel")}
+                value={location}
+                onChange={setLocation}
+                options={[
+                  { label: t("ai.options.none-location"), value: "Geen" },
+                  { label: t("ai.options.breda"), value: "Breda" },
+                  { label: t("ai.options.den_bosch"), value: "Den Bosch" },
+                  { label: t("ai.options.tilburg"), value: "Tilburg" },
+                ]}
+              />
+
+              <RadioGroup
+                label={t("ai.ectsLabel") + "*"}
+                value={ecs}
+                onChange={(val) => {
+                  setEcs(val);
+                  if (ecsError) setEcsError(null);
+                }}
+                error={!!ecsError}
+                options={[
+                  { label: t("ai.options.none-ec"), value: "Geen" },
+                  { label: t("ai.options.15"), value: "15" },
+                  { label: t("ai.options.30"), value: "30" },
+                ]}
+              />
             </div>
 
             {/* Fixed height container for ECTS error */}

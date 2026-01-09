@@ -132,6 +132,7 @@
     "Too many attempts": "Te veel inlogpogingen",
     "Network error": "Netwerkfout",
     "Server error": "Serverfout"
+  },
   "twoFactor": {
     "title": "2FA Verificatie",
     "codeLabel": "Verificatiecode",
