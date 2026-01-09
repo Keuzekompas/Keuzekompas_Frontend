@@ -1,9 +1,12 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ModuleCard from "./ModuleCard";
 import { ModuleListResponse } from "../types/moduleList";
 import { useTranslation } from "react-i18next";
+import { getModules } from "@/lib/modules";
+import { useDebounce } from "@/app/hooks/useDebounce";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export interface FilterState {
   search: string;
@@ -22,10 +25,14 @@ interface ModuleFilterProps {
 
 const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterChange, onLoadMore, hasMore }: ModuleFilterProps) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
+  const [modules, setModules] = useState<ModuleListResponse[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 300);
   const [location, setLocation] = useState("None");
   const [studycredit, setStudycredit] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const LIMIT = 10;
 
   // Debounce filter changes
   useEffect(() => {
@@ -40,6 +47,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
     return () => clearTimeout(timer);
   }, [searchQuery, location, studycredit, onFilterChange]);
 
+  // Infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -69,6 +77,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
           placeholder={t('moduleFilter.searchPlaceholder')}
           className="w-full p-2 pl-10 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary) placeholder-(--text-placeholder)"
           onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-5 h-5 text-(--icon-color)" />
@@ -87,6 +96,7 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
             id="location"
             className="w-full p-2 border border-(--border-input) rounded-lg bg-(--bg-input) text-(--text-primary)"
             onChange={(e) => setLocation(e.target.value)}
+            value={location}
           >
             <option value="None">{t('moduleFilter.none')}</option>
             <option value="Breda">{t('moduleFilter.breda')}</option>
@@ -133,9 +143,16 @@ const ModuleFilter = ({ modules, favoriteIds = new Set(), totalCount, onFilterCh
             )}
           </>
         ) : (
-          <div className="text-center text-(--text-secondary) mt-8">
-            {t('moduleFilter.noModulesFound')}
-          </div>
+           !loading && (
+            <div className="text-center text-(--text-secondary) mt-8">
+              {t('moduleFilter.noModulesFound')}
+            </div>
+          )
+        )}
+        {loading && modules.length === 0 && (
+           <div className="flex justify-center items-center h-20">
+             <p className="text-lg text-(--text-primary)">{t('common.loading')}</p>
+           </div>
         )}
       </div>
     </div>
